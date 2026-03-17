@@ -82,15 +82,22 @@ watch(visible, (val) => {
   }
 })
 
-const handleSave = async () => {
-  if (!card.value.title) return
+const isSaving = ref(false)
 
-  if (isNew.value) {
-    await createCard(card.value)
-  } else {
-    await updateCard(card.value as Card)
+const handleSave = async () => {
+  if (!card.value.title || isSaving.value) return
+
+  isSaving.value = true
+  try {
+    if (isNew.value) {
+      await createCard(card.value)
+    } else {
+      await updateCard(card.value as Card)
+    }
+    visible.value = false
+  } finally {
+    isSaving.value = false
   }
-  visible.value = false
 }
 
 const handleDelete = () => {
@@ -226,8 +233,8 @@ const toggleTag = (tag: string) => {
           @click="handleDelete" 
         />
         <div class="right-buttons">
-          <Button label="Cancel" text @click="visible = false" />
-          <Button label="Save" @click="handleSave" :disabled="!card.title" />
+          <Button label="Cancel" text @click="visible = false" :disabled="isSaving" />
+          <Button label="Save" @click="handleSave" :disabled="!card.title" :loading="isSaving" />
         </div>
       </div>
     </template>

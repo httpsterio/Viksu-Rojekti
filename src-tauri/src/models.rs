@@ -51,6 +51,9 @@ pub struct Index {
     pub cards: Vec<CardMeta>,
 }
 
+use std::sync::Mutex;
+
 pub struct AppState {
     pub project_dir: std::path::PathBuf,
+    pub write_lock: Mutex<()>,
 }

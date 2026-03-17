@@ -35,6 +35,9 @@ Adding the ability to swap lane order in the `BoardSettingsModal`. This requires
 **Internationalization (Translations)**
 The app currently has hardcoded English strings. To support translations, we need to extract all text into a dedicated system (like `vue-i18n`) and replace hardcoded text with keys.
 
+- [x] **Creating Card and moving bug**
+Creating a card, then editing its' content (status etc.) creates a duplicate of the card that persists until a reload of the app.
+
 ---
 
 ## 🔍 Needs Clarification

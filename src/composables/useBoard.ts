@@ -65,7 +65,9 @@ export function useBoard() {
   const createCard = async (cardData: any) => {
     try {
       const newCard = await invoke<Card>('create_card', cardData)
-      cards.value.push(newCard)
+      if (!cards.value.some(c => c.id === newCard.id)) {
+        cards.value.push(newCard)
+      }
       toast.add({ severity: 'success', summary: 'Success', detail: 'Card created', life: 3000 })
       return newCard
     } catch (e) {

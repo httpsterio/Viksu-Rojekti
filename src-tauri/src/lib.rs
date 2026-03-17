@@ -45,7 +45,10 @@ pub fn run() {
     });
 
     tauri::Builder::default()
-        .manage(AppState { project_dir: project_dir.clone() })
+        .manage(AppState { 
+            project_dir: project_dir.clone(),
+            write_lock: std::sync::Mutex::new(()),
+        })
         .setup(move |app| {
             if let Some(window) = app.get_webview_window("main") {
                 let _ = window.show();

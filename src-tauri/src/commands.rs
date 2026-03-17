@@ -11,6 +11,7 @@ pub fn get_board_config(state: State<AppState>) -> Result<BoardConfig, String> {
 
 #[tauri::command]
 pub fn save_board_config(config: BoardConfig, state: State<AppState>) -> Result<(), String> {
+    let _lock = state.write_lock.lock().map_err(|e| format!("Lock error: {}", e))?;
     storage::write_board_config(&state.project_dir.join("rojekti").join("rojekti.config.yaml"), &config)
 }
 
@@ -34,6 +35,8 @@ pub fn create_card(
     body: String,
     state: State<AppState>,
 ) -> Result<Card, String> {
+    let _lock = state.write_lock.lock().map_err(|e| format!("Lock error: {}", e))?;
+    
     let mut config = storage::read_board_config(&state.project_dir.join("rojekti").join("rojekti.config.yaml"))?;
     
     let id = format!("{}-{:03}", config.prefix, config.next_id);
@@ -70,6 +73,7 @@ pub fn create_card(
 
 #[tauri::command]
 pub fn update_card(card: Card, state: State<AppState>) -> Result<Card, String> {
+    let _lock = state.write_lock.lock().map_err(|e| format!("Lock error: {}", e))?;
     storage::write_card(&state.project_dir, &card)?;
     index::rebuild_index(&state.project_dir)?;
     Ok(card)
@@ -77,6 +81,7 @@ pub fn update_card(card: Card, state: State<AppState>) -> Result<Card, String> {
 
 #[tauri::command]
 pub fn delete_card(id: String, state: State<AppState>) -> Result<(), String> {
+    let _lock = state.write_lock.lock().map_err(|e| format!("Lock error: {}", e))?;
     storage::delete_card_file(&state.project_dir, &id)?;
     index::rebuild_index(&state.project_dir)?;
     Ok(())
@@ -89,6 +94,7 @@ pub fn move_card(
     new_position: f64,
     state: State<AppState>,
 ) -> Result<Card, String> {
+    let _lock = state.write_lock.lock().map_err(|e| format!("Lock error: {}", e))?;
     let mut card = storage::read_card(&state.project_dir.join("rojekti").join("cards").join(format!("{}.md", id)))?;
     card.meta.status = new_status;
     card.meta.position = new_position;
@@ -105,6 +111,7 @@ pub fn reorder_lane(
     card_ids: Vec<String>,
     state: State<AppState>,
 ) -> Result<(), String> {
+    let _lock = state.write_lock.lock().map_err(|e| format!("Lock error: {}", e))?;
     for (i, id) in card_ids.iter().enumerate() {
         let mut card = storage::read_card(&state.project_dir.join("rojekti").join("cards").join(format!("{}.md", id)))?;
         card.meta.position = (i + 1) as f64;
@@ -122,6 +129,7 @@ pub fn rebuild_index(state: State<AppState>) -> Result<Index, String> {
 
 #[tauri::command]
 pub fn init_project(name: String, prefix: String, state: State<AppState>) -> Result<(), String> {
+    let _lock = state.write_lock.lock().map_err(|e| format!("Lock error: {}", e))?;
     let config = BoardConfig {
         name,
         prefix,
