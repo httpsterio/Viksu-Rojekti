@@ -1,9 +1,0 @@
-generated: 2026-03-17T02:37:00.293327400+02:00
-ticketCount: 1
-tickets:
-- id: ROJ-001
-  title: asdads
-  status: todo
-  priority: medium
-  position: 1.0
-  created: 2026-03-17
