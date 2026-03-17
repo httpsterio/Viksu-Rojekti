@@ -1,7 +1,7 @@
 use std::fs;
 use std::path::Path;
 use chrono::Local;
-use crate::models::{Index, TicketMeta};
+use crate::models::Index;
 use crate::storage;
 
 pub fn rebuild_index(dir: &Path) -> Result<Index, String> {
