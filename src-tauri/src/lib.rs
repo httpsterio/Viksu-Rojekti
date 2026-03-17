@@ -1,6 +1,5 @@
 use std::path::PathBuf;
 use tauri::Manager;
-use tauri_plugin_cli::CliExt;
 use crate::models::AppState;
 
 pub mod models;
@@ -46,24 +45,12 @@ pub fn run() {
     });
 
     tauri::Builder::default()
-        .plugin(tauri_plugin_cli::init())
         .manage(AppState { project_dir: project_dir.clone() })
         .setup(move |app| {
-            match app.cli().matches() {
-                Ok(matches) => {
-                    if matches.subcommand.is_some() {
-                        cli::handle_cli(matches, project_dir);
-                        std::process::exit(0);
-                    }
-                }
-                Err(_) => {}
-            }
-
-            // No CLI subcommand matched: Show the window
+            // In GUI mode, show the window (it was hidden by default in tauri.conf.json)
             if let Some(window) = app.get_webview_window("main") {
                 let _ = window.show();
             }
-            
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![
