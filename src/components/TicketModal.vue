@@ -7,6 +7,7 @@ import Button from 'primevue/button'
 import InputText from 'primevue/inputtext'
 import Select from 'primevue/select'
 import Tag from 'primevue/tag'
+import { useConfirm } from 'primevue/useconfirm'
 import { MdEditor, MdPreview } from 'md-editor-v3'
 import 'md-editor-v3/lib/style.css'
 
@@ -42,6 +43,7 @@ const ticket = ref<Partial<Ticket>>({
 })
 
 const descriptionTab = ref<'view' | 'edit'>('view')
+const confirm = useConfirm()
 
 const editorToolbars = [
   'bold',
@@ -91,10 +93,28 @@ const handleSave = async () => {
   visible.value = false
 }
 
-const handleDelete = async () => {
+const handleDelete = () => {
   if (ticket.value.id) {
-    await deleteTicket(ticket.value.id)
-    visible.value = false
+    confirm.require({
+      message: `Are you sure you want to delete ${ticket.value.id}?`,
+      header: 'Delete Confirmation',
+      icon: 'pi pi-exclamation-triangle',
+      acceptProps: {
+        label: 'Delete',
+        severity: 'danger'
+      },
+      rejectProps: {
+        label: 'Cancel',
+        severity: 'secondary',
+        text: true
+      },
+      accept: async () => {
+        if (ticket.value.id) {
+          await deleteTicket(ticket.value.id)
+          visible.value = false
+        }
+      }
+    })
   }
 }
 
@@ -190,7 +210,8 @@ const toggleTag = (tag: string) => {
             v-model="ticket.body" 
             :toolbars="editorToolbars" 
             :preview="false" 
-            :theme="isDarkMode ? 'dark' : 'light'" 
+            :theme="isDarkMode ? 'dark' : 'light'"
+            :language="en-US" 
           />
         </div>
       </div>

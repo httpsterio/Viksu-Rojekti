@@ -13,6 +13,8 @@ const {
   isDarkMode 
 } = useBoard()
 
+defineEmits(['open-settings'])
+
 const views = [
   { label: 'Board', value: 'board', icon: 'pi pi-th-large' },
   { label: 'Epics', value: 'epics', icon: 'pi pi-list' }
@@ -75,7 +77,7 @@ const views = [
         rounded 
         text 
       />
-      <Button icon="pi pi-cog" rounded text />
+      <Button icon="pi pi-cog" rounded text @click="$emit('open-settings')" />
       <Button label="New Ticket" icon="pi pi-plus" @click="isCreating = true" />
     </div>
   </div>

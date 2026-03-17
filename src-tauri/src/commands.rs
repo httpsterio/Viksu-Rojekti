@@ -10,6 +10,11 @@ pub fn get_board_config(state: State<AppState>) -> Result<BoardConfig, String> {
 }
 
 #[tauri::command]
+pub fn save_board_config(config: BoardConfig, state: State<AppState>) -> Result<(), String> {
+    storage::write_board_config(&state.project_dir.join("board.yaml"), &config)
+}
+
+#[tauri::command]
 pub fn get_all_tickets(state: State<AppState>) -> Result<Vec<Ticket>, String> {
     storage::read_all_tickets(&state.project_dir)
 }

@@ -8,11 +8,15 @@ import ProgressSpinner from 'primevue/progressspinner'
 import TopBar from './components/TopBar.vue'
 import BoardView from './components/BoardView.vue'
 import TicketModal from './components/TicketModal.vue'
+import ConfirmDialog from 'primevue/confirmdialog'
+import EpicView from './components/EpicView.vue'
+import BoardSettingsModal from './components/BoardSettingsModal.vue'
 
 const { config, isLoading, needsInit, loadBoard, initBoard, currentView } = useBoard()
 
 const initName = ref('')
 const initPrefix = ref('')
+const settingsModal = ref<any>(null)
 
 onMounted(() => {
   loadBoard()
@@ -28,6 +32,7 @@ const handleInit = () => {
 <template>
   <div class="app-container">
     <Toast />
+    <ConfirmDialog />
 
     <div v-if="isLoading" class="loading-overlay">
       <ProgressSpinner />
@@ -53,14 +58,15 @@ const handleInit = () => {
     </div>
 
     <template v-else-if="config">
-      <TopBar />
+      <Toast />
+      <ConfirmDialog />
+      <TopBar @open-settings="settingsModal.open()" />
       <main class="main-content">
         <BoardView v-if="currentView === 'board'" />
-        <div v-else class="epic-view-placeholder">
-          <h2>Epic View Coming Soon (Phase 5)</h2>
-        </div>
+        <EpicView v-else />
       </main>
       <TicketModal />
+      <BoardSettingsModal ref="settingsModal" />
     </template>
   </div>
 </template>
@@ -117,12 +123,5 @@ const handleInit = () => {
   display: block;
   margin-bottom: 0.5rem;
   font-weight: 600;
-}
-
-.epic-view-placeholder {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
 }
 </style>

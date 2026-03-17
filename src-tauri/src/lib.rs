@@ -1,4 +1,5 @@
 use std::path::PathBuf;
+use tauri::Manager;
 use tauri_plugin_cli::CliExt;
 use crate::models::AppState;
 
@@ -53,14 +54,25 @@ pub fn run() {
                     if matches.subcommand.is_some() {
                         cli::handle_cli(matches, project_dir);
                         std::process::exit(0);
+                    } else {
+                        // No subcommand: show the main window
+                        if let Some(window) = app.get_webview_window("main") {
+                            let _ = window.show();
+                        }
                     }
                 }
-                Err(_) => {}
+                Err(_) => {
+                    // No CLI args: show the main window
+                    if let Some(window) = app.get_webview_window("main") {
+                        let _ = window.show();
+                    }
+                }
             }
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![
             commands::get_board_config,
+            commands::save_board_config,
             commands::get_all_tickets,
             commands::get_ticket,
             commands::create_ticket,

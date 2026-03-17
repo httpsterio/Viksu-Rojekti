@@ -74,6 +74,18 @@ export function useBoard() {
     }
   }
 
+  const saveBoardConfig = async (newConfig: BoardConfig) => {
+    try {
+      config.value = newConfig
+      await invoke('save_board_config', { config: newConfig })
+      await loadBoard()
+      toast.add({ severity: 'success', summary: 'Success', detail: 'Settings saved', life: 3000 })
+    } catch (e) {
+      toast.add({ severity: 'error', summary: 'Error', detail: String(e), life: 3000 })
+      await loadBoard()
+    }
+  }
+
   const deleteTicket = async (id: string) => {
     try {
       await invoke('delete_ticket', { id })
