@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
 import { useBoard } from '@/composables/useBoard'
-import type { Ticket, TicketMeta } from '@/types'
+import type { Card } from '@/types'
 import Dialog from 'primevue/dialog'
 import Button from 'primevue/button'
 import InputText from 'primevue/inputtext'
@@ -14,26 +14,26 @@ import 'md-editor-v3/lib/style.css'
 const { 
   config, 
   isCreating, 
-  editingTicket, 
-  createTicket, 
-  updateTicket, 
-  deleteTicket,
+  editingCard, 
+  createCard, 
+  updateCard, 
+  deleteCard,
   isDarkMode
 } = useBoard()
 
 const visible = computed({
-  get: () => isCreating.value || !!editingTicket.value,
+  get: () => isCreating.value || !!editingCard.value,
   set: (val) => {
     if (!val) {
       isCreating.value = false
-      editingTicket.value = null
+      editingCard.value = null
     }
   }
 })
 
 const isNew = computed(() => isCreating.value)
 
-const ticket = ref<Partial<Ticket>>({
+const card = ref<Partial<Card>>({
   title: '',
   status: '',
   epic: null,
@@ -65,11 +65,11 @@ const editorToolbars = [
 
 watch(visible, (val) => {
   if (val) {
-    if (editingTicket.value) {
-      ticket.value = { ...editingTicket.value }
+    if (editingCard.value) {
+      card.value = { ...editingCard.value }
       descriptionTab.value = 'view'
     } else {
-      ticket.value = {
+      card.value = {
         title: '',
         status: config.value?.lanes[0] || '',
         epic: null,
@@ -83,20 +83,20 @@ watch(visible, (val) => {
 })
 
 const handleSave = async () => {
-  if (!ticket.value.title) return
+  if (!card.value.title) return
 
   if (isNew.value) {
-    await createTicket(ticket.value)
+    await createCard(card.value)
   } else {
-    await updateTicket(ticket.value as Ticket)
+    await updateCard(card.value as Card)
   }
   visible.value = false
 }
 
 const handleDelete = () => {
-  if (ticket.value.id) {
+  if (card.value.id) {
     confirm.require({
-      message: `Are you sure you want to delete ${ticket.value.id}?`,
+      message: `Are you sure you want to delete ${card.value.id}?`,
       header: 'Delete Confirmation',
       icon: 'pi pi-exclamation-triangle',
       acceptProps: {
@@ -109,8 +109,8 @@ const handleDelete = () => {
         text: true
       },
       accept: async () => {
-        if (ticket.value.id) {
-          await deleteTicket(ticket.value.id)
+        if (card.value.id) {
+          await deleteCard(card.value.id)
           visible.value = false
         }
       }
@@ -119,11 +119,11 @@ const handleDelete = () => {
 }
 
 const toggleTag = (tag: string) => {
-  const index = ticket.value.tags?.indexOf(tag) ?? -1
+  const index = card.value.tags?.indexOf(tag) ?? -1
   if (index === -1) {
-    ticket.value.tags?.push(tag)
+    card.value.tags?.push(tag)
   } else {
-    ticket.value.tags?.splice(index, 1)
+    card.value.tags?.splice(index, 1)
   }
 }
 </script>
@@ -132,31 +132,31 @@ const toggleTag = (tag: string) => {
   <Dialog 
     v-model:visible="visible" 
     modal 
-    :header="isNew ? 'Create New Ticket' : `Edit Ticket: ${ticket.id}`" 
-    class="ticket-modal"
+    :header="isNew ? 'Create New Card' : `Edit Card: ${card.id}`" 
+    class="card-modal"
   >
     <div class="modal-grid">
       <div class="main-fields">
         <div class="field">
           <label>Title</label>
-          <InputText v-model="ticket.title" placeholder="What needs to be done?" fluid autofocus />
+          <InputText v-model="card.title" placeholder="What needs to be done?" fluid autofocus />
         </div>
 
         <div class="row">
           <div class="field">
             <label>Status</label>
-            <Select v-model="ticket.status" :options="config?.lanes" placeholder="Select Status" fluid />
+            <Select v-model="card.status" :options="config?.lanes" placeholder="Select Status" fluid />
           </div>
           <div class="field">
             <label>Priority</label>
-            <Select v-model="ticket.priority" :options="config?.priorities" placeholder="Select Priority" fluid />
+            <Select v-model="card.priority" :options="config?.priorities" placeholder="Select Priority" fluid />
           </div>
         </div>
 
         <div class="field">
           <label>Epic</label>
           <Select 
-            v-model="ticket.epic" 
+            v-model="card.epic" 
             :options="config?.epics" 
             optionLabel="name" 
             optionValue="id" 
@@ -173,7 +173,7 @@ const toggleTag = (tag: string) => {
               v-for="tag in config?.tags" 
               :key="tag" 
               :value="tag"
-              :class="{ 'tag-selected': ticket.tags?.includes(tag) }"
+              :class="{ 'tag-selected': card.tags?.includes(tag) }"
               @click="toggleTag(tag)"
             />
           </div>
@@ -202,16 +202,15 @@ const toggleTag = (tag: string) => {
         <div class="description-content">
           <MdPreview 
             v-if="descriptionTab === 'view'" 
-            v-model="ticket.body" 
+            v-model="card.body" 
             :theme="isDarkMode ? 'dark' : 'light'" 
           />
           <MdEditor 
             v-else 
-            v-model="ticket.body" 
+            v-model="card.body" 
             :toolbars="editorToolbars" 
             :preview="false" 
-            :theme="isDarkMode ? 'dark' : 'light'"
-            :language="en-US" 
+            :theme="isDarkMode ? 'dark' : 'light'" 
           />
         </div>
       </div>
@@ -228,7 +227,7 @@ const toggleTag = (tag: string) => {
         />
         <div class="right-buttons">
           <Button label="Cancel" text @click="visible = false" />
-          <Button label="Save" @click="handleSave" :disabled="!ticket.title" />
+          <Button label="Save" @click="handleSave" :disabled="!card.title" />
         </div>
       </div>
     </template>
@@ -236,7 +235,7 @@ const toggleTag = (tag: string) => {
 </template>
 
 <style scoped>
-.ticket-modal {
+.card-modal {
   width: 90vw;
   max-width: 800px;
 }

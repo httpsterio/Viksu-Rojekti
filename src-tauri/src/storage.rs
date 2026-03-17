@@ -1,8 +1,8 @@
 use std::fs;
 use std::path::{Path, PathBuf};
-use crate::models::{BoardConfig, Ticket, TicketMeta};
+use crate::models::{BoardConfig, Card, CardMeta};
 
-pub fn parse_ticket_file(content: &str) -> Result<(TicketMeta, String), String> {
+pub fn parse_card_file(content: &str) -> Result<(CardMeta, String), String> {
     let parts: Vec<&str> = content.splitn(3, "---").collect();
     if parts.len() < 3 {
         return Err("Invalid frontmatter format: missing '---' delimiters".into());
@@ -10,68 +10,68 @@ pub fn parse_ticket_file(content: &str) -> Result<(TicketMeta, String), String> 
     let yaml = parts[1].trim();
     let body = parts[2].trim().to_string();
     
-    let meta: TicketMeta = serde_yaml::from_str(yaml)
+    let meta: CardMeta = serde_yaml::from_str(yaml)
         .map_err(|e| format!("YAML parse error: {}", e))?;
         
     Ok((meta, body))
 }
 
-pub fn serialize_ticket_file(meta: &TicketMeta, body: &str) -> String {
+pub fn serialize_card_file(meta: &CardMeta, body: &str) -> String {
     let yaml = serde_yaml::to_string(meta).unwrap_or_default();
     format!("---\n{}---\n\n{}\n", yaml, body)
 }
 
 pub fn read_board_config(path: &Path) -> Result<BoardConfig, String> {
     let content = fs::read_to_string(path)
-        .map_err(|e| format!("Could not read board.yaml: {}", e))?;
+        .map_err(|e| format!("Could not read config file: {}", e))?;
     serde_yaml::from_str(&content)
-        .map_err(|e| format!("YAML parse error in board.yaml: {}", e))
+        .map_err(|e| format!("YAML parse error in config file: {}", e))
 }
 
 pub fn write_board_config(path: &Path, config: &BoardConfig) -> Result<(), String> {
     let yaml = serde_yaml::to_string(config)
         .map_err(|e| format!("YAML serialization error: {}", e))?;
     fs::write(path, yaml)
-        .map_err(|e| format!("Could not write board.yaml: {}", e))
+        .map_err(|e| format!("Could not write config file: {}", e))
 }
 
-pub fn read_ticket(path: &Path) -> Result<Ticket, String> {
+pub fn read_card(path: &Path) -> Result<Card, String> {
     let content = fs::read_to_string(path)
-        .map_err(|e| format!("Could not read ticket file: {}", e))?;
-    let (meta, body) = parse_ticket_file(&content)?;
-    Ok(Ticket { meta, body })
+        .map_err(|e| format!("Could not read card file: {}", e))?;
+    let (meta, body) = parse_card_file(&content)?;
+    Ok(Card { meta, body })
 }
 
-pub fn write_ticket(dir: &Path, ticket: &Ticket) -> Result<(), String> {
-    let path = dir.join("tickets").join(format!("{}.md", ticket.meta.id));
-    let content = serialize_ticket_file(&ticket.meta, &ticket.body);
+pub fn write_card(dir: &Path, card: &Card) -> Result<(), String> {
+    let path = dir.join("rojekti").join("cards").join(format!("{}.md", card.meta.id));
+    let content = serialize_card_file(&card.meta, &card.body);
     
     if let Some(parent) = path.parent() {
         fs::create_dir_all(parent)
-            .map_err(|e| format!("Could not create tickets directory: {}", e))?;
+            .map_err(|e| format!("Could not create cards directory: {}", e))?;
     }
     
     fs::write(path, content)
-        .map_err(|e| format!("Could not write ticket file: {}", e))
+        .map_err(|e| format!("Could not write card file: {}", e))
 }
 
-pub fn delete_ticket_file(dir: &Path, id: &str) -> Result<(), String> {
-    let path = dir.join("tickets").join(format!("{}.md", id));
+pub fn delete_card_file(dir: &Path, id: &str) -> Result<(), String> {
+    let path = dir.join("rojekti").join("cards").join(format!("{}.md", id));
     if path.exists() {
         fs::remove_file(path)
-            .map_err(|e| format!("Could not delete ticket file: {}", e))?;
+            .map_err(|e| format!("Could not delete card file: {}", e))?;
     }
     Ok(())
 }
 
-pub fn list_ticket_files(dir: &Path) -> Result<Vec<PathBuf>, String> {
-    let tickets_dir = dir.join("tickets");
-    if !tickets_dir.exists() {
+pub fn list_card_files(dir: &Path) -> Result<Vec<PathBuf>, String> {
+    let cards_dir = dir.join("rojekti").join("cards");
+    if !cards_dir.exists() {
         return Ok(Vec::new());
     }
     
-    let entries = fs::read_dir(tickets_dir)
-        .map_err(|e| format!("Could not read tickets directory: {}", e))?;
+    let entries = fs::read_dir(cards_dir)
+        .map_err(|e| format!("Could not read cards directory: {}", e))?;
         
     let mut files = Vec::new();
     for entry in entries {
@@ -84,11 +84,11 @@ pub fn list_ticket_files(dir: &Path) -> Result<Vec<PathBuf>, String> {
     Ok(files)
 }
 
-pub fn read_all_tickets(dir: &Path) -> Result<Vec<Ticket>, String> {
-    let files = list_ticket_files(dir)?;
-    let mut tickets = Vec::new();
+pub fn read_all_cards(dir: &Path) -> Result<Vec<Card>, String> {
+    let files = list_card_files(dir)?;
+    let mut cards = Vec::new();
     for file in files {
-        tickets.push(read_ticket(&file)?);
+        cards.push(read_card(&file)?);
     }
-    Ok(tickets)
+    Ok(cards)
 }

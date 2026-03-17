@@ -1,51 +1,49 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, watch } from 'vue'
 import Sortable from 'sortablejs'
-import TicketCard from './TicketCard.vue'
-import type { Ticket } from '@/types'
+import Card from './Card.vue'
+import type { Card as CardType } from '@/types'
 import { useBoard } from '@/composables/useBoard'
 import Button from 'primevue/button'
 
 const props = defineProps<{
   name: string
-  tickets: Ticket[]
+  cards: CardType[]
   collapsed: boolean
 }>()
 
-const { toggleLaneCollapse, moveTicket } = useBoard()
+const { toggleLaneCollapse, moveCard } = useBoard()
 const cardContainer = ref<HTMLElement | null>(null)
 let sortable: Sortable | null = null
 
 const initSortable = () => {
   if (cardContainer.value && !props.collapsed) {
     sortable = new Sortable(cardContainer.value, {
-      group: 'tickets',
+      group: 'cards',
       animation: 150,
       ghostClass: 'ghost-card',
       dragClass: 'dragging-card',
-      dataIdAttr: 'data-ticket-id',
+      dataIdAttr: 'data-card-id',
       onEnd: (evt) => {
         if (evt.to && evt.item) {
-          const id = evt.item.getAttribute('data-ticket-id')!
+          const id = evt.item.getAttribute('data-card-id')!
           const newStatus = evt.to.getAttribute('data-lane')!
           const newIndex = evt.newIndex!
           
-          // Position calculation
-          const laneTickets = Array.from(evt.to.children)
+          const laneCards = Array.from(evt.to.children)
           let newPos = 1.0
           
-          if (laneTickets.length > 1) {
+          if (laneCards.length > 1) {
             if (newIndex === 0) {
-              const nextId = laneTickets[1].getAttribute('data-ticket-id')
               newPos = 0.5 
-            } else if (newIndex === laneTickets.length - 1) {
-              newPos = laneTickets.length + 1.0
+            } else if (newIndex === laneCards.length - 1) {
+              newPos = laneCards.length + 1.0
             } else {
               newPos = newIndex + 0.5
             }
           }
           
-          moveTicket(id, newStatus, newPos)
+          moveCard(id, newStatus, newPos)
         }
       }
     })
@@ -72,14 +70,14 @@ const formatName = (name: string) => name.replace(/-/g, ' ').toUpperCase()
   <div :class="['lane', collapsed ? 'collapsed' : 'expanded']">
     <div v-if="collapsed" class="lane-collapsed" @click="toggleLaneCollapse(name)">
       <span class="lane-name-vertical">{{ formatName(name) }}</span>
-      <span class="lane-count">{{ tickets.length }}</span>
+      <span class="lane-count">{{ cards.length }}</span>
     </div>
 
     <template v-else>
       <div class="lane-header">
         <div class="header-left">
           <h3>{{ formatName(name) }}</h3>
-          <span class="lane-count">{{ tickets.length }}</span>
+          <span class="lane-count">{{ cards.length }}</span>
         </div>
         <Button 
           icon="pi pi-angle-left" 
@@ -94,10 +92,10 @@ const formatName = (name: string) => name.replace(/-/g, ' ').toUpperCase()
         class="lane-body" 
         :data-lane="name"
       >
-        <TicketCard 
-          v-for="ticket in tickets" 
-          :key="ticket.id" 
-          :ticket="ticket" 
+        <Card 
+          v-for="card in cards" 
+          :key="card.id" 
+          :card="card" 
         />
       </div>
     </template>

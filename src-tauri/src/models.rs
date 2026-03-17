@@ -22,7 +22,7 @@ pub struct Epic {
 
 #[derive(Serialize, Deserialize, Clone, Debug)]
 #[serde(rename_all = "camelCase")]
-pub struct TicketMeta {
+pub struct CardMeta {
     pub id: String,
     pub title: String,
     pub status: String,
@@ -37,9 +37,9 @@ pub struct TicketMeta {
 
 #[derive(Serialize, Deserialize, Clone, Debug)]
 #[serde(rename_all = "camelCase")]
-pub struct Ticket {
+pub struct Card {
     #[serde(flatten)]
-    pub meta: TicketMeta,
+    pub meta: CardMeta,
     pub body: String,
 }
 
@@ -47,8 +47,8 @@ pub struct Ticket {
 #[serde(rename_all = "camelCase")]
 pub struct Index {
     pub generated: String,
-    pub ticket_count: usize,
-    pub tickets: Vec<TicketMeta>,
+    pub card_count: usize,
+    pub cards: Vec<CardMeta>,
 }
 
 pub struct AppState {

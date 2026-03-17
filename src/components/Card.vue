@@ -1,31 +1,31 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useBoard } from '@/composables/useBoard'
-import type { Ticket } from '@/types'
+import type { Card } from '@/types'
 
 const props = defineProps<{
-  ticket: Ticket
+  card: Card
 }>()
 
-const { config, editingTicket } = useBoard()
+const { config, editingCard } = useBoard()
 
 const epic = computed(() => 
-  config.value?.epics.find(e => e.id === props.ticket.epic)
+  config.value?.epics.find(e => e.id === props.card.epic)
 )
 </script>
 
 <template>
   <div 
-    class="ticket-card" 
-    :class="`priority-${ticket.priority}`"
-    :data-ticket-id="ticket.id"
-    @click="editingTicket = ticket"
+    class="card" 
+    :class="`priority-${card.priority}`"
+    :data-card-id="card.id"
+    @click="editingCard = card"
   >
     <div class="card-header">
-      <span class="ticket-id">{{ ticket.id }}</span>
+      <span class="card-id">{{ card.id }}</span>
     </div>
-    <h4 class="ticket-title">{{ ticket.title }}</h4>
-    <div class="ticket-meta">
+    <h4 class="card-title">{{ card.title }}</h4>
+    <div class="card-meta">
       <span 
         v-if="epic" 
         class="epic-badge" 
@@ -33,7 +33,7 @@ const epic = computed(() =>
       >
         {{ epic.name }}
       </span>
-      <span v-for="tag in ticket.tags" :key="tag" class="tag-pill">
+      <span v-for="tag in card.tags" :key="tag" class="tag-pill">
         {{ tag }}
       </span>
     </div>
@@ -41,7 +41,7 @@ const epic = computed(() =>
 </template>
 
 <style scoped>
-.ticket-card {
+.card {
   background: var(--bg-card);
   border-left: 4px solid transparent;
   border-radius: var(--card-radius);
@@ -52,7 +52,7 @@ const epic = computed(() =>
   transition: transform 0.1s, box-shadow 0.1s;
 }
 
-.ticket-card:hover {
+.card:hover {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   transform: translateY(-1px);
 }
@@ -61,13 +61,13 @@ const epic = computed(() =>
   margin-bottom: 0.25rem;
 }
 
-.ticket-id {
+.card-id {
   font-size: 0.7rem;
   color: var(--text-muted);
   font-weight: 600;
 }
 
-.ticket-title {
+.card-title {
   margin: 0 0 0.5rem 0;
   font-size: 0.95rem;
   line-height: 1.3;
@@ -78,7 +78,7 @@ const epic = computed(() =>
   overflow: hidden;
 }
 
-.ticket-meta {
+.card-meta {
   display: flex;
   flex-wrap: wrap;
   gap: 0.25rem;

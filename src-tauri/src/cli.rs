@@ -1,6 +1,6 @@
 use clap::{Parser, Subcommand};
 use std::path::PathBuf;
-use crate::models::{BoardConfig, Ticket, TicketMeta};
+use crate::models::{BoardConfig, Card, CardMeta};
 use crate::{storage, index};
 use chrono::Local;
 use std::io::Write;
@@ -15,7 +15,7 @@ pub struct Cli {
 
 #[derive(Subcommand)]
 pub enum Commands {
-    /// Rebuild index.yaml from ticket files
+    /// Rebuild rojekti.index.yaml from card files
     RebuildIndex,
     /// Renormalize position values in a lane
     Reorder {
@@ -23,17 +23,17 @@ pub enum Commands {
         #[arg(short, long)]
         lane: String,
     },
-    /// List all tickets to stdout
+    /// List all cards to stdout
     List,
-    /// Print a single ticket to stdout
+    /// Print a single card to stdout
     Show {
-        /// Ticket ID
+        /// Card ID
         #[arg(short, long)]
         id: String,
     },
-    /// Create a new ticket
+    /// Create a new card
     Create {
-        /// Ticket title
+        /// Card title
         #[arg(short, long)]
         title: String,
         /// Lane (defaults to first lane)
@@ -54,7 +54,7 @@ pub enum Commands {
         /// Board name
         #[arg(short, long)]
         name: String,
-        /// Ticket ID prefix
+        /// Card ID prefix
         #[arg(short, long)]
         prefix: String,
     },
@@ -72,57 +72,57 @@ pub fn handle_cli(command: Commands, project_dir: PathBuf) {
             if lane.is_empty() {
                 eprintln!("Error: lane is required.");
             } else {
-                match storage::read_all_tickets(&project_dir) {
-                    Ok(tickets) => {
-                        let mut lane_tickets: Vec<Ticket> = tickets.into_iter()
-                            .filter(|t| t.meta.status == lane)
+                match storage::read_all_cards(&project_dir) {
+                    Ok(cards) => {
+                        let mut lane_cards: Vec<Card> = cards.into_iter()
+                            .filter(|c| c.meta.status == lane)
                             .collect();
-                        lane_tickets.sort_by(|a, b| a.meta.position.partial_cmp(&b.meta.position).unwrap());
+                        lane_cards.sort_by(|a, b| a.meta.position.partial_cmp(&b.meta.position).unwrap());
                         
-                        for (i, mut ticket) in lane_tickets.into_iter().enumerate() {
-                            ticket.meta.position = (i + 1) as f64;
-                            if let Err(e) = storage::write_ticket(&project_dir, &ticket) {
-                                eprintln!("Error updating ticket {}: {}", ticket.meta.id, e);
+                        for (i, mut card) in lane_cards.into_iter().enumerate() {
+                            card.meta.position = (i + 1) as f64;
+                            if let Err(e) = storage::write_card(&project_dir, &card) {
+                                eprintln!("Error updating card {}: {}", card.meta.id, e);
                             }
                         }
                         let _ = index::rebuild_index(&project_dir);
                         println!("Lane '{}' reordered.", lane);
                     }
-                    Err(e) => eprintln!("Error reading tickets: {}", e),
+                    Err(e) => eprintln!("Error reading cards: {}", e),
                 }
             }
         }
         Commands::List => {
-            match storage::read_all_tickets(&project_dir) {
-                Ok(mut tickets) => {
-                    tickets.sort_by(|a, b| {
+            match storage::read_all_cards(&project_dir) {
+                Ok(mut cards) => {
+                    cards.sort_by(|a, b| {
                         a.meta.status.cmp(&b.meta.status)
                             .then(a.meta.position.partial_cmp(&b.meta.position).unwrap())
                     });
-                    for t in tickets {
-                        println!("{}: {} [{}] ({})", t.meta.id, t.meta.title, t.meta.status, t.meta.priority);
+                    for c in cards {
+                        println!("{}: {} [{}] ({})", c.meta.id, c.meta.title, c.meta.status, c.meta.priority);
                     }
                 }
-                Err(e) => eprintln!("Error listing tickets: {}", e),
+                Err(e) => eprintln!("Error listing cards: {}", e),
             }
         }
         Commands::Show { id } => {
             if id.is_empty() {
                 eprintln!("Error: id is required.");
             } else {
-                match storage::read_ticket(&project_dir.join("tickets").join(format!("{}.md", id))) {
-                    Ok(t) => {
-                        println!("ID: {}", t.meta.id);
-                        println!("Title: {}", t.meta.title);
-                        println!("Status: {}", t.meta.status);
-                        println!("Priority: {}", t.meta.priority);
-                        if let Some(epic) = t.meta.epic { println!("Epic: {}", epic); }
-                        println!("Tags: {}", t.meta.tags.join(", "));
-                        println!("Created: {}", t.meta.created);
+                match storage::read_card(&project_dir.join("rojekti").join("cards").join(format!("{}.md", id))) {
+                    Ok(c) => {
+                        println!("ID: {}", c.meta.id);
+                        println!("Title: {}", c.meta.title);
+                        println!("Status: {}", c.meta.status);
+                        println!("Priority: {}", c.meta.priority);
+                        if let Some(epic) = c.meta.epic { println!("Epic: {}", epic); }
+                        println!("Tags: {}", c.meta.tags.join(", "));
+                        println!("Created: {}", c.meta.created);
                         println!("\n--- Description ---\n");
-                        println!("{}", t.body);
+                        println!("{}", c.body);
                     }
-                    Err(e) => eprintln!("Error showing ticket {}: {}", id, e),
+                    Err(e) => eprintln!("Error showing card {}: {}", id, e),
                 }
             }
         }
@@ -138,22 +138,22 @@ pub fn handle_cli(command: Commands, project_dir: PathBuf) {
                     tags_str.split(',').map(|s| s.trim().to_string()).collect() 
                 };
 
-                match storage::read_board_config(&project_dir.join("board.yaml")) {
+                match storage::read_board_config(&project_dir.join("rojekti").join("rojekti.config.yaml")) {
                     Ok(mut config) => {
                         let id = format!("{}-{:03}", config.prefix, config.next_id);
                         config.next_id += 1;
-                        let _ = storage::write_board_config(&project_dir.join("board.yaml"), &config);
+                        let _ = storage::write_board_config(&project_dir.join("rojekti").join("rojekti.config.yaml"), &config);
                         
                         let status_val = status.unwrap_or_else(|| config.lanes.first().cloned().unwrap_or_else(|| "todo".to_string()));
                         
-                        let tickets = storage::read_all_tickets(&project_dir).unwrap_or_default();
-                        let max_pos = tickets.iter()
-                            .filter(|t| t.meta.status == status_val)
-                            .map(|t| t.meta.position)
+                        let cards = storage::read_all_cards(&project_dir).unwrap_or_default();
+                        let max_pos = cards.iter()
+                            .filter(|c| c.meta.status == status_val)
+                            .map(|c| c.meta.position)
                             .fold(0.0, f64::max);
 
-                        let ticket = Ticket {
-                            meta: TicketMeta {
+                        let card = Card {
+                            meta: CardMeta {
                                 id: id.clone(),
                                 title: title.to_string(),
                                 status: status_val,
@@ -166,15 +166,15 @@ pub fn handle_cli(command: Commands, project_dir: PathBuf) {
                             body: "".to_string(),
                         };
                         
-                        match storage::write_ticket(&project_dir, &ticket) {
+                        match storage::write_card(&project_dir, &card) {
                             Ok(_) => {
                                 let _ = index::rebuild_index(&project_dir);
-                                println!("Created ticket {}.", id);
+                                println!("Created card {}.", id);
                             }
-                            Err(e) => eprintln!("Error creating ticket: {}", e),
+                            Err(e) => eprintln!("Error creating card: {}", e),
                         }
                     }
-                    Err(e) => eprintln!("Error reading board.yaml: {}", e),
+                    Err(e) => eprintln!("Error reading config: {}", e),
                 }
             }
         }
@@ -192,14 +192,15 @@ pub fn handle_cli(command: Commands, project_dir: PathBuf) {
                     priorities: vec!["low".into(), "medium".into(), "high".into(), "critical".into()],
                 };
                 
-                if !project_dir.exists() {
-                    let _ = std::fs::create_dir_all(&project_dir);
+                let rojekti_dir = project_dir.join("rojekti");
+                if !rojekti_dir.exists() {
+                    let _ = std::fs::create_dir_all(&rojekti_dir);
                 }
                 
-                if let Err(e) = storage::write_board_config(&project_dir.join("board.yaml"), &config) {
-                    eprintln!("Error writing board.yaml: {}", e);
+                if let Err(e) = storage::write_board_config(&rojekti_dir.join("rojekti.config.yaml"), &config) {
+                    eprintln!("Error writing config: {}", e);
                 } else {
-                    let _ = std::fs::create_dir_all(project_dir.join("tickets"));
+                    let _ = std::fs::create_dir_all(rojekti_dir.join("cards"));
                     let _ = index::rebuild_index(&project_dir);
                     println!("Initialized board '{}' with prefix '{}'.", name, prefix);
                 }

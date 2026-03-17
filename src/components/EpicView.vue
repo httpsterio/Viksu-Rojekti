@@ -2,7 +2,7 @@
 import { useBoard } from '@/composables/useBoard'
 import EpicGroup from './EpicGroup.vue'
 
-const { config, ticketsByEpic } = useBoard()
+const { config, cardsByEpic } = useBoard()
 </script>
 
 <template>
@@ -11,12 +11,12 @@ const { config, ticketsByEpic } = useBoard()
       v-for="epic in config.epics" 
       :key="epic.id"
       :epic="epic"
-      :tickets="ticketsByEpic[epic.id] || []"
+      :cards="cardsByEpic[epic.id] || []"
     />
     
     <EpicGroup 
-      v-if="ticketsByEpic['unassigned']?.length > 0"
-      :tickets="ticketsByEpic['unassigned']"
+      v-if="cardsByEpic['unassigned']?.length > 0"
+      :cards="cardsByEpic['unassigned']"
     />
   </div>
 </template>

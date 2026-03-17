@@ -1,31 +1,31 @@
 use tauri::State;
 use chrono::Local;
 use std::fs;
-use crate::models::{AppState, BoardConfig, Ticket, TicketMeta, Index};
+use crate::models::{AppState, BoardConfig, Card, CardMeta, Index};
 use crate::{storage, index};
 
 #[tauri::command]
 pub fn get_board_config(state: State<AppState>) -> Result<BoardConfig, String> {
-    storage::read_board_config(&state.project_dir.join("board.yaml"))
+    storage::read_board_config(&state.project_dir.join("rojekti").join("rojekti.config.yaml"))
 }
 
 #[tauri::command]
 pub fn save_board_config(config: BoardConfig, state: State<AppState>) -> Result<(), String> {
-    storage::write_board_config(&state.project_dir.join("board.yaml"), &config)
+    storage::write_board_config(&state.project_dir.join("rojekti").join("rojekti.config.yaml"), &config)
 }
 
 #[tauri::command]
-pub fn get_all_tickets(state: State<AppState>) -> Result<Vec<Ticket>, String> {
-    storage::read_all_tickets(&state.project_dir)
+pub fn get_all_cards(state: State<AppState>) -> Result<Vec<Card>, String> {
+    storage::read_all_cards(&state.project_dir)
 }
 
 #[tauri::command]
-pub fn get_ticket(id: String, state: State<AppState>) -> Result<Ticket, String> {
-    storage::read_ticket(&state.project_dir.join("tickets").join(format!("{}.md", id)))
+pub fn get_card(id: String, state: State<AppState>) -> Result<Card, String> {
+    storage::read_card(&state.project_dir.join("rojekti").join("cards").join(format!("{}.md", id)))
 }
 
 #[tauri::command]
-pub fn create_ticket(
+pub fn create_card(
     title: String,
     status: Option<String>,
     epic: Option<String>,
@@ -33,24 +33,23 @@ pub fn create_ticket(
     priority: String,
     body: String,
     state: State<AppState>,
-) -> Result<Ticket, String> {
-    let mut config = storage::read_board_config(&state.project_dir.join("board.yaml"))?;
+) -> Result<Card, String> {
+    let mut config = storage::read_board_config(&state.project_dir.join("rojekti").join("rojekti.config.yaml"))?;
     
     let id = format!("{}-{:03}", config.prefix, config.next_id);
     config.next_id += 1;
-    storage::write_board_config(&state.project_dir.join("board.yaml"), &config)?;
+    storage::write_board_config(&state.project_dir.join("rojekti").join("rojekti.config.yaml"), &config)?;
     
     let status = status.unwrap_or_else(|| config.lanes.first().cloned().unwrap_or_default());
     
-    // Calculate position: highest position in target lane + 1.0
-    let tickets = storage::read_all_tickets(&state.project_dir)?;
-    let max_pos = tickets.iter()
-        .filter(|t| t.meta.status == status)
-        .map(|t| t.meta.position)
+    let cards = storage::read_all_cards(&state.project_dir)?;
+    let max_pos = cards.iter()
+        .filter(|c| c.meta.status == status)
+        .map(|c| c.meta.position)
         .fold(0.0, f64::max);
     
-    let ticket = Ticket {
-        meta: TicketMeta {
+    let card = Card {
+        meta: CardMeta {
             id,
             title,
             status,
@@ -63,54 +62,54 @@ pub fn create_ticket(
         body,
     };
     
-    storage::write_ticket(&state.project_dir, &ticket)?;
+    storage::write_card(&state.project_dir, &card)?;
     index::rebuild_index(&state.project_dir)?;
     
-    Ok(ticket)
+    Ok(card)
 }
 
 #[tauri::command]
-pub fn update_ticket(ticket: Ticket, state: State<AppState>) -> Result<Ticket, String> {
-    storage::write_ticket(&state.project_dir, &ticket)?;
+pub fn update_card(card: Card, state: State<AppState>) -> Result<Card, String> {
+    storage::write_card(&state.project_dir, &card)?;
     index::rebuild_index(&state.project_dir)?;
-    Ok(ticket)
+    Ok(card)
 }
 
 #[tauri::command]
-pub fn delete_ticket(id: String, state: State<AppState>) -> Result<(), String> {
-    storage::delete_ticket_file(&state.project_dir, &id)?;
+pub fn delete_card(id: String, state: State<AppState>) -> Result<(), String> {
+    storage::delete_card_file(&state.project_dir, &id)?;
     index::rebuild_index(&state.project_dir)?;
     Ok(())
 }
 
 #[tauri::command]
-pub fn move_ticket(
+pub fn move_card(
     id: String,
     new_status: String,
     new_position: f64,
     state: State<AppState>,
-) -> Result<Ticket, String> {
-    let mut ticket = storage::read_ticket(&state.project_dir.join("tickets").join(format!("{}.md", id)))?;
-    ticket.meta.status = new_status;
-    ticket.meta.position = new_position;
+) -> Result<Card, String> {
+    let mut card = storage::read_card(&state.project_dir.join("rojekti").join("cards").join(format!("{}.md", id)))?;
+    card.meta.status = new_status;
+    card.meta.position = new_position;
     
-    storage::write_ticket(&state.project_dir, &ticket)?;
+    storage::write_card(&state.project_dir, &card)?;
     index::rebuild_index(&state.project_dir)?;
     
-    Ok(ticket)
+    Ok(card)
 }
 
 #[tauri::command]
 pub fn reorder_lane(
     status: String,
-    ticket_ids: Vec<String>,
+    card_ids: Vec<String>,
     state: State<AppState>,
 ) -> Result<(), String> {
-    for (i, id) in ticket_ids.iter().enumerate() {
-        let mut ticket = storage::read_ticket(&state.project_dir.join("tickets").join(format!("{}.md", id)))?;
-        ticket.meta.position = (i + 1) as f64;
-        ticket.meta.status = status.clone(); // Ensure it matches the requested lane
-        storage::write_ticket(&state.project_dir, &ticket)?;
+    for (i, id) in card_ids.iter().enumerate() {
+        let mut card = storage::read_card(&state.project_dir.join("rojekti").join("cards").join(format!("{}.md", id)))?;
+        card.meta.position = (i + 1) as f64;
+        card.meta.status = status.clone();
+        storage::write_card(&state.project_dir, &card)?;
     }
     index::rebuild_index(&state.project_dir)?;
     Ok(())
@@ -133,14 +132,15 @@ pub fn init_project(name: String, prefix: String, state: State<AppState>) -> Res
         priorities: vec!["low".into(), "medium".into(), "high".into(), "critical".into()],
     };
     
-    if !state.project_dir.exists() {
-        fs::create_dir_all(&state.project_dir)
-            .map_err(|e| format!("Could not create project directory: {}", e))?;
+    let rojekti_dir = state.project_dir.join("rojekti");
+    if !rojekti_dir.exists() {
+        fs::create_dir_all(&rojekti_dir)
+            .map_err(|e| format!("Could not create rojekti directory: {}", e))?;
     }
     
-    storage::write_board_config(&state.project_dir.join("board.yaml"), &config)?;
-    fs::create_dir_all(state.project_dir.join("tickets"))
-        .map_err(|e| format!("Could not create tickets directory: {}", e))?;
+    storage::write_board_config(&rojekti_dir.join("rojekti.config.yaml"), &config)?;
+    fs::create_dir_all(rojekti_dir.join("cards"))
+        .map_err(|e| format!("Could not create cards directory: {}", e))?;
     index::rebuild_index(&state.project_dir)?;
     
     Ok(())

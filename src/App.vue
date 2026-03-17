@@ -7,7 +7,7 @@ import InputText from 'primevue/inputtext'
 import ProgressSpinner from 'primevue/progressspinner'
 import TopBar from './components/TopBar.vue'
 import BoardView from './components/BoardView.vue'
-import TicketModal from './components/TicketModal.vue'
+import CardModal from './components/CardModal.vue'
 import ConfirmDialog from 'primevue/confirmdialog'
 import EpicView from './components/EpicView.vue'
 import BoardSettingsModal from './components/BoardSettingsModal.vue'
@@ -49,7 +49,7 @@ const handleInit = () => {
         </div>
         
         <div class="field">
-          <label for="prefix">Ticket Prefix</label>
+          <label for="prefix">Card Prefix</label>
           <InputText id="prefix" v-model="initPrefix" placeholder="ROJ" fluid />
         </div>
         
@@ -58,14 +58,12 @@ const handleInit = () => {
     </div>
 
     <template v-else-if="config">
-      <Toast />
-      <ConfirmDialog />
       <TopBar @open-settings="settingsModal.open()" />
       <main class="main-content">
         <BoardView v-if="currentView === 'board'" />
         <EpicView v-else />
       </main>
-      <TicketModal />
+      <CardModal />
       <BoardSettingsModal ref="settingsModal" />
     </template>
   </div>

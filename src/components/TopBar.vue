@@ -78,7 +78,7 @@ const views = [
         text 
       />
       <Button icon="pi pi-cog" rounded text @click="$emit('open-settings')" />
-      <Button label="New Ticket" icon="pi pi-plus" @click="isCreating = true" />
+      <Button label="New Card" icon="pi pi-plus" @click="isCreating = true" />
     </div>
   </div>
 </template>

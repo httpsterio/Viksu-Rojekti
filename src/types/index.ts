@@ -14,7 +14,7 @@ export interface Epic {
   color: string
 }
 
-export interface TicketMeta {
+export interface CardMeta {
   id: string
   title: string
   status: string
@@ -25,12 +25,12 @@ export interface TicketMeta {
   created: string
 }
 
-export interface Ticket extends TicketMeta {
+export interface Card extends CardMeta {
   body: string
 }
 
 export interface Index {
   generated: string
-  ticketCount: number
-  tickets: TicketMeta[]
+  cardCount: number
+  cards: CardMeta[]
 }

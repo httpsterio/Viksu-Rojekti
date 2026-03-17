@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import type { Ticket, Epic } from '@/types'
-import TicketCard from './TicketCard.vue'
+import type { Card, Epic } from '@/types'
+import CardComponent from './Card.vue'
 
 defineProps<{
   epic?: Epic
-  tickets: Ticket[]
+  cards: Card[]
 }>()
 </script>
 
@@ -15,13 +15,13 @@ defineProps<{
       :style="{ borderLeftColor: epic?.color || 'var(--text-muted)' }"
     >
       <h3>{{ epic?.name || 'Unassigned' }}</h3>
-      <span class="count">{{ tickets.length }}</span>
+      <span class="count">{{ cards.length }}</span>
     </div>
     <div class="epic-tickets">
-      <TicketCard 
-        v-for="ticket in tickets" 
-        :key="ticket.id" 
-        :ticket="ticket" 
+      <CardComponent 
+        v-for="card in cards" 
+        :key="card.id" 
+        :card="card" 
       />
     </div>
   </div>

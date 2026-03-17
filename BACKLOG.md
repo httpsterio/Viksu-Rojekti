@@ -4,24 +4,16 @@
 *High impact, low technical risk. Good for immediate polish.*
 
 **Rename "Tickets" to "Cards"**
-Standardize naming across the entire stack. This involves a bulk search-and-replace in Rust models, Vue components, TypeScript interfaces, and renaming the `tickets/` directory to `cards/`.
-
-** Folder structure**
-rojekti/
-├── board.yaml
-├── index.yaml
-└── cards/
-    ├── PROJ-001.md
-    └── ...
+Standardize naming across the entire stack. This involves a bulk search-and-replace in Rust models, Vue components, TypeScript interfaces, and renaming the `tickets/` directory to `cards/`. (COMPLETED)
 
 **Fix Markdown Editor width mismatch**
-The "Edit" tab currently appears wider than the "View" tab. This is likely due to default padding or container constraints in the `md-editor-v3` library. A surgical CSS fix in `TicketModal.vue` will align them.
+The "Edit" tab currently appears wider than the "View" tab. This is likely due to default padding or container constraints in the `md-editor-v3` library. A surgical CSS fix in `CardModal.vue` will align them.
 
 **Default window size and responsiveness**
 The app currently shows a horizontal scrollbar with five lanes. We need to adjust the CSS flex logic (likely `flex-basis` and `min-width`) and the default window dimensions in `tauri.conf.json` so lanes shrink gracefully to fit the viewport.
 
 **Reorganize Data Folder Structure**
-Move `board.yaml` and `index.yaml` into the same directory as the cards. This keeps the project root clean and groups all "database" files together.
+Move `board.yaml` and `index.yaml` into the same directory as the cards (the `rojekti/` folder). This keeps the project root clean and groups all "database" files together. (COMPLETED)
 
 ---
 
@@ -38,7 +30,7 @@ The UI for settings, epics, and tags is built, but changes aren't persisting. We
 If an agent edits a card via the CLI, the GUI doesn't know. We need to implement a file watcher using the `notify` crate in Rust. When a file changes, the backend should emit a Tauri event to the frontend to trigger a `loadBoard()` refresh.
 
 **Lane Reordering in Settings**
-Adding the ability to swap lane order in the `BoardSettingsModal`. This requires a SortableJS implementation inside the modal and updating the `lanes: Vec<String>` in `board.yaml`.
+Adding the ability to swap lane order in the `BoardSettingsModal`. This requires a SortableJS implementation inside the modal and updating the `lanes: Vec<String>` in the config file.
 
 **Internationalization (Translations)**
 The app currently has hardcoded English strings. To support translations, we need to extract all text into a dedicated system (like `vue-i18n`) and replace hardcoded text with keys.
@@ -49,10 +41,7 @@ The app currently has hardcoded English strings. To support translations, we nee
 *Requires user input or verification before proceeding.*
 
 **Status of CLI "Unregister Class" Error**
-We recently switched the app to a **Console Subsystem** build to fix CLI output issues. We need to confirm if the `ERROR:ui\gfx\win\window_impl.cc:124` still appears. If it does, we may need a more graceful cleanup of the WebView2 environment before the CLI process exits.
-
-**Specific Folder Structure Preference**
-You mentioned moving everything to the "same folder". Do you prefer a flat structure in the project root (e.g., `./cards/`, `./board.yaml`), or a dedicated data subfolder (e.g., `./data/cards/`, `./data/board.yaml`)?
+We recently switched the app to a **Console Subsystem** build to fix CLI output issues. We need to confirm if the `ERROR:ui\gfx\win\window_impl.cc:124` still appears.
 
 **Empty Tags Section Detail**
 In the edit view, the tags section is empty. Does this mean the *available* tags defined in the board config are missing, or that the *assigned* tags on that specific card aren't loading? Knowing this helps distinguish between a config-load bug and a card-parse bug.
