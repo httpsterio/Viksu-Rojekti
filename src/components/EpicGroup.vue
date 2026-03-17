@@ -17,7 +17,7 @@ defineProps<{
       <h3>{{ epic?.name || 'Unassigned' }}</h3>
       <span class="count">{{ cards.length }}</span>
     </div>
-    <div class="epic-tickets">
+    <div class="epic-cards">
       <CardComponent 
         v-for="card in cards" 
         :key="card.id" 
@@ -59,7 +59,7 @@ defineProps<{
   font-weight: 600;
 }
 
-.epic-tickets {
+.epic-cards {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 1rem;

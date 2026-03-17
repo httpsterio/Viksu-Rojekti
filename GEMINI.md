@@ -135,7 +135,7 @@ The binary uses console subsystem. In GUI mode, the console is hidden programmat
 - Position values are floats. After many reorderings, values can get very close together. Trigger renormalization (reassign 1.0, 2.0, 3.0...) when `Math.abs(a - b) < 0.001`.
 - `serde_yaml` serializes `None` as `null`. Use `#[serde(skip_serializing_if = "Option::is_none")]` on optional fields.
 - `serde_yaml` serializes empty `Vec` as `[]`. Use `#[serde(default, skip_serializing_if = "Vec::is_empty")]` to omit empty lists.
-- When writing ticket files, ensure a blank line between closing `---` and the body: `format!("---\n{}---\n\n{}\n", yaml, body)`.
+- When writing card files, ensure a blank line between closing `---` and the body: `format!("---\n{}---\n\n{}\n", yaml, body)`.
 
 ## 8. Reference
 
