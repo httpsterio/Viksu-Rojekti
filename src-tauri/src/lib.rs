@@ -53,32 +53,17 @@ pub fn run() {
                 Ok(matches) => {
                     if matches.subcommand.is_some() {
                         cli::handle_cli(matches, project_dir);
-                        
-                        // Exit the process immediately for CLI commands
-                        // This prevents the GUI from initializing further
-                        #[cfg(windows)]
-                        unsafe {
-                            #[link(name = "kernel32")]
-                            extern "system" {
-                                fn FreeConsole() -> i32;
-                            }
-                            FreeConsole();
-                        }
                         std::process::exit(0);
-                    } else {
-                        // No subcommand: show the main window
-                        if let Some(window) = app.get_webview_window("main") {
-                            let _ = window.show();
-                        }
                     }
                 }
-                Err(_) => {
-                    // No CLI args: show the main window
-                    if let Some(window) = app.get_webview_window("main") {
-                        let _ = window.show();
-                    }
-                }
+                Err(_) => {}
             }
+
+            // No CLI subcommand matched: Show the window
+            if let Some(window) = app.get_webview_window("main") {
+                let _ = window.show();
+            }
+            
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![
