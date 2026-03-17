@@ -1,0 +1,16 @@
+name: Testi
+prefix: ROJ
+nextId: 1
+lanes:
+- backlog
+- todo
+- in-progress
+- review
+- done
+epics: []
+tags: []
+priorities:
+- low
+- medium
+- high
+- critical

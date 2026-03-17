@@ -1,0 +1,109 @@
+<script setup lang="ts">
+import { computed } from 'vue'
+import { useBoard } from '@/composables/useBoard'
+import type { Ticket } from '@/types'
+
+const props = defineProps<{
+  ticket: Ticket
+}>()
+
+const { config, editingTicket } = useBoard()
+
+const epic = computed(() => 
+  config.value?.epics.find(e => e.id === props.ticket.epic)
+)
+</script>
+
+<template>
+  <div 
+    class="ticket-card" 
+    :class="`priority-${ticket.priority}`"
+    :data-ticket-id="ticket.id"
+    @click="editingTicket = ticket"
+  >
+    <div class="card-header">
+      <span class="ticket-id">{{ ticket.id }}</span>
+    </div>
+    <h4 class="ticket-title">{{ ticket.title }}</h4>
+    <div class="ticket-meta">
+      <span 
+        v-if="epic" 
+        class="epic-badge" 
+        :style="{ backgroundColor: epic.color }"
+      >
+        {{ epic.name }}
+      </span>
+      <span v-for="tag in ticket.tags" :key="tag" class="tag-pill">
+        {{ tag }}
+      </span>
+    </div>
+  </div>
+</template>
+
+<style scoped>
+.ticket-card {
+  background: var(--bg-card);
+  border-left: 4px solid transparent;
+  border-radius: var(--card-radius);
+  padding: 0.75rem;
+  margin-bottom: 0.75rem;
+  cursor: pointer;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: transform 0.1s, box-shadow 0.1s;
+}
+
+.ticket-card:hover {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transform: translateY(-1px);
+}
+
+.card-header {
+  margin-bottom: 0.25rem;
+}
+
+.ticket-id {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.ticket-title {
+  margin: 0 0 0.5rem 0;
+  font-size: 0.95rem;
+  line-height: 1.3;
+  color: var(--text-primary);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.ticket-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+}
+
+.epic-badge {
+  font-size: 0.7rem;
+  padding: 0.1rem 0.4rem;
+  border-radius: 10px;
+  color: white;
+  font-weight: 600;
+}
+
+.tag-pill {
+  font-size: 0.7rem;
+  padding: 0.1rem 0.4rem;
+  border-radius: 10px;
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-color);
+}
+
+/* Priority Borders */
+.priority-critical { border-left-color: #e53e3e; }
+.priority-high     { border-left-color: #ed8936; }
+.priority-medium   { border-left-color: #4299e1; }
+.priority-low      { border-left-color: #a0aec0; }
+</style>
