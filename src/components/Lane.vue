@@ -78,8 +78,8 @@ const formatName = (name: string) => name.replace(/-/g, ' ').toUpperCase()
 <template>
   <div :class="['lane', collapsed ? 'collapsed' : 'expanded']">
     <div v-if="collapsed" class="lane-collapsed" @click="toggleStatusCollapse(id)">
+      <span class="lane-count-vertical">{{ cards.length }}</span>
       <span class="lane-name-vertical">{{ formatName(name) }}</span>
-      <span class="lane-count">{{ cards.length }}</span>
     </div>
 
     <template v-else>
@@ -175,9 +175,9 @@ const formatName = (name: string) => name.replace(/-/g, ' ').toUpperCase()
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 1rem 0;
+  justify-content: space-between;
+  padding: 1.5rem 0;
   height: 100%;
-  gap: 1rem;
 }
 
 .lane-name-vertical {
@@ -187,6 +187,17 @@ const formatName = (name: string) => name.replace(/-/g, ' ').toUpperCase()
   font-weight: 700;
   font-size: 0.8rem;
   color: var(--text-muted);
+}
+
+.lane-count-vertical {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  font-size: 0.75rem;
+  background: var(--bg-secondary);
+  padding: 8px 4px;
+  border-radius: 12px;
+  color: var(--text-muted);
+  font-weight: 600;
 }
 
 :deep(.ghost-card) {

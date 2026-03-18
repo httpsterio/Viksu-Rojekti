@@ -356,5 +356,18 @@ const removeTag = (tag: string) => {
 
 :deep(.md-editor), :deep(.md-preview) {
   height: 100% !important;
+  border: none !important;
+}
+
+:deep(.md-editor-content) {
+  border: none !important;
+}
+
+:deep(.md-editor-preview-wrapper) {
+  padding: 10px;
+}
+
+:deep(.md-editor-preview) {
+  padding: 0;
 }
 </style>
