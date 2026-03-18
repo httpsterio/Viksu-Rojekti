@@ -1,37 +1,24 @@
 name: Rojekti
 prefix: roj
-nextId: 3
+nextId: 5
 lanes:
 - BACKLOG
-- todo
-- in-progress
-- review
-- done
+- TODO
+- IN PROGRESS
+- DONE
 epics:
-- id: epic-1773797182995
-  name: EPIC-1
-  color: '#0040ff'
-- id: epic-1773806687993
-  name: EPIC-2
-  color: '#ef0b85'
+- id: epic-1773841293029
+  name: feature-1
+  color: '#0362fc'
+- id: epic-1773841300747
+  name: feature-2
+  color: '#f64409'
 tags:
-- id: tag-1773797207005
+- id: tag-1773841308834
   name: BUG
-  color: '#ff4d00'
-- id: tag-1773797217392
-  name: FEAT
-  color: '#10b981'
-- id: tag-1773797469968
-  name: UI
-  color: '#10b981'
-- id: tag-1773797473982
-  name: DX
-  color: '#10b981'
-- id: tag-1773797480308
-  name: BACKEND
-  color: '#10b981'
-- id: tag-1773797482417
-  name: POLISH
+  color: '#ff0000'
+- id: tag-1773841316186
+  name: UX
   color: '#10b981'
 priorities:
 - low

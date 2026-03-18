@@ -142,6 +142,7 @@ const removeTag = (tag: string) => {
     modal 
     :header="isNew ? 'Create New Card' : `Edit Card: ${card.id}`" 
     class="card-modal"
+    :draggable="false"
   >
     <div class="modal-grid">
       <div class="main-fields">

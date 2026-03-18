@@ -123,7 +123,7 @@ const formatName = (name: string) => name.replace(/-/g, ' ').toUpperCase()
 
 .expanded {
   flex: 1 1 0;
-  min-width: 250px;
+  min-width: 200px;
 }
 
 .collapsed {

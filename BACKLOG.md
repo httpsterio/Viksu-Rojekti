@@ -9,13 +9,13 @@ Standardize naming across the entire stack. This involves a bulk search-and-repl
 - [ ] **Fix Markdown Editor width mismatch**
 The "Edit" tab currently appears wider than the "View" tab. This is likely due to default padding or container constraints in the `md-editor-v3` library. A surgical CSS fix in `CardModal.vue` will align them.
 
-- [ ] **Default window size and responsiveness**
+- [x] **Default window size and responsiveness**
 The app currently shows a horizontal scrollbar with five lanes. We need to adjust the CSS flex logic (likely `flex-basis` and `min-width`) and the default window dimensions in `tauri.conf.json` so lanes shrink gracefully to fit the viewport. Set lane minwidth to 10rem / 160px 
 
 - [x] **Reorganize Data Folder Structure**
 Move `board.yaml` and `index.yaml` into the same directory as the cards (the `rojekti/` folder). This keeps the project root clean and groups all "database" files together. (COMPLETED)
 
-- [ ] **Card edit modal is draggable bug**
+- [x] **Card edit modal is draggable bug**
 The card editing modal can be dragged???
 
 ---

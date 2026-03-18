@@ -32,7 +32,7 @@ const handleInit = () => {
 <template>
   <div class="app-container">
     <Toast />
-    <ConfirmDialog />
+    <ConfirmDialog :draggable="false" />
 
     <div v-if="isLoading" class="loading-overlay">
       <ProgressSpinner />
