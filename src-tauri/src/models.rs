@@ -66,9 +66,12 @@ pub struct Index {
     pub cards: Vec<CardMeta>,
 }
 
-use std::sync::Mutex;
+use std::sync::{Arc, Mutex};
+use std::time::Instant;
 
 pub struct AppState {
     pub project_dir: std::path::PathBuf,
     pub write_lock: Mutex<()>,
+    pub last_gui_write: Arc<Mutex<Instant>>,
+    pub watcher: Mutex<Option<notify::RecommendedWatcher>>,
 }

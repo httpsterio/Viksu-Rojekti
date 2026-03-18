@@ -7,6 +7,7 @@ pub mod storage;
 pub mod index;
 pub mod commands;
 pub mod cli;
+pub mod watcher;
 
 fn discover_project_dir() -> Option<PathBuf> {
     // 1. Check current working directory for a 'rojekti' folder
@@ -44,15 +45,32 @@ pub fn run() {
         std::env::current_dir().unwrap_or_default()
     });
 
+    let last_gui_write = std::sync::Arc::new(std::sync::Mutex::new(std::time::Instant::now()));
+
     tauri::Builder::default()
         .manage(AppState { 
             project_dir: project_dir.clone(),
             write_lock: std::sync::Mutex::new(()),
+            last_gui_write: last_gui_write.clone(),
+            watcher: std::sync::Mutex::new(None),
         })
         .setup(move |app| {
             if let Some(window) = app.get_webview_window("main") {
                 let _ = window.show();
             }
+
+            // Start the watcher immediately if the board already exists
+            let rojekti_dir = project_dir.join("rojekti");
+            if rojekti_dir.exists() {
+                let state: tauri::State<AppState> = app.state();
+                match watcher::start(project_dir.clone(), app.handle().clone(), last_gui_write.clone()) {
+                    Ok(w) => {
+                        *state.watcher.lock().unwrap() = Some(w);
+                    }
+                    Err(e) => eprintln!("Watcher failed to start: {}", e),
+                }
+            }
+
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![

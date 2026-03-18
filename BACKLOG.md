@@ -29,10 +29,10 @@ Currently, dragging a card does not persist the change. This is likely a synchro
 - [x] **Fix Settings Saving (including Epics and Tags)**
 The UI for settings, epics, and tags is built, but changes aren't persisting. We need to verify the "plumbing": checking for `serde` naming mismatches (camelCase vs snake_case) and ensuring the `save_board_config` Tauri command is correctly receiving and writing the data.
 
-- [ ] **Implement Real-Time Refresh from CLI Changes**
-If an agent edits a card via the CLI, the GUI doesn't know. We need to implement a file watcher using the `notify` crate in Rust. When a file changes, the backend should emit a Tauri event to the frontend to trigger a `loadBoard()` refresh. Debounce-time or time between scans should be at least 5 seconds. Or refresh happens about 5 seconds since the last file change.
+- [x] **Implement Real-Time Refresh from CLI Changes**
+Implemented using the `notify` v6 crate (`watcher.rs`). A `RecommendedWatcher` watches the `rojekti/` folder recursively using native OS APIs (inotify/FSEvents/ReadDirectoryChangesW). A background thread debounces events — the board reloads 2 seconds after the last file change. GUI-originated writes are suppressed via a `last_gui_write` timestamp in `AppState` (4-second suppress window). `rojekti.index.yaml` and editor temp files are filtered out. The watcher starts at launch if the board exists, or after `init_project` for new boards. Frontend listens for the `board-changed` Tauri event and calls `loadBoard()`. (COMPLETED)
 
-- [ ] **Lane Reordering in Settings**
+- [x] **Lane Reordering in Settings**
 Adding the ability to swap lane order in the `BoardSettingsModal`. This requires a SortableJS implementation inside the modal and updating the `lanes: Vec<String>` in the config file.
 
 - [ ] **Internationalization (Translations)**
@@ -52,10 +52,10 @@ Creating a card, then editing its' content (status etc.) creates a duplicate of 
 - [x] **Tags are listed and saved from settings but not assignable**
 Fixed by replacing the static tag list in the card modal with a PrimeVue MultiSelect component (with "Select All" hidden) and displaying selected tags as removable chips below the dropdown. (COMPLETED) 
 
-- [ ] **Tags colors and reordering in settings missing**
+- [x] **Tags colors and reordering in settings missing**
   Tag order can't be reordered and tags have no color settings like epics have. We need them. Full color picker, same component as with Epics.
 
-- [ ] **Renaming status/epics/tags should carry new name over to files using those**
+- [x] **Renaming status/epics/tags should carry new name over to files using those**
   If we rename f.ex. "to-do" status to "TODO", all cards assigned to "to-do" should be assigned to "TODO" when saving the rename.
   Either refer to status/epic/tag with an ID and use string text only in UI to display OR update actual status/epic/tag name for each card when renaming them.
   Rewriting the tags instead of storing an ID is maybe better, more human readable and when using the CLI API we don't have to fetch and match ID to strings.

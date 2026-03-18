@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
+import { listen } from '@tauri-apps/api/event'
 import { useBoard } from './composables/useBoard'
 import Toast from 'primevue/toast'
 import Button from 'primevue/button'
@@ -18,8 +19,11 @@ const initName = ref('')
 const initPrefix = ref('')
 const settingsModal = ref<any>(null)
 
-onMounted(() => {
-  loadBoard()
+onMounted(async () => {
+  await loadBoard()
+  await listen('board-changed', () => {
+    loadBoard()
+  })
 })
 
 const handleInit = () => {

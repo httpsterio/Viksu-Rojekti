@@ -1,6 +1,6 @@
 name: Rojekti
 prefix: roj
-nextId: 1
+nextId: 9
 statuses:
 - id: backlog
   name: Backlog
@@ -8,12 +8,25 @@ statuses:
   name: Todo
 - id: in-progress
   name: In Progress
-- id: review
-  name: Review
 - id: done
   name: Done
-epics: []
-tags: []
+epics:
+- id: epic-1773869062213
+  name: Publishing
+  color: '#fad000'
+- id: epic-1773869074651
+  name: Licensing
+  color: '#f7a93b'
+- id: epic-1773869087849
+  name: Translations
+  color: '#3b82f6'
+tags:
+- id: tag-1773869123619
+  name: Feature
+  color: '#10b981'
+- id: tag-1773869127764
+  name: Bug
+  color: '#ff4d00'
 priorities:
 - low
 - medium

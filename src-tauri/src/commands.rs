@@ -12,6 +12,7 @@ pub fn get_board_config(state: State<AppState>) -> Result<BoardConfig, String> {
 #[tauri::command]
 pub fn save_board_config(config: BoardConfig, state: State<AppState>) -> Result<(), String> {
     let _lock = state.write_lock.lock().map_err(|e| format!("Lock error: {}", e))?;
+    *state.last_gui_write.lock().map_err(|e| format!("Lock error: {}", e))? = std::time::Instant::now();
     storage::write_board_config(&state.project_dir.join("rojekti").join("rojekti.config.yaml"), &config)
 }
 
@@ -36,6 +37,7 @@ pub fn create_card(
     state: State<AppState>,
 ) -> Result<Card, String> {
     let _lock = state.write_lock.lock().map_err(|e| format!("Lock error: {}", e))?;
+    *state.last_gui_write.lock().map_err(|e| format!("Lock error: {}", e))? = std::time::Instant::now();
     
     let mut config = storage::read_board_config(&state.project_dir.join("rojekti").join("rojekti.config.yaml"))?;
     
@@ -74,6 +76,7 @@ pub fn create_card(
 #[tauri::command]
 pub fn update_card(card: Card, state: State<AppState>) -> Result<Card, String> {
     let _lock = state.write_lock.lock().map_err(|e| format!("Lock error: {}", e))?;
+    *state.last_gui_write.lock().map_err(|e| format!("Lock error: {}", e))? = std::time::Instant::now();
     storage::write_card(&state.project_dir, &card)?;
     index::rebuild_index(&state.project_dir)?;
     Ok(card)
@@ -82,6 +85,7 @@ pub fn update_card(card: Card, state: State<AppState>) -> Result<Card, String> {
 #[tauri::command]
 pub fn delete_card(id: String, state: State<AppState>) -> Result<(), String> {
     let _lock = state.write_lock.lock().map_err(|e| format!("Lock error: {}", e))?;
+    *state.last_gui_write.lock().map_err(|e| format!("Lock error: {}", e))? = std::time::Instant::now();
     storage::delete_card_file(&state.project_dir, &id)?;
     index::rebuild_index(&state.project_dir)?;
     Ok(())
@@ -95,6 +99,7 @@ pub fn move_card(
     state: State<AppState>,
 ) -> Result<Card, String> {
     let _lock = state.write_lock.lock().map_err(|e| format!("Lock error: {}", e))?;
+    *state.last_gui_write.lock().map_err(|e| format!("Lock error: {}", e))? = std::time::Instant::now();
     let mut card = storage::read_card(&state.project_dir.join("rojekti").join("cards").join(format!("{}.md", id)))?;
     card.meta.status = new_status;
     card.meta.position = new_position;
@@ -112,6 +117,7 @@ pub fn reorder_status(
     state: State<AppState>,
 ) -> Result<(), String> {
     let _lock = state.write_lock.lock().map_err(|e| format!("Lock error: {}", e))?;
+    *state.last_gui_write.lock().map_err(|e| format!("Lock error: {}", e))? = std::time::Instant::now();
     for (i, id) in card_ids.iter().enumerate() {
         let mut card = storage::read_card(&state.project_dir.join("rojekti").join("cards").join(format!("{}.md", id)))?;
         card.meta.position = (i + 1) as f64;
@@ -128,8 +134,15 @@ pub fn rebuild_index(state: State<AppState>) -> Result<Index, String> {
 }
 
 #[tauri::command]
-pub fn init_project(name: String, prefix: String, state: State<AppState>) -> Result<(), String> {
+pub fn init_project(
+    name: String,
+    prefix: String,
+    app_handle: tauri::AppHandle,
+    state: State<AppState>,
+) -> Result<(), String> {
     let _lock = state.write_lock.lock().map_err(|e| format!("Lock error: {}", e))?;
+    *state.last_gui_write.lock().map_err(|e| format!("Lock error: {}", e))? = std::time::Instant::now();
+    
     let config = BoardConfig {
         name,
         prefix,
@@ -156,6 +169,15 @@ pub fn init_project(name: String, prefix: String, state: State<AppState>) -> Res
     fs::create_dir_all(rojekti_dir.join("cards"))
         .map_err(|e| format!("Could not create cards directory: {}", e))?;
     index::rebuild_index(&state.project_dir)?;
+    
+    // Start the watcher now that the directory exists
+    let mut watcher_guard = state.watcher.lock().map_err(|e| format!("Lock error: {}", e))?;
+    if watcher_guard.is_none() {
+        match crate::watcher::start(state.project_dir.clone(), app_handle, state.last_gui_write.clone()) {
+            Ok(w) => { *watcher_guard = Some(w); }
+            Err(e) => eprintln!("Watcher failed to start after init: {}", e),
+        }
+    }
     
     Ok(())
 }
