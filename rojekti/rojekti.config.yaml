@@ -1,6 +1,6 @@
 name: Rojekti
 prefix: roj
-nextId: 1
+nextId: 3
 lanes:
 - BACKLOG
 - todo

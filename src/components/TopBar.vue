@@ -3,6 +3,9 @@ import { useBoard } from '@/composables/useBoard'
 import Button from 'primevue/button'
 import Select from 'primevue/select'
 import InputText from 'primevue/inputtext'
+import ButtonGroup from 'primevue/buttongroup'
+import InputGroup from 'primevue/inputgroup';
+import InputGroupAddon from 'primevue/inputgroupaddon';
 
 const { 
   config, 
@@ -24,8 +27,9 @@ const views = [
 <template>
   <div class="top-bar" v-if="config">
     <div class="left">
-      <h2 class="board-name">{{ config.name }}</h2>
+      <!-- <h2 class="board-name">{{ config.name }}</h2> -->
       <div class="view-toggle">
+        <ButtonGroup>
         <Button 
           v-for="view in views" 
           :key="view.value"
@@ -35,29 +39,16 @@ const views = [
           @click="currentView = (view.value as 'board' | 'epics')"
           size="small"
         />
+        </ButtonGroup>
       </div>
     </div>
 
     <div class="center">
       <div class="filters">
-        <Select 
-          v-model="activeFilters.epic" 
-          :options="config.epics" 
-          optionLabel="name" 
-          optionValue="id" 
-          placeholder="All Epics" 
-          showClear 
-          size="small"
-        />
-        <Select 
-          v-model="activeFilters.tag" 
-          :options="config.tags" 
-          optionLabel="name"
-          optionValue="id"
-          placeholder="All Tags" 
-          showClear 
-          size="small"
-        />
+        <Select v-model="activeFilters.epic" :options="config.epics" optionLabel="name" optionValue="id"
+          placeholder="All Epics" showClear size="small" style="min-width: 160px" />
+        <Select v-model="activeFilters.tag" :options="config.tags" optionLabel="name" optionValue="id"
+          placeholder="All Tags" showClear size="small" style="min-width: 140px"  />
         <Select 
           v-model="activeFilters.priority" 
           :options="config.priorities" 
@@ -65,22 +56,30 @@ const views = [
           showClear 
           size="small"
         />
-        <span class="p-input-icon-left">
-          <i class="pi pi-search" />
+        <InputGroup>
+          <!-- <InputGroupAddon>
+            <i class="pi pi-search" />
+          </InputGroupAddon> -->
           <InputText v-model="activeFilters.search" placeholder="Search..." size="small" />
-        </span>
+          <InputGroupAddon>
+            <Button icon="pi pi-times" text severity="secondary" size="small" @click="activeFilters.search = ''" />
+          </InputGroupAddon>
+        </InputGroup>
+        
+
       </div>
     </div>
 
     <div class="right">
-      <Button 
+      <ButtonGroup>
+      <!-- <Button 
         :icon="isDarkMode ? 'pi pi-sun' : 'pi pi-moon'" 
         @click="toggleDarkMode" 
-        rounded 
-        text 
-      />
-      <Button icon="pi pi-cog" rounded text @click="$emit('open-settings')" />
-      <Button label="New Card" icon="pi pi-plus" @click="isCreating = true" />
+         text
+      /> -->
+      <Button icon="pi pi-cog" text @click="$emit('open-settings')" />
+      </ButtonGroup>
+      <Button label="New Card" size="small" icon="pi pi-plus" @click="isCreating = true" />
     </div>
   </div>
 </template>

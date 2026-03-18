@@ -62,3 +62,7 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--text-muted);
 }
+
+.p-select-list-container {
+  max-height: 100% !important;
+}
