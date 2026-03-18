@@ -58,8 +58,13 @@ pub fn write_card(dir: &Path, card: &Card) -> Result<(), String> {
 pub fn delete_card_file(dir: &Path, id: &str) -> Result<(), String> {
     let path = dir.join("rojekti").join("cards").join(format!("{}.md", id));
     if path.exists() {
-        fs::remove_file(path)
-            .map_err(|e| format!("Could not delete card file: {}", e))?;
+        let deleted_dir = dir.join("rojekti").join("deleted");
+        fs::create_dir_all(&deleted_dir)
+            .map_err(|e| format!("Could not create deleted directory: {}", e))?;
+        
+        let new_path = deleted_dir.join(format!("{}.md", id));
+        fs::rename(path, new_path)
+            .map_err(|e| format!("Could not move card to deleted directory: {}", e))?;
     }
     Ok(())
 }
