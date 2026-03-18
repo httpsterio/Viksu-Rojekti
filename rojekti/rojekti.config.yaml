@@ -11,6 +11,9 @@ epics:
 - id: epic-1773797182995
   name: EPIC-1
   color: '#0040ff'
+- id: epic-1773806687993
+  name: EPIC-2
+  color: '#ef0b85'
 tags:
 - id: tag-1773797207005
   name: BUG

@@ -17,32 +17,30 @@ const visible = ref(false)
 const localConfig = ref<BoardConfig | null>(null)
 const epicsContainer = ref<HTMLElement | null>(null)
 const tagsContainer = ref<HTMLElement | null>(null)
+let epicsSortable: Sortable | null = null
+let tagsSortable: Sortable | null = null
 
 const open = () => {
   if (config.value) {
     // Deep copy to avoid mutating original state
     localConfig.value = JSON.parse(JSON.stringify(config.value))
-    
-    // Legacy migration (if needed): ensure tags are objects
-    if (localConfig.value && localConfig.value.tags.length > 0 && typeof localConfig.value.tags[0] === 'string') {
-       // Ideally this should be handled by backend migration, but frontend defensive coding helps
-       // But type system says Tag[], so we assume it's correct or cast
-    }
-    
     visible.value = true
-    
-    nextTick(() => {
-      initSortable(epicsContainer.value, 'epics')
-      initSortable(tagsContainer.value, 'tags')
-    })
   }
+}
+
+const onShow = () => {
+  epicsSortable?.destroy()
+  tagsSortable?.destroy()
+  epicsSortable = initSortable(epicsContainer.value, 'epics')
+  tagsSortable = initSortable(tagsContainer.value, 'tags')
 }
 
 const initSortable = (el: HTMLElement | null, list: 'epics' | 'tags') => {
   if (el && localConfig.value) {
-    new Sortable(el, {
+    return new Sortable(el, {
       handle: '.drag-handle',
       animation: 150,
+      forceFallback: true,
       onEnd: (evt) => {
         if (evt.oldIndex !== undefined && evt.newIndex !== undefined && localConfig.value) {
           const item = localConfig.value[list].splice(evt.oldIndex, 1)[0]
@@ -51,6 +49,7 @@ const initSortable = (el: HTMLElement | null, list: 'epics' | 'tags') => {
       }
     })
   }
+  return null
 }
 
 defineExpose({ open })
@@ -112,7 +111,7 @@ const removeTag = (index: number) => {
 </script>
 
 <template>
-  <Dialog v-model:visible="visible" modal header="Board Settings" class="settings-modal">
+  <Dialog v-model:visible="visible" modal header="Board Settings" class="settings-modal" @show="onShow">
     <div v-if="localConfig" class="settings-grid">
       <section>
         <label>Board Name</label>
