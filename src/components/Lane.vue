@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, watch } from 'vue'
+import { ref, onMounted, onUnmounted, watch, nextTick } from 'vue'
 import Sortable from 'sortablejs'
 import Card from './Card.vue'
 import type { Card as CardType } from '@/types'
@@ -17,37 +17,45 @@ const cardContainer = ref<HTMLElement | null>(null)
 let sortable: Sortable | null = null
 
 const initSortable = () => {
-  if (cardContainer.value && !props.collapsed) {
-    sortable = new Sortable(cardContainer.value, {
-      group: 'cards',
-      animation: 150,
-      ghostClass: 'ghost-card',
-      dragClass: 'dragging-card',
-      dataIdAttr: 'data-card-id',
-      onEnd: (evt) => {
-        if (evt.to && evt.item) {
-          const id = evt.item.getAttribute('data-card-id')!
-          const newStatus = evt.to.getAttribute('data-lane')!
-          const newIndex = evt.newIndex!
-          
-          const laneCards = Array.from(evt.to.children)
-          let newPos = 1.0
-          
-          if (laneCards.length > 1) {
-            if (newIndex === 0) {
-              newPos = 0.5 
-            } else if (newIndex === laneCards.length - 1) {
-              newPos = laneCards.length + 1.0
-            } else {
-              newPos = newIndex + 0.5
+  nextTick(() => {
+    if (cardContainer.value && !props.collapsed) {
+      sortable = new Sortable(cardContainer.value, {
+        group: 'cards',
+        animation: 150,
+        ghostClass: 'ghost-card',
+        dragClass: 'dragging-card',
+        forceFallback: true,
+        fallbackClass: 'dragging-card',
+        dataIdAttr: 'data-card-id',
+        onEnd: (evt) => {
+          if (evt.to && evt.item) {
+            const id = evt.item.getAttribute('data-card-id')!
+            const newStatus = evt.to.getAttribute('data-lane')!
+            const newIndex = evt.newIndex!
+            
+            const laneCards = Array.from(evt.to.children)
+            let newPos = 1.0
+            
+            if (laneCards.length > 1) {
+              if (newIndex === 0) {
+                const nextPos = parseFloat(laneCards[1].getAttribute('data-pos') || '2.0')
+                newPos = nextPos / 2
+              } else if (newIndex === laneCards.length - 1) {
+                const prevPos = parseFloat(laneCards[laneCards.length - 2].getAttribute('data-pos') || '0.0')
+                newPos = prevPos + 1.0
+              } else {
+                const prevPos = parseFloat(laneCards[newIndex - 1].getAttribute('data-pos') || '0.0')
+                const nextPos = parseFloat(laneCards[newIndex + 1].getAttribute('data-pos') || '0.0')
+                newPos = (prevPos + nextPos) / 2
+              }
             }
+            
+            moveCard(id, newStatus, newPos)
           }
-          
-          moveCard(id, newStatus, newPos)
         }
-      }
-    })
-  }
+      })
+    }
+  })
 }
 
 onMounted(() => initSortable())
@@ -96,6 +104,7 @@ const formatName = (name: string) => name.replace(/-/g, ' ').toUpperCase()
           v-for="card in cards" 
           :key="card.id" 
           :card="card" 
+          :data-pos="card.position"
         />
       </div>
     </template>
@@ -179,8 +188,16 @@ const formatName = (name: string) => name.replace(/-/g, ' ').toUpperCase()
   color: var(--text-muted);
 }
 
-.ghost-card {
-  opacity: 0.4;
+:deep(.ghost-card) {
+  opacity: 0.2;
   background: var(--bg-secondary) !important;
+  border: 2px dashed var(--border-color) !important;
+}
+
+:deep(.dragging-card) {
+  cursor: grabbing !important;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2) !important;
+  opacity: 0.9;
+  user-select: none;
 }
 </style>
