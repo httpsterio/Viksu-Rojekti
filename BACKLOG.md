@@ -46,10 +46,8 @@ Creating a card, then editing its' content (status etc.) creates a duplicate of 
 - [x] **Status of CLI "Unregister Class" Error**
   We recently switched the app to a **Console Subsystem** build to fix CLI output issues. We need to confirm if the `ERROR:ui\gfx\win\window_impl.cc:124` still appears.
 
-- [ ] **Tags are listed and saved from settings but not assignable**
-  A card cannot be assigned a tag via the GUI even if the tags appear in the edit modal. Creating tags in settings works, tags are surfaced to the modal but they can't be selected at all.
-
-  Add a multiselect where the options come from the tags created in settings. allow selecting multiple. When clicking an option in the multiselect, add it as a chip under the search bar. The chip is removable and has a little cross button to delete/unselecting that that. 
+- [x] **Tags are listed and saved from settings but not assignable**
+Fixed by replacing the static tag list in the card modal with a PrimeVue MultiSelect component, allowing users to select multiple tags which are displayed as chips. (COMPLETED) 
 
 - [ ] **Tags colors and reordering in settings missing**
   Tag order can't be reordered and tags have no color settings like epics have. We need them. Full color picker, same component as with Epics.

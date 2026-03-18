@@ -6,7 +6,7 @@ import Dialog from 'primevue/dialog'
 import Button from 'primevue/button'
 import InputText from 'primevue/inputtext'
 import Select from 'primevue/select'
-import Tag from 'primevue/tag'
+import MultiSelect from 'primevue/multiselect'
 import { useConfirm } from 'primevue/useconfirm'
 import { MdEditor, MdPreview } from 'md-editor-v3'
 import 'md-editor-v3/lib/style.css'
@@ -67,6 +67,7 @@ watch(visible, (val) => {
   if (val) {
     if (editingCard.value) {
       card.value = { ...editingCard.value }
+      if (!card.value.tags) card.value.tags = []
       descriptionTab.value = 'view'
     } else {
       card.value = {
@@ -125,14 +126,7 @@ const handleDelete = () => {
   }
 }
 
-const toggleTag = (tag: string) => {
-  const index = card.value.tags?.indexOf(tag) ?? -1
-  if (index === -1) {
-    card.value.tags?.push(tag)
-  } else {
-    card.value.tags?.splice(index, 1)
-  }
-}
+
 </script>
 
 <template>
@@ -175,15 +169,14 @@ const toggleTag = (tag: string) => {
 
         <div class="field">
           <label>Tags</label>
-          <div class="tag-selector">
-            <Tag 
-              v-for="tag in config?.tags" 
-              :key="tag" 
-              :value="tag"
-              :class="{ 'tag-selected': card.tags?.includes(tag) }"
-              @click="toggleTag(tag)"
-            />
-          </div>
+          <MultiSelect 
+            v-model="card.tags" 
+            :options="config?.tags" 
+            placeholder="Select Tags" 
+            display="chip" 
+            fluid 
+            :maxSelectedLabels="3"
+          />
         </div>
       </div>
 
@@ -276,22 +269,6 @@ const toggleTag = (tag: string) => {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 1rem;
-}
-
-.tag-selector {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-.tag-selector .p-tag {
-  cursor: pointer;
-  opacity: 0.5;
-  transition: opacity 0.2s;
-}
-
-.tag-selector .p-tag.tag-selected {
-  opacity: 1;
 }
 
 .description-section {
