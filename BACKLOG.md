@@ -3,77 +3,83 @@
 ## 🟢 Easy Wins
 *High impact, low technical risk. Good for immediate polish.*
 
-- [x] **Rename "Tickets" to "Cards"**
-Standardize naming across the entire stack. This involves a bulk search-and-replace in Rust models, Vue components, TypeScript interfaces, and renaming the `tickets/` directory to `cards/`. (COMPLETED)
+- [ ] **Graceful handling of broken card files**
+  If any card file has malformed YAML frontmatter, `read_all_cards` in `storage.rs` fails entirely via `?` — the whole board disappears with no explanation. Fix: change `read_all_cards` to collect errors per file rather than short-circuit. Broken cards should be skipped and a warning toast shown per bad file (e.g. "Could not load ROJ-007.md: YAML parse error"). The rest of the board loads normally. This is important because users can hand-edit card files via CLI or a text editor and introduce typos.
 
-- [ ] **Fix Markdown Editor width mismatch**
-The "Edit" tab currently appears wider than the "View" tab. This is likely due to default padding or container constraints in the `md-editor-v3` library. A surgical CSS fix in `CardModal.vue` will align them.
+- [ ] **Timestamp suffix in deleted folder to prevent overwrites**
+  If a card is deleted, restored, then deleted again, the second move to `rojekti/deleted/` silently overwrites the first. Fix: append a timestamp to the destination filename in the deleted folder — e.g. `ROJ-001_2026-03-19T142301.md`. Apply this wherever `rojekti/deleted/` writes happen in `storage.rs`.
 
-- [x] **Default window size and responsiveness**
-The app currently shows a horizontal scrollbar with five lanes. We need to adjust the CSS flex logic (likely `flex-basis` and `min-width`) and the default window dimensions in `tauri.conf.json` so lanes shrink gracefully to fit the viewport. Set lane minwidth to 10rem / 160px 
+- [ ] **Validate board name and prefix against OS-reserved names**
+  On Windows, filenames like `CON.md`, `PRN.md`, `AUX.md` etc. are reserved device names and will fail or behave unpredictably. The card prefix becomes part of filenames (`PREFIX-001.md`), so a prefix of `CON` or `NUL` is dangerous. Fix: add a blocklist check in `init_project` in `commands.rs` that rejects reserved Windows names (`CON`, `PRN`, `AUX`, `NUL`, `COM1`–`COM9`, `LPT1`–`LPT9`) case-insensitively for the prefix field, and strips illegal path characters (`\ / : * ? " < > |`) from both name and prefix. Return a descriptive error if validation fails.
 
-- [x] **Reorganize Data Folder Structure**
-Move `board.yaml` and `index.yaml` into the same directory as the cards (the `rojekti/` folder). This keeps the project root clean and groups all "database" files together. (COMPLETED)
+- [ ] **Clear stale filters when Epic/Tag is deleted**
+  If a user has an active Epic or Tag filter and then deletes that Epic/Tag in Settings, the board appears completely empty with no explanation. Filters referencing deleted items should be cleared automatically when `saveBoardConfig` is called.
+  Fix in `useBoard.ts`: after `config.value` is updated by `saveBoardConfig`, check `activeFilters.value.epic` and `activeFilters.value.tag` against the new config's epics/tags arrays. If the filtered ID no longer exists, reset that filter to `null`.
 
-- [x] **Card edit modal is draggable bug**
-The card editing modal can be dragged???
+- [ ] **Verify CardModal does not silently drop card fields on save**
+  Code review flagged a risk: if `CardModal.vue` uses a partial/incomplete local state object for editing and spreads it onto the saved card, any fields present on the original card but absent in the local ref will be silently lost on save. Read `CardModal.vue` and confirm the save path works with a complete `Card` object. If not, fix the local state type to be a strict full `Card`.
+
+- [ ] **Verify TopBar.vue filter popover ref is correctly wired**
+  Code review flagged that `const filterPanel = ref()` may not be correctly linked to `<Popover ref="filterPanel">` in all configurations. Read `TopBar.vue` and confirm the ref assignment works and the popover opens/closes correctly.
 
 ---
 
 ## 🔴 Serious Work
 *Requires deeper logic changes, debugging, or new dependencies.*
 
-- [x] **Fix Drag-and-Drop Reordering and Lane Switching**
-Currently, dragging a card does not persist the change. This is likely a synchronization issue: SortableJS modifies the DOM, but the Vue reactive state and the Rust backend aren't receiving the correct new position or status. Requires debugging the `onEnd` handler in `Lane.vue`.
+- [ ] **Atomic file writes to prevent corruption**
+  `storage::write_card` and `storage::write_board_config` both use `fs::write` which is not atomic. If the process crashes mid-write the file is left truncated or corrupted with no recovery path.
+  Fix: write to a sibling `.tmp` file first, then `fs::rename` to the target. Rename is atomic on all target platforms. Applies to both `write_card` and `write_board_config` in `storage.rs`. The `.tmp` extension is already filtered by the file watcher so no watcher side-effects.
 
-- [x] **Fix Settings Saving (including Epics and Tags)**
-The UI for settings, epics, and tags is built, but changes aren't persisting. We need to verify the "plumbing": checking for `serde` naming mismatches (camelCase vs snake_case) and ensuring the `save_board_config` Tauri command is correctly receiving and writing the data.
+- [ ] **Silent background refresh for watcher-triggered reloads**
+  `loadBoard()` sets `isLoading = true` which renders a full-screen `ProgressSpinner` overlay (`position: fixed; z-index: 1000`). When the file watcher triggers a reload this causes a jarring full-screen flash.
+  Fix: add a `silent` boolean parameter to `loadBoard`. When `true`, skip setting `isLoading` and omit the spinner — just silently swap `config.value` and `cards.value` in the background. The `board-changed` listener in `App.vue` calls the silent variant. The initial `onMounted` load and `initBoard` continue using the normal variant.
 
-- [x] **Implement Real-Time Refresh from CLI Changes**
-Implemented using the `notify` v6 crate (`watcher.rs`). A `RecommendedWatcher` watches the `rojekti/` folder recursively using native OS APIs (inotify/FSEvents/ReadDirectoryChangesW). A background thread debounces events — the board reloads 2 seconds after the last file change. GUI-originated writes are suppressed via a `last_gui_write` timestamp in `AppState` (4-second suppress window). `rojekti.index.yaml` and editor temp files are filtered out. The watcher starts at launch if the board exists, or after `init_project` for new boards. Frontend listens for the `board-changed` Tauri event and calls `loadBoard()`. (COMPLETED)
-
-- [x] **Lane Reordering in Settings**
-Adding the ability to swap lane order in the `BoardSettingsModal`. This requires a SortableJS implementation inside the modal and updating the `lanes: Vec<String>` in the config file.
+- [ ] **Card attachments**
+  Full spec in `ATTACHMENTS_SPEC.md`. Cards can have files attached — images render as thumbnails inline, audio/video with HTML5 players, all other formats open in the OS default app. Files are either copied to `rojekti/attachments/` or linked by path depending on a global board setting. Local attachments are moved to `rojekti/attachments/deleted/` when their card is deleted.
 
 - [ ] **Internationalization (Translations)**
-The app currently has hardcoded English strings. To support translations, we need to extract all text into a dedicated system (like `vue-i18n`) and replace hardcoded text with keys.
-
-- [x] **Creating Card and moving bug**
-Creating a card, then editing its' content (status etc.) creates a duplicate of the card that persists until a reload of the app.
+  The app has hardcoded English strings. Low priority until core features are stable. When the time comes, extract strings into `vue-i18n` and replace hardcoded text with keys. No target languages defined yet — needs clarification before starting.
 
 ---
 
 ## 🔍 Needs Clarification
 *Requires user input or verification before proceeding.*
 
-- [x] **Status of CLI "Unregister Class" Error**
-  We recently switched the app to a **Console Subsystem** build to fix CLI output issues. We need to confirm if the `ERROR:ui\gfx\win\window_impl.cc:124` still appears.
+- [ ] **Collapsed lane card count rotation**
+  When a lane is collapsed, the lane name rotates correctly but the card count number does not. The count should sit above the lane name (toward the top of the lane) and also rotate with it.
+  Needs visual confirmation of current state before writing the CSS fix.
 
-- [x] **Tags are listed and saved from settings but not assignable**
-Fixed by replacing the static tag list in the card modal with a PrimeVue MultiSelect component (with "Select All" hidden) and displaying selected tags as removable chips below the dropdown. (COMPLETED) 
+---
 
-- [x] **Tags colors and reordering in settings missing**
-  Tag order can't be reordered and tags have no color settings like epics have. We need them. Full color picker, same component as with Epics.
+## ✅ Completed
 
-- [x] **Renaming status/epics/tags should carry new name over to files using those**
-  If we rename f.ex. "to-do" status to "TODO", all cards assigned to "to-do" should be assigned to "TODO" when saving the rename.
-  Either refer to status/epic/tag with an ID and use string text only in UI to display OR update actual status/epic/tag name for each card when renaming them.
-  Rewriting the tags instead of storing an ID is maybe better, more human readable and when using the CLI API we don't have to fetch and match ID to strings.
+- [x] **Rename "Tickets" to "Cards"** — Bulk search-and-replace across Rust models, Vue components, TypeScript interfaces, and `cards/` directory rename.
 
+- [x] **Fix Markdown Editor width mismatch** — Normalized internal padding and borders for `md-editor-v3` so Edit and View tabs align.
 
-- [ ] **Collapsed lane information reordering**
-  When a lane is collapsed, the lane name is rotated correctly. The amount of cards number in that lane is not rotated. The number should also follow the lane name, meaning the lane name is on the "bottom" and number on the "top" 
+- [x] **Default window size and responsiveness** — Adjusted CSS flex logic and `tauri.conf.json` window dimensions. Lane `min-width` set to `10rem / 160px`.
 
-  So if a lane is normally [ Lane name (number of tickets) ], when it's rotated the lane name should be on the bottom going up towards the top and closer to the top end of the lane is the number of tickets.
+- [x] **Reorganize data folder structure** — Moved config and index into the `rojekti/` subfolder alongside cards. Exe looks for `rojekti/rojekti.config.yaml` relative to CWD then exe location.
 
-- [ ] **Allow attachments in cards**
-  Cards should allow attaching files to them, either as an online/local file link OR by copying the attachment to a rojekti/attachments folder. Need to ensure unique filenames. When attaching it should ask if we want to link or copy the file to attachments.
+- [x] **Card edit modal draggable bug** — Fixed by setting `:draggable="false"` on the PrimeVue Dialog.
 
-  File attachments (non-image) should add a link to the file locally or online that can be clicked to navigate to the item.
-  Image attachments should display a thumbnail of the image that can be clicked to view with the default image viewer.
+- [x] **Fix drag-and-drop reordering and lane switching** — Debugged `onEnd` handler in `Lane.vue`. SortableJS DOM changes are now correctly reflected in Vue state and persisted to the Rust backend.
 
-- [ ] **Deleting files**
-  Deleting a card should move the card in its' current status (notes, status, epic, tags etc.) into rojekti/deleted instead of deleting the card from the filesystem. Deleted cards will not be shown in the GUI nor when using the CLI (unless we add a list --deleted or something)
+- [x] **Fix settings saving (epics and tags)** — Resolved `serde` camelCase/snake_case mismatches. `save_board_config` command now correctly receives and writes all config data.
 
-- [x] **Tags and Epics revamp in settings**
-Implemented drag-and-drop reordering, full color pickers, and improved UI for both Epics and Tags in the settings modal. Updated backend to store Tags as structured objects with IDs, names, and colors. Updated frontend to resolve Tag IDs to names/colors for display. (COMPLETED)
+- [x] **Status reordering in settings** — SortableJS drag-and-drop in `BoardSettingsModal` for status lanes. Backend updated to use structured `Status { id, name }` objects.
+
+- [x] **Tags: assignable from card modal** — Replaced static tag list with a PrimeVue `MultiSelect`. Selected tags render as removable chips.
+
+- [x] **Tags: colors and reordering in settings** — Full color pickers and drag-and-drop reordering for both Epics and Tags in settings modal. Tags stored as structured objects with `id`, `name`, `color`.
+
+- [x] **Renaming status/epics/tags carries over to cards** — ID-based matching implemented. Renaming a display name no longer breaks the link to existing cards.
+
+- [x] **Creating card then editing creates duplicate** — Fixed. The optimistic card push in `createCard` now checks for an existing ID before pushing to avoid duplicates on reload.
+
+- [x] **Implement real-time refresh from CLI changes** — `notify` v6 `RecommendedWatcher` watches `rojekti/` recursively. Background thread debounces events (2s quiet window). GUI writes suppressed via `last_gui_write` timestamp (4s window). `rojekti.index.yaml` and temp files filtered out. Frontend listens for `board-changed` event and calls `loadBoard()`.
+
+- [x] **Soft delete cards** — Deleting a card moves it to `rojekti/deleted/` instead of permanently removing it. Deleted cards are not shown in the GUI or CLI listings.
+
+- [x] **Collapsed lane information ordering** — Card count now appears at the top and lane name at the bottom when collapsed, both correctly rotated.
