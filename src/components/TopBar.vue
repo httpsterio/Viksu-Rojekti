@@ -52,6 +52,8 @@ const views = [
         <Select 
           v-model="activeFilters.tag" 
           :options="config.tags" 
+          optionLabel="name"
+          optionValue="id"
           placeholder="All Tags" 
           showClear 
           size="small"

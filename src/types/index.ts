@@ -4,11 +4,17 @@ export interface BoardConfig {
   nextId: number
   lanes: string[]
   epics: Epic[]
-  tags: string[]
+  tags: Tag[]
   priorities: string[]
 }
 
 export interface Epic {
+  id: string
+  name: string
+  color: string
+}
+
+export interface Tag {
   id: string
   name: string
   color: string

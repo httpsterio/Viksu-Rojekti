@@ -15,6 +15,9 @@ The app currently shows a horizontal scrollbar with five lanes. We need to adjus
 - [x] **Reorganize Data Folder Structure**
 Move `board.yaml` and `index.yaml` into the same directory as the cards (the `rojekti/` folder). This keeps the project root clean and groups all "database" files together. (COMPLETED)
 
+- [ ] **Card edit modal is draggable bug**
+The card editing modal can be dragged???
+
 ---
 
 ## 🔴 Serious Work
@@ -47,7 +50,7 @@ Creating a card, then editing its' content (status etc.) creates a duplicate of 
   We recently switched the app to a **Console Subsystem** build to fix CLI output issues. We need to confirm if the `ERROR:ui\gfx\win\window_impl.cc:124` still appears.
 
 - [x] **Tags are listed and saved from settings but not assignable**
-Fixed by replacing the static tag list in the card modal with a PrimeVue MultiSelect component, allowing users to select multiple tags which are displayed as chips. (COMPLETED) 
+Fixed by replacing the static tag list in the card modal with a PrimeVue MultiSelect component (with "Select All" hidden) and displaying selected tags as removable chips below the dropdown. (COMPLETED) 
 
 - [ ] **Tags colors and reordering in settings missing**
   Tag order can't be reordered and tags have no color settings like epics have. We need them. Full color picker, same component as with Epics.
@@ -71,3 +74,6 @@ Fixed by replacing the static tag list in the card modal with a PrimeVue MultiSe
 
 - [ ] **Deleting files**
   Deleting a card should move the card in its' current status (notes, status, epic, tags etc.) into rojekti/deleted instead of deleting the card from the filesystem. Deleted cards will not be shown in the GUI nor when using the CLI (unless we add a list --deleted or something)
+
+- [x] **Tags and Epics revamp in settings**
+Implemented drag-and-drop reordering, full color pickers, and improved UI for both Epics and Tags in the settings modal. Updated backend to store Tags as structured objects with IDs, names, and colors. Updated frontend to resolve Tag IDs to names/colors for display. (COMPLETED)

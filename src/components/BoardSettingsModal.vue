@@ -1,21 +1,55 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref, watch, nextTick, onMounted } from 'vue'
 import { useBoard } from '@/composables/useBoard'
-import type { BoardConfig, Epic } from '@/types'
+import type { BoardConfig, Epic, Tag } from '@/types'
 import Dialog from 'primevue/dialog'
 import Button from 'primevue/button'
 import InputText from 'primevue/inputtext'
-import Tag from 'primevue/tag'
+import InputGroup from 'primevue/inputgroup'
+import InputGroupAddon from 'primevue/inputgroupaddon'
+import { useConfirm } from 'primevue/useconfirm'
+import Sortable from 'sortablejs'
 
 const { config, saveBoardConfig } = useBoard()
+const confirm = useConfirm()
 
 const visible = ref(false)
 const localConfig = ref<BoardConfig | null>(null)
+const epicsContainer = ref<HTMLElement | null>(null)
+const tagsContainer = ref<HTMLElement | null>(null)
 
 const open = () => {
   if (config.value) {
+    // Deep copy to avoid mutating original state
     localConfig.value = JSON.parse(JSON.stringify(config.value))
+    
+    // Legacy migration (if needed): ensure tags are objects
+    if (localConfig.value && localConfig.value.tags.length > 0 && typeof localConfig.value.tags[0] === 'string') {
+       // Ideally this should be handled by backend migration, but frontend defensive coding helps
+       // But type system says Tag[], so we assume it's correct or cast
+    }
+    
     visible.value = true
+    
+    nextTick(() => {
+      initSortable(epicsContainer.value, 'epics')
+      initSortable(tagsContainer.value, 'tags')
+    })
+  }
+}
+
+const initSortable = (el: HTMLElement | null, list: 'epics' | 'tags') => {
+  if (el && localConfig.value) {
+    new Sortable(el, {
+      handle: '.drag-handle',
+      animation: 150,
+      onEnd: (evt) => {
+        if (evt.oldIndex !== undefined && evt.newIndex !== undefined && localConfig.value) {
+          const item = localConfig.value[list].splice(evt.oldIndex, 1)[0]
+          localConfig.value[list].splice(evt.newIndex, 0, item as any)
+        }
+      }
+    })
   }
 }
 
@@ -45,21 +79,35 @@ const addEpic = () => {
 }
 
 const removeEpic = (index: number) => {
-  localConfig.value?.epics.splice(index, 1)
+  confirm.require({
+    message: 'Are you sure you want to delete this epic?',
+    header: 'Delete Epic',
+    icon: 'pi pi-exclamation-triangle',
+    acceptClass: 'p-button-danger',
+    accept: () => {
+      localConfig.value?.epics.splice(index, 1)
+    }
+  })
 }
 
-const newTag = ref('')
 const addTag = () => {
-  if (newTag.value && !localConfig.value?.tags.includes(newTag.value)) {
-    localConfig.value?.tags.push(newTag.value)
-    newTag.value = ''
-  }
+  localConfig.value?.tags.push({
+    id: `tag-${Date.now()}`,
+    name: 'New Tag',
+    color: '#10b981'
+  })
 }
 
-const removeTag = (tag: string) => {
-  if (localConfig.value) {
-    localConfig.value.tags = localConfig.value.tags.filter(t => t !== tag)
-  }
+const removeTag = (index: number) => {
+  confirm.require({
+    message: 'Are you sure you want to delete this tag?',
+    header: 'Delete Tag',
+    icon: 'pi pi-exclamation-triangle',
+    acceptClass: 'p-button-danger',
+    accept: () => {
+      localConfig.value?.tags.splice(index, 1)
+    }
+  })
 }
 </script>
 
@@ -87,26 +135,42 @@ const removeTag = (tag: string) => {
       <section>
         <div class="section-header">
           <label>Epics</label>
-          <Button icon="pi pi-plus" size="small" text rounded @click="addEpic" />
+          <Button icon="pi pi-plus" label="Add Epic" size="small" text rounded @click="addEpic" />
         </div>
-        <div class="list-editor">
-          <div v-for="(epic, index) in localConfig.epics" :key="epic.id" class="list-item epic-item">
-            <input type="color" v-model="localConfig.epics[index].color" class="color-picker" />
-            <InputText v-model="localConfig.epics[index].name" size="small" placeholder="Epic Name" />
-            <InputText v-model="localConfig.epics[index].id" size="small" placeholder="ID (slug)" />
-            <Button icon="pi pi-trash" severity="danger" text rounded size="small" @click="removeEpic(index)" />
+        <div class="list-editor" ref="epicsContainer">
+          <div v-for="(epic, index) in localConfig.epics" :key="epic.id" class="list-item">
+            <InputGroup>
+              <InputGroupAddon class="drag-handle">
+                <i class="pi pi-bars"></i>
+              </InputGroupAddon>
+              <InputGroupAddon class="color-addon">
+                <input type="color" v-model="epic.color" class="color-picker" />
+              </InputGroupAddon>
+              <InputText v-model="epic.name" placeholder="Epic Name" />
+              <Button icon="pi pi-trash" severity="danger" @click="removeEpic(index)" />
+            </InputGroup>
           </div>
         </div>
       </section>
 
       <section>
-        <label>Tags</label>
-        <div class="tag-input">
-          <InputText v-model="newTag" placeholder="Add tag..." size="small" @keyup.enter="addTag" />
-          <Button icon="pi pi-plus" size="small" @click="addTag" :disabled="!newTag" />
+        <div class="section-header">
+          <label>Tags</label>
+          <Button icon="pi pi-plus" label="Add Tag" size="small" text rounded @click="addTag" />
         </div>
-        <div class="tag-display">
-          <Tag v-for="tag in localConfig.tags" :key="tag" :value="tag" closable @close="removeTag(tag)" />
+        <div class="list-editor" ref="tagsContainer">
+          <div v-for="(tag, index) in localConfig.tags" :key="tag.id" class="list-item">
+            <InputGroup>
+              <InputGroupAddon class="drag-handle">
+                <i class="pi pi-bars"></i>
+              </InputGroupAddon>
+              <InputGroupAddon class="color-addon">
+                <input type="color" v-model="tag.color" class="color-picker" />
+              </InputGroupAddon>
+              <InputText v-model="tag.name" placeholder="Tag Name" />
+              <Button icon="pi pi-trash" severity="danger" @click="removeTag(index)" />
+            </InputGroup>
+          </div>
         </div>
       </section>
     </div>
@@ -149,52 +213,36 @@ section label {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  max-height: 200px;
+  max-height: 250px;
   overflow-y: auto;
   padding-right: 0.5rem;
 }
 
 .list-item {
-  display: flex;
-  gap: 0.5rem;
-  align-items: center;
+  display: block;
 }
 
-.list-item .p-inputtext {
-  flex: 1;
+.drag-handle {
+  cursor: grab;
 }
 
-.epic-item .p-inputtext {
-  flex: 2;
+.drag-handle i {
+  color: var(--text-muted);
 }
 
-.epic-item .p-inputtext:last-of-type {
-  flex: 1;
+.color-addon {
+  padding: 0;
+  width: 3rem;
+  overflow: hidden;
 }
 
 .color-picker {
-  width: 30px;
-  height: 30px;
+  width: 100%;
+  height: 100%;
   padding: 0;
   border: none;
-  border-radius: 4px;
-  cursor: pointer;
   background: none;
-}
-
-.tag-input {
-  display: flex;
-  gap: 0.5rem;
-  margin-bottom: 0.5rem;
-}
-
-.tag-input .p-inputtext {
-  flex: 1;
-}
-
-.tag-display {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
+  cursor: pointer;
+  min-height: 2.5rem;
 }
 </style>

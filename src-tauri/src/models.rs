@@ -2,13 +2,21 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Clone, Debug)]
 #[serde(rename_all = "camelCase")]
+pub struct Tag {
+    pub id: String,
+    pub name: String,
+    pub color: String,
+}
+
+#[derive(Serialize, Deserialize, Clone, Debug)]
+#[serde(rename_all = "camelCase")]
 pub struct BoardConfig {
     pub name: String,
     pub prefix: String,
     pub next_id: u32,
     pub lanes: Vec<String>,
     pub epics: Vec<Epic>,
-    pub tags: Vec<String>,
+    pub tags: Vec<Tag>,
     pub priorities: Vec<String>,
 }
 

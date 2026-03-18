@@ -12,6 +12,20 @@ const { config, editingCard } = useBoard()
 const epic = computed(() => 
   config.value?.epics.find(e => e.id === props.card.epic)
 )
+
+const getTag = (id: string) => config.value?.tags.find(t => t.id === id)
+
+const getTagStyle = (id: string) => {
+  const tag = getTag(id)
+  if (tag?.color) {
+    return {
+      backgroundColor: tag.color,
+      color: 'white',
+      borderColor: 'transparent'
+    }
+  }
+  return {}
+}
 </script>
 
 <template>
@@ -33,8 +47,13 @@ const epic = computed(() =>
       >
         {{ epic.name }}
       </span>
-      <span v-for="tag in card.tags" :key="tag" class="tag-pill">
-        {{ tag }}
+      <span 
+        v-for="tagId in card.tags" 
+        :key="tagId" 
+        class="tag-pill"
+        :style="getTagStyle(tagId)"
+      >
+        {{ getTag(tagId)?.name || tagId }}
       </span>
     </div>
   </div>

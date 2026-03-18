@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "vite:dev": "vite",
+    "prod": "cmd.exe /c rojekti.exe",
     "vite:build": "vite build",
     "tauri": "tauri",
     "dev": "cmd.exe /c npm run tauri -- dev",

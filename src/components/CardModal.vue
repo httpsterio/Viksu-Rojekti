@@ -7,6 +7,7 @@ import Button from 'primevue/button'
 import InputText from 'primevue/inputtext'
 import Select from 'primevue/select'
 import MultiSelect from 'primevue/multiselect'
+import Tag from 'primevue/tag'
 import { useConfirm } from 'primevue/useconfirm'
 import { MdEditor, MdPreview } from 'md-editor-v3'
 import 'md-editor-v3/lib/style.css'
@@ -126,7 +127,13 @@ const handleDelete = () => {
   }
 }
 
+const getTag = (id: string) => config.value?.tags.find(t => t.id === id)
 
+const removeTag = (tag: string) => {
+  if (card.value.tags) {
+    card.value.tags = card.value.tags.filter(t => t !== tag)
+  }
+}
 </script>
 
 <template>
@@ -172,11 +179,25 @@ const handleDelete = () => {
           <MultiSelect 
             v-model="card.tags" 
             :options="config?.tags" 
+            optionLabel="name"
+            optionValue="id"
             placeholder="Select Tags" 
             display="chip" 
             fluid 
             :maxSelectedLabels="3"
+            :showSelectAll="false"
           />
+          <div class="selected-tags" v-if="card.tags && card.tags.length > 0">
+            <Tag 
+              v-for="tagId in card.tags" 
+              :key="tagId" 
+              :value="getTag(tagId)?.name || tagId"
+              :style="{ backgroundColor: getTag(tagId)?.color }"
+              class="removable-tag"
+              icon="pi pi-times"
+              @click="removeTag(tagId)"
+            />
+          </div>
         </div>
       </div>
 
@@ -307,6 +328,22 @@ const handleDelete = () => {
 .right-buttons {
   display: flex;
   gap: 0.5rem;
+}
+
+.selected-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.removable-tag {
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.removable-tag:hover {
+  opacity: 0.8;
 }
 
 :deep(.md-editor), :deep(.md-preview) {

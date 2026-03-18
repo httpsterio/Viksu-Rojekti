@@ -1,0 +1,37 @@
+name: Rojekti
+prefix: roj
+nextId: 1
+lanes:
+- BACKLOG
+- todo
+- in-progress
+- review
+- done
+epics:
+- id: epic-1773797182995
+  name: EPIC-1
+  color: '#0040ff'
+tags:
+- id: tag-1773797207005
+  name: BUG
+  color: '#ff4d00'
+- id: tag-1773797217392
+  name: FEAT
+  color: '#10b981'
+- id: tag-1773797469968
+  name: UI
+  color: '#10b981'
+- id: tag-1773797473982
+  name: DX
+  color: '#10b981'
+- id: tag-1773797480308
+  name: BACKEND
+  color: '#10b981'
+- id: tag-1773797482417
+  name: POLISH
+  color: '#10b981'
+priorities:
+- low
+- medium
+- high
+- critical
