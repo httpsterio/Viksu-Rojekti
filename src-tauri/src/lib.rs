@@ -64,7 +64,7 @@ pub fn run() {
             commands::update_card,
             commands::delete_card,
             commands::move_card,
-            commands::reorder_lane,
+            commands::reorder_status,
             commands::rebuild_index,
             commands::init_project,
         ])

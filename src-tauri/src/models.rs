@@ -10,11 +10,18 @@ pub struct Tag {
 
 #[derive(Serialize, Deserialize, Clone, Debug)]
 #[serde(rename_all = "camelCase")]
+pub struct Status {
+    pub id: String,
+    pub name: String,
+}
+
+#[derive(Serialize, Deserialize, Clone, Debug)]
+#[serde(rename_all = "camelCase")]
 pub struct BoardConfig {
     pub name: String,
     pub prefix: String,
     pub next_id: u32,
-    pub lanes: Vec<String>,
+    pub statuses: Vec<Status>,
     pub epics: Vec<Epic>,
     pub tags: Vec<Tag>,
     pub priorities: Vec<String>,

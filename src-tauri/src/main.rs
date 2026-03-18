@@ -7,11 +7,11 @@ use std::path::PathBuf;
 
 fn discover_project_dir() -> Option<PathBuf> {
     if let Ok(cwd) = std::env::current_dir() {
-        if cwd.join("board.yaml").exists() {
+        if cwd.join("rojekti").join("rojekti.config.yaml").exists() {
             return Some(cwd);
         }
         if let Some(parent) = cwd.parent() {
-            if parent.join("board.yaml").exists() {
+            if parent.join("rojekti").join("rojekti.config.yaml").exists() {
                 return Some(parent.to_path_buf());
             }
         }

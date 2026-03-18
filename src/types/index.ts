@@ -2,10 +2,15 @@ export interface BoardConfig {
   name: string
   prefix: string
   nextId: number
-  lanes: string[]
+  statuses: Status[]
   epics: Epic[]
   tags: Tag[]
   priorities: string[]
+}
+
+export interface Status {
+  id: string
+  name: string
 }
 
 export interface Epic {

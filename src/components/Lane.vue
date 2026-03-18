@@ -7,12 +7,13 @@ import { useBoard } from '@/composables/useBoard'
 import Button from 'primevue/button'
 
 const props = defineProps<{
+  id: string
   name: string
   cards: CardType[]
   collapsed: boolean
 }>()
 
-const { toggleLaneCollapse, moveCard } = useBoard()
+const { toggleStatusCollapse, moveCard } = useBoard()
 const cardContainer = ref<HTMLElement | null>(null)
 let sortable: Sortable | null = null
 
@@ -29,8 +30,8 @@ const initSortable = () => {
         dataIdAttr: 'data-card-id',
         onEnd: (evt) => {
           if (evt.to && evt.item) {
-            const id = evt.item.getAttribute('data-card-id')!
-            const newStatus = evt.to.getAttribute('data-lane')!
+            const cardId = evt.item.getAttribute('data-card-id')!
+            const newStatusId = evt.to.getAttribute('data-status-id')!
             const newIndex = evt.newIndex!
             
             const laneCards = Array.from(evt.to.children)
@@ -50,7 +51,7 @@ const initSortable = () => {
               }
             }
             
-            moveCard(id, newStatus, newPos)
+            moveCard(cardId, newStatusId, newPos)
           }
         }
       })
@@ -76,7 +77,7 @@ const formatName = (name: string) => name.replace(/-/g, ' ').toUpperCase()
 
 <template>
   <div :class="['lane', collapsed ? 'collapsed' : 'expanded']">
-    <div v-if="collapsed" class="lane-collapsed" @click="toggleLaneCollapse(name)">
+    <div v-if="collapsed" class="lane-collapsed" @click="toggleStatusCollapse(id)">
       <span class="lane-name-vertical">{{ formatName(name) }}</span>
       <span class="lane-count">{{ cards.length }}</span>
     </div>
@@ -92,13 +93,13 @@ const formatName = (name: string) => name.replace(/-/g, ' ').toUpperCase()
           text 
           rounded 
           size="small" 
-          @click="toggleLaneCollapse(name)" 
+          @click="toggleStatusCollapse(id)" 
         />
       </div>
       <div 
         ref="cardContainer" 
         class="lane-body" 
-        :data-lane="name"
+        :data-status-id="id"
       >
         <Card 
           v-for="card in cards" 

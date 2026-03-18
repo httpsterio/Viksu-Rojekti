@@ -73,7 +73,7 @@ watch(visible, (val) => {
     } else {
       card.value = {
         title: '',
-        status: config.value?.lanes[0] || '',
+        status: config.value?.statuses[0]?.id || '',
         epic: null,
         tags: [],
         priority: 'medium',
@@ -154,7 +154,14 @@ const removeTag = (tag: string) => {
         <div class="row">
           <div class="field">
             <label>Status</label>
-            <Select v-model="card.status" :options="config?.lanes" placeholder="Select Status" fluid />
+            <Select 
+              v-model="card.status" 
+              :options="config?.statuses" 
+              optionLabel="name"
+              optionValue="id"
+              placeholder="Select Status" 
+              fluid 
+            />
           </div>
           <div class="field">
             <label>Priority</label>

@@ -1,7 +1,7 @@
 use tauri::State;
 use chrono::Local;
 use std::fs;
-use crate::models::{AppState, BoardConfig, Card, CardMeta, Index};
+use crate::models::{AppState, BoardConfig, Card, CardMeta, Index, Status};
 use crate::{storage, index};
 
 #[tauri::command]
@@ -43,7 +43,7 @@ pub fn create_card(
     config.next_id += 1;
     storage::write_board_config(&state.project_dir.join("rojekti").join("rojekti.config.yaml"), &config)?;
     
-    let status = status.unwrap_or_else(|| config.lanes.first().cloned().unwrap_or_default());
+    let status = status.unwrap_or_else(|| config.statuses.first().map(|s| s.id.clone()).unwrap_or_default());
     
     let cards = storage::read_all_cards(&state.project_dir)?;
     let max_pos = cards.iter()
@@ -106,7 +106,7 @@ pub fn move_card(
 }
 
 #[tauri::command]
-pub fn reorder_lane(
+pub fn reorder_status(
     status: String,
     card_ids: Vec<String>,
     state: State<AppState>,
@@ -134,7 +134,13 @@ pub fn init_project(name: String, prefix: String, state: State<AppState>) -> Res
         name,
         prefix,
         next_id: 1,
-        lanes: vec!["backlog".into(), "todo".into(), "in-progress".into(), "review".into(), "done".into()],
+        statuses: vec![
+            Status { id: "backlog".into(), name: "Backlog".into() },
+            Status { id: "todo".into(), name: "Todo".into() },
+            Status { id: "in-progress".into(), name: "In Progress".into() },
+            Status { id: "review".into(), name: "Review".into() },
+            Status { id: "done".into(), name: "Done".into() },
+        ],
         epics: Vec::new(),
         tags: Vec::new(),
         priorities: vec!["low".into(), "medium".into(), "high".into(), "critical".into()],

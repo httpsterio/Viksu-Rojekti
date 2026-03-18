@@ -1,6 +1,6 @@
 use clap::{Parser, Subcommand};
 use std::path::PathBuf;
-use crate::models::{BoardConfig, Card, CardMeta};
+use crate::models::{BoardConfig, Card, CardMeta, Status};
 use crate::{storage, index};
 use chrono::Local;
 use std::io::Write;
@@ -17,11 +17,11 @@ pub struct Cli {
 pub enum Commands {
     /// Rebuild rojekti.index.yaml from card files
     RebuildIndex,
-    /// Renormalize position values in a lane
+    /// Renormalize position values in a status
     Reorder {
-        /// Lane to reorder
+        /// Status to reorder
         #[arg(short, long)]
-        lane: String,
+        status: String,
     },
     /// List all cards to stdout
     List,
@@ -36,7 +36,7 @@ pub enum Commands {
         /// Card title
         #[arg(short, long)]
         title: String,
-        /// Lane (defaults to first lane)
+        /// Status (defaults to first status)
         #[arg(short, long)]
         status: Option<String>,
         /// Priority level (defaults to medium)
@@ -68,25 +68,25 @@ pub fn handle_cli(command: Commands, project_dir: PathBuf) {
                 Err(e) => eprintln!("Error rebuilding index: {}", e),
             }
         }
-        Commands::Reorder { lane } => {
-            if lane.is_empty() {
-                eprintln!("Error: lane is required.");
+        Commands::Reorder { status } => {
+            if status.is_empty() {
+                eprintln!("Error: status is required.");
             } else {
                 match storage::read_all_cards(&project_dir) {
                     Ok(cards) => {
-                        let mut lane_cards: Vec<Card> = cards.into_iter()
-                            .filter(|c| c.meta.status == lane)
+                        let mut status_cards: Vec<Card> = cards.into_iter()
+                            .filter(|c| c.meta.status == status)
                             .collect();
-                        lane_cards.sort_by(|a, b| a.meta.position.partial_cmp(&b.meta.position).unwrap());
+                        status_cards.sort_by(|a, b| a.meta.position.partial_cmp(&b.meta.position).unwrap());
                         
-                        for (i, mut card) in lane_cards.into_iter().enumerate() {
+                        for (i, mut card) in status_cards.into_iter().enumerate() {
                             card.meta.position = (i + 1) as f64;
                             if let Err(e) = storage::write_card(&project_dir, &card) {
                                 eprintln!("Error updating card {}: {}", card.meta.id, e);
                             }
                         }
                         let _ = index::rebuild_index(&project_dir);
-                        println!("Lane '{}' reordered.", lane);
+                        println!("Status '{}' reordered.", status);
                     }
                     Err(e) => eprintln!("Error reading cards: {}", e),
                 }
@@ -144,7 +144,9 @@ pub fn handle_cli(command: Commands, project_dir: PathBuf) {
                         config.next_id += 1;
                         let _ = storage::write_board_config(&project_dir.join("rojekti").join("rojekti.config.yaml"), &config);
                         
-                        let status_val = status.unwrap_or_else(|| config.lanes.first().cloned().unwrap_or_else(|| "todo".to_string()));
+                        let status_val = status.unwrap_or_else(|| {
+                            config.statuses.first().map(|s| s.id.clone()).unwrap_or_else(|| "todo".to_string())
+                        });
                         
                         let cards = storage::read_all_cards(&project_dir).unwrap_or_default();
                         let max_pos = cards.iter()
@@ -186,7 +188,13 @@ pub fn handle_cli(command: Commands, project_dir: PathBuf) {
                     name: name.to_string(),
                     prefix: prefix.to_string(),
                     next_id: 1,
-                    lanes: vec!["backlog".into(), "todo".into(), "in-progress".into(), "review".into(), "done".into()],
+                    statuses: vec![
+                        Status { id: "backlog".into(), name: "Backlog".into() },
+                        Status { id: "todo".into(), name: "Todo".into() },
+                        Status { id: "in-progress".into(), name: "In Progress".into() },
+                        Status { id: "review".into(), name: "Review".into() },
+                        Status { id: "done".into(), name: "Done".into() },
+                    ],
                     epics: Vec::new(),
                     tags: Vec::new(),
                     priorities: vec!["low".into(), "medium".into(), "high".into(), "critical".into()],

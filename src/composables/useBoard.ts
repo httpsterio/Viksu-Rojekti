@@ -5,7 +5,7 @@ import { useToast } from 'primevue/usetoast'
 
 const config = ref<BoardConfig | null>(null)
 const cards = ref<Card[]>([])
-const collapsedLanes = ref<Set<string>>(new Set())
+const collapsedStatuses = ref<Set<string>>(new Set())
 const activeFilters = ref({
   epic: null as string | null,
   tag: null as string | null,
@@ -110,11 +110,11 @@ export function useBoard() {
     }
   }
 
-  const toggleLaneCollapse = (lane: string) => {
-    if (collapsedLanes.value.has(lane)) {
-      collapsedLanes.value.delete(lane)
+  const toggleStatusCollapse = (statusId: string) => {
+    if (collapsedStatuses.value.has(statusId)) {
+      collapsedStatuses.value.delete(statusId)
     } else {
-      collapsedLanes.value.add(lane)
+      collapsedStatuses.value.add(statusId)
     }
   }
 
@@ -137,13 +137,13 @@ export function useBoard() {
     })
   })
 
-  const cardsByLane = computed(() => {
+  const cardsByStatus = computed(() => {
     const grouped: Record<string, Card[]> = {}
     if (!config.value) return grouped
     
-    for (const lane of config.value.lanes) {
-      grouped[lane] = filteredCards.value
-        .filter(c => c.status === lane)
+    for (const status of config.value.statuses) {
+      grouped[status.id] = filteredCards.value
+        .filter(c => c.status === status.id)
         .sort((a, b) => a.position - b.position)
     }
     return grouped
@@ -171,7 +171,7 @@ export function useBoard() {
   return {
     config,
     cards,
-    collapsedLanes,
+    collapsedStatuses,
     activeFilters,
     currentView,
     editingCard,
@@ -186,9 +186,9 @@ export function useBoard() {
     updateCard,
     deleteCard,
     moveCard,
-    toggleLaneCollapse,
+    toggleStatusCollapse,
     toggleDarkMode,
-    cardsByLane,
+    cardsByStatus,
     cardsByEpic
   }
 }

@@ -2,17 +2,18 @@
 import { useBoard } from '@/composables/useBoard'
 import Lane from './Lane.vue'
 
-const { config, cardsByLane, collapsedLanes } = useBoard()
+const { config, cardsByStatus, collapsedStatuses } = useBoard()
 </script>
 
 <template>
   <div class="board-view" v-if="config">
     <Lane 
-      v-for="lane in config.lanes" 
-      :key="lane"
-      :name="lane"
-      :cards="cardsByLane[lane] || []"
-      :collapsed="collapsedLanes.has(lane)"
+      v-for="status in config.statuses" 
+      :key="status.id"
+      :id="status.id"
+      :name="status.name"
+      :cards="cardsByStatus[status.id] || []"
+      :collapsed="collapsedStatuses.has(status.id)"
     />
   </div>
 </template>

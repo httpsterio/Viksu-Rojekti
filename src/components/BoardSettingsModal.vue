@@ -10,13 +10,15 @@ import InputGroupAddon from 'primevue/inputgroupaddon'
 import { useConfirm } from 'primevue/useconfirm'
 import Sortable from 'sortablejs'
 
-const { config, saveBoardConfig } = useBoard()
+const { config, cards, saveBoardConfig, updateCard } = useBoard()
 const confirm = useConfirm()
 
 const visible = ref(false)
 const localConfig = ref<BoardConfig | null>(null)
+const statusesContainer = ref<HTMLElement | null>(null)
 const epicsContainer = ref<HTMLElement | null>(null)
 const tagsContainer = ref<HTMLElement | null>(null)
+let statusesSortable: Sortable | null = null
 let epicsSortable: Sortable | null = null
 let tagsSortable: Sortable | null = null
 
@@ -28,13 +30,15 @@ const open = () => {
 }
 
 const onShow = () => {
+  statusesSortable?.destroy()
   epicsSortable?.destroy()
   tagsSortable?.destroy()
+  statusesSortable = initSortable(statusesContainer.value, 'statuses')
   epicsSortable = initSortable(epicsContainer.value, 'epics')
   tagsSortable = initSortable(tagsContainer.value, 'tags')
 }
 
-const initSortable = (el: HTMLElement | null, list: 'epics' | 'tags') => {
+const initSortable = (el: HTMLElement | null, list: 'statuses' | 'epics' | 'tags') => {
   if (el && localConfig.value) {
     return new Sortable(el, {
       handle: '.drag-handle',
@@ -60,12 +64,46 @@ const handleSave = async () => {
   }
 }
 
-const addLane = () => {
-  localConfig.value?.lanes.push('new-lane')
+const addStatus = () => {
+  localConfig.value?.statuses.push({
+    id: `status-${Date.now()}`,
+    name: 'New Status'
+  })
 }
 
-const removeLane = (index: number) => {
-  localConfig.value?.lanes.splice(index, 1)
+const removeStatus = (index: number) => {
+  if (!localConfig.value) return
+  
+  const statusToRemove = localConfig.value.statuses[index]
+  const cardsInStatus = cards.value.filter(c => c.status === statusToRemove.id)
+  
+  if (cardsInStatus.length === 0) {
+    confirm.require({
+      message: `Are you sure you want to delete the "${statusToRemove.name}" status?`,
+      header: 'Delete Status',
+      icon: 'pi pi-exclamation-triangle',
+      acceptClass: 'p-button-danger',
+      accept: () => {
+        localConfig.value?.statuses.splice(index, 1)
+      }
+    })
+  } else {
+    confirm.require({
+      message: `The status "${statusToRemove.name}" has ${cardsInStatus.length} cards assigned to it. If you proceed, these cards will be moved to the first status in the list. Do you want to proceed?`,
+      header: 'Delete Status & Move Cards',
+      icon: 'pi pi-exclamation-triangle',
+      acceptClass: 'p-button-danger',
+      accept: async () => {
+        localConfig.value?.statuses.splice(index, 1)
+        if (localConfig.value && localConfig.value.statuses.length > 0) {
+          const firstStatusId = localConfig.value.statuses[0].id
+          for (const card of cardsInStatus) {
+            await updateCard({ ...card, status: firstStatusId })
+          }
+        }
+      }
+    })
+  }
 }
 
 const addEpic = () => {
@@ -123,16 +161,19 @@ const removeTag = (index: number) => {
           <div class="section-header">
             <label>Status</label>
           </div>
-          <div class="list-editor">
-            <div v-for="(lane, index) in localConfig.lanes" :key="index" class="list-item">
+          <div class="list-editor" ref="statusesContainer">
+            <div v-for="(status, index) in localConfig.statuses" :key="status.id" class="list-item">
               <InputGroup>
-                <InputText v-model="localConfig.lanes[index]" size="small" />
+                <InputGroupAddon class="drag-handle">
+                  <i class="pi pi-bars"></i>
+                </InputGroupAddon>
+                <InputText v-model="status.name" size="small" />
                 <InputGroupAddon>
-                  <Button icon="pi pi-trash" text severity="danger" size="small" @click="removeLane(index)" />
+                  <Button icon="pi pi-trash" text severity="danger" size="small" @click="removeStatus(index)" />
                 </InputGroupAddon>
               </InputGroup>
             </div>
-            <Button icon="pi pi-plus" label="Add Status" size="small" class="add-btn" @click="addLane" />
+            <Button icon="pi pi-plus" label="Add Status" size="small" class="add-btn" @click="addStatus" />
           </div>
         </section>
 
