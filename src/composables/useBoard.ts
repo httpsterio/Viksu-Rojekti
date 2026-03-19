@@ -53,6 +53,18 @@ export function useBoard() {
   const saveBoardConfig = async (newConfig: BoardConfig) => {
     try {
       config.value = newConfig
+
+      // Clear stale filters
+      if (activeFilters.value.epic && !newConfig.epics.some(e => e.id === activeFilters.value.epic)) {
+        activeFilters.value.epic = null
+      }
+      if (activeFilters.value.tag && !newConfig.tags.some(t => t.id === activeFilters.value.tag)) {
+        activeFilters.value.tag = null
+      }
+      if (activeFilters.value.priority && !newConfig.priorities.includes(activeFilters.value.priority)) {
+        activeFilters.value.priority = null
+      }
+
       await invoke('save_board_config', { config: newConfig })
       await loadBoard()
       toast.add({ severity: 'success', summary: 'Success', detail: 'Settings saved', life: 3000 })

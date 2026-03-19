@@ -1,4 +1,4 @@
-generated: 2026-03-20T01:18:37.756484700+02:00
+generated: 2026-03-20T01:22:57.565605500+02:00
 cardCount: 9
 cards:
 - id: roj-009
@@ -79,12 +79,11 @@ cards:
   position: 2.0
   created: 2026-03-20
 - id: roj-017
-  title: 'fix: Markdown description box overflow scrolling'
-  status: todo
-  epic: epic-1773924454503
+  title: 'fix: Clear Stale Filters on Epic/Tag Deletion'
+  status: done
+  epic: epic-1773924443930
   tags:
-  - tag-1773923939233
   - tag-1773869127764
-  priority: MED
+  priority: LOW
   position: 1.0
-  created: 2026-03-19
+  created: 2026-03-20
