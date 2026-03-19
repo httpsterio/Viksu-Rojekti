@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useBoard } from '@/composables/useBoard'
+import { useColorContrast } from '@/composables/useColorContrast'
 import type { Card } from '@/types'
 
 const props = defineProps<{
@@ -8,6 +9,7 @@ const props = defineProps<{
 }>()
 
 const { config, editingCard } = useBoard()
+const { contrastColor } = useColorContrast()
 
 const epic = computed(() => 
   config.value?.epics.find(e => e.id === props.card.epic)
@@ -20,7 +22,7 @@ const getTagStyle = (id: string) => {
   if (tag?.color) {
     return {
       backgroundColor: tag.color,
-      color: 'white',
+      color: contrastColor(tag.color),
       borderColor: 'transparent'
     }
   }
@@ -43,7 +45,7 @@ const getTagStyle = (id: string) => {
       <span 
         v-if="epic" 
         class="epic-badge" 
-        :style="{ backgroundColor: epic.color }"
+        :style="{ backgroundColor: epic.color, color: contrastColor(epic.color) }"
       >
         {{ epic.name }}
       </span>

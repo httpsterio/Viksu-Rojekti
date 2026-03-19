@@ -11,6 +11,7 @@ import Tag from 'primevue/tag'
 import { useConfirm } from 'primevue/useconfirm'
 import { MdEditor, MdPreview } from 'md-editor-v3'
 import type { ToolbarNames } from 'md-editor-v3'
+import { useColorContrast } from '@/composables/useColorContrast'
 
 const { 
   config, 
@@ -21,6 +22,8 @@ const {
   deleteCard,
   isDarkMode
 } = useBoard()
+
+const { contrastColor } = useColorContrast()
 
 const visible = computed({
   get: () => isCreating.value || !!editingCard.value,
@@ -200,7 +203,10 @@ const removeTag = (tag: string) => {
               v-for="tagId in card.tags" 
               :key="tagId" 
               :value="getTag(tagId)?.name || tagId"
-              :style="{ backgroundColor: getTag(tagId)?.color }"
+              :style="{ 
+                backgroundColor: getTag(tagId)?.color, 
+                color: contrastColor(getTag(tagId)?.color) 
+              }"
               class="removable-tag"
               icon="pi pi-times"
               @click="removeTag(tagId)"

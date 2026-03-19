@@ -16,8 +16,8 @@
   If a user has an active Epic or Tag filter and then deletes that Epic/Tag in Settings, the board appears completely empty with no explanation. Filters referencing deleted items should be cleared automatically when `saveBoardConfig` is called.
   Fix in `useBoard.ts`: after `config.value` is updated by `saveBoardConfig`, check `activeFilters.value.epic` and `activeFilters.value.tag` against the new config's epics/tags arrays. If the filtered ID no longer exists, reset that filter to `null`.
 
-- [ ] **Verify CardModal does not silently drop card fields on save**
-  Code review flagged a risk: if `CardModal.vue` uses a partial/incomplete local state object for editing and spreads it onto the saved card, any fields present on the original card but absent in the local ref will be silently lost on save. Read `CardModal.vue` and confirm the save path works with a complete `Card` object. If not, fix the local state type to be a strict full `Card`.
+- [ ] **Fix CardModal silently dropping card fields on save**
+  `CardModal.vue` holds local edit state as `ref<Partial<Card>>` and saves via `updateCard(card.value as Card)`. The `as Card` cast bypasses TypeScript's type checking, so if `Card` gains new fields in the future, they may be missing from the local ref and silently dropped when the card is written back to disk. The spread `card.value = { ...editingCard.value }` copies all fields correctly today, but the `Partial<Card>` type gives no compile-time guarantee this stays true. Fix: change the local ref to `ref<Card>` with a complete initial value matching all fields, and remove the `as Card` cast so TypeScript enforces the full shape at the call site.
 
 - [ ] **Verify TopBar.vue filter popover ref is correctly wired**
   Code review flagged that `const filterPanel = ref()` may not be correctly linked to `<Popover ref="filterPanel">` in all configurations. Read `TopBar.vue` and confirm the ref assignment works and the popover opens/closes correctly.
