@@ -1,0 +1,69 @@
+# Task: Clear Stale Filters on Epic/Tag Deletion
+
+## Problem
+
+`activeFilters` in `useBoard.ts` holds IDs referencing epics, tags, and priorities. If a user has an active filter and then deletes the epic or tag it references via the Settings modal, the filter remains set but the item no longer exists in `config`. The board then shows completely empty with no explanation.
+
+## File to Change
+
+`src/composables/useBoard.ts` — only this file needs to change.
+
+## Where to Add the Fix
+
+Inside `saveBoardConfig` (line 53), after `config.value` has been updated with the new config but before the function returns. The new config's epics and tags arrays are the source of truth.
+
+## Current `saveBoardConfig`:
+
+```ts
+const saveBoardConfig = async (newConfig: BoardConfig) => {
+  try {
+    config.value = newConfig
+    await invoke('save_board_config', { config: newConfig })
+    await loadBoard()
+    toast.add({ severity: 'success', summary: 'Success', detail: 'Settings saved', life: 3000 })
+  } catch (e) {
+    toast.add({ severity: 'error', summary: 'Error', detail: String(e), life: 3000 })
+    await loadBoard()
+  }
+}
+```
+
+## Fix
+
+Add a filter validation step after `config.value = newConfig`:
+
+```ts
+const saveBoardConfig = async (newConfig: BoardConfig) => {
+  try {
+    config.value = newConfig
+
+    const epicIds = new Set(newConfig.epics.map(e => e.id))
+    const tagIds = new Set(newConfig.tags.map(t => t.id))
+    const priorityIds = new Set(newConfig.priorities)
+
+    if (activeFilters.value.epic && !epicIds.has(activeFilters.value.epic)) {
+      activeFilters.value.epic = null
+    }
+    if (activeFilters.value.tag && !tagIds.has(activeFilters.value.tag)) {
+      activeFilters.value.tag = null
+    }
+    if (activeFilters.value.priority && !priorityIds.has(activeFilters.value.priority)) {
+      activeFilters.value.priority = null
+    }
+
+    await invoke('save_board_config', { config: newConfig })
+    await loadBoard()
+    toast.add({ severity: 'success', summary: 'Success', detail: 'Settings saved', life: 3000 })
+  } catch (e) {
+    toast.add({ severity: 'error', summary: 'Error', detail: String(e), life: 3000 })
+    await loadBoard()
+  }
+}
+```
+
+## Notes
+
+- `activeFilters.search` is a free-text string, not an ID — no validation needed
+- Do not touch any other function — `loadBoard`, `filteredCards`, or anything else
+- No new imports needed
+- No other files need to change

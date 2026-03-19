@@ -37,14 +37,19 @@ const visible = computed({
 
 const isNew = computed(() => isCreating.value)
 
-const card = ref<Partial<Card>>({
+const getInitialCard = (): Card => ({
+  id: '',
   title: '',
   status: '',
   epic: null,
   tags: [],
   priority: 'medium',
+  position: 0,
+  created: '',
   body: ''
 })
+
+const card = ref<Card>(getInitialCard())
 
 const descriptionTab = ref<'view' | 'edit'>('view')
 const confirm = useConfirm()
@@ -75,12 +80,8 @@ watch(visible, (val) => {
       descriptionTab.value = 'view'
     } else {
       card.value = {
-        title: '',
+        ...getInitialCard(),
         status: config.value?.statuses[0]?.id || '',
-        epic: null,
-        tags: [],
-        priority: 'medium',
-        body: ''
       }
       descriptionTab.value = 'edit'
     }
@@ -97,7 +98,7 @@ const handleSave = async () => {
     if (isNew.value) {
       await createCard(card.value)
     } else {
-      await updateCard(card.value as Card)
+      await updateCard(card.value)
     }
     visible.value = false
   } finally {

@@ -110,7 +110,6 @@ const getTagStyle = (id: string) => {
   font-size: 0.7rem;
   padding: 0.1rem 0.4rem;
   border-radius: 10px;
-  color: white;
   font-weight: 600;
 }
 

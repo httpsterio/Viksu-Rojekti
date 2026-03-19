@@ -1,4 +1,4 @@
-generated: 2026-03-20T01:05:40.118777300+02:00
+generated: 2026-03-20T01:18:37.756484700+02:00
 cardCount: 9
 cards:
 - id: roj-009
@@ -60,25 +60,24 @@ cards:
   created: 2026-03-19
 - id: roj-015
   title: 'style: Automatic contrast colors utility'
-  status: done
+  status: status-1773961454787
   epic: epic-1773924443930
   tags:
   - tag-1773869127764
   - tag-1773923939233
   - tag-1773923872831
   priority: MED
-  position: 1.0
+  position: 3.0
   created: 2026-03-19
 - id: roj-016
-  title: 'feat: Hotkeys'
-  status: backlog
-  epic: epic-1773924443930
+  title: 'fix: CardModal silently dropping card fields on save'
+  status: status-1773961454787
+  epic: epic-1773924454503
   tags:
-  - tag-1773869123619
-  - tag-1773923939233
+  - tag-1773869127764
   priority: MED
-  position: 8.0
-  created: 2026-03-19
+  position: 2.0
+  created: 2026-03-20
 - id: roj-017
   title: 'fix: Markdown description box overflow scrolling'
   status: todo
