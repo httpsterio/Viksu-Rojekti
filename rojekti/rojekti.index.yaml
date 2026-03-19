@@ -1,5 +1,5 @@
-generated: 2026-03-20T01:22:57.565605500+02:00
-cardCount: 9
+generated: 2026-03-20T01:34:39.536376900+02:00
+cardCount: 11
 cards:
 - id: roj-009
   title: 'fix: Broken cards graceful failing'
@@ -86,4 +86,23 @@ cards:
   - tag-1773869127764
   priority: LOW
   position: 1.0
+  created: 2026-03-20
+- id: roj-018
+  title: 'fix: loadBoard race condition dropping optimistic card push'
+  status: done
+  epic: epic-1773924443930
+  tags:
+  - tag-1773869127764
+  priority: MED
+  position: 2.0
+  created: 2026-03-20
+- id: roj-019
+  title: 'fix: minimum distance to consider moving a card vs. opening a card'
+  status: backlog
+  epic: epic-1773924443930
+  tags:
+  - tag-1773869127764
+  - tag-1773923939233
+  priority: LOW
+  position: 7.0
   created: 2026-03-20
