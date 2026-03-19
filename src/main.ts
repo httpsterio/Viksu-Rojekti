@@ -1,4 +1,5 @@
 import { createApp } from 'vue'
+import { config as mdConfig } from 'md-editor-v3'
 import PrimeVue from 'primevue/config'
 import Aura from '@primevue/themes/aura'
 // import Material from '@primevue/themes/material'
@@ -7,8 +8,11 @@ import Aura from '@primevue/themes/aura'
 import ToastService from 'primevue/toastservice'
 import ConfirmationService from 'primevue/confirmationservice'
 import 'primeicons/primeicons.css'
+import 'md-editor-v3/lib/style.css'
 import './styles/main.css'
 import App from './App.vue'
+
+mdConfig({})
 
 const app = createApp(App)
 

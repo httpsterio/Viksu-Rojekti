@@ -1,21 +1,13 @@
-generated: 2026-03-19T00:11:14.435192600+02:00
-cardCount: 3
+generated: 2026-03-19T17:24:00.610640200+02:00
+cardCount: 1
 cards:
-- id: roj-001
-  title: test
+- id: roj-009
+  title: Broken cards graceful failing
   status: backlog
-  priority: medium
-  position: 2.0
-  created: 2026-03-18
-- id: roj-007
-  title: '123'
-  status: backlog
-  priority: medium
-  position: 3.0
-  created: 2026-03-19
-- id: roj-008
-  title: asdads
-  status: backlog
-  priority: medium
-  position: 4.0
+  epic: epic-1773924443930
+  tags:
+  - tag-1773869127764
+  - tag-1773869123619
+  priority: HIGH
+  position: 1.0
   created: 2026-03-19

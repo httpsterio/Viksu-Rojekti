@@ -85,3 +85,16 @@ body {
   flex: 1;
   overflow-y: auto;
 }
+
+/* md-editor-v3 overrides */
+.md-editor-code-flag, .md-editor-code-action {
+  display: none!important;
+}
+
+.md-editor-code summary {
+  display: none!important;
+}
+
+pre > code {
+  border-radius: 0.5rem!important;
+}

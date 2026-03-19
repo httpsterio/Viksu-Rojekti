@@ -10,7 +10,7 @@ import MultiSelect from 'primevue/multiselect'
 import Tag from 'primevue/tag'
 import { useConfirm } from 'primevue/useconfirm'
 import { MdEditor, MdPreview } from 'md-editor-v3'
-import 'md-editor-v3/lib/style.css'
+import type { ToolbarNames } from 'md-editor-v3'
 
 const { 
   config, 
@@ -46,7 +46,7 @@ const card = ref<Partial<Card>>({
 const descriptionTab = ref<'view' | 'edit'>('view')
 const confirm = useConfirm()
 
-const editorToolbars = [
+const editorToolbars: ToolbarNames[] = [
   'bold',
   'italic',
   'strikeThrough',
@@ -59,9 +59,9 @@ const editorToolbars = [
   'code',
   'codeRow',
   'link',
-  '-',
-  'revoke',
-  'next'
+  // '-',
+  // 'revoke',
+  // 'next'
 ]
 
 watch(visible, (val) => {
@@ -229,16 +229,18 @@ const removeTag = (tag: string) => {
         </div>
 
         <div class="description-content">
-          <MdPreview 
-            v-if="descriptionTab === 'view'" 
-            v-model="card.body" 
-            :theme="isDarkMode ? 'dark' : 'light'" 
+          <MdPreview
+            v-if="descriptionTab === 'view'"
+            v-model="card.body"
+            language="en-US"
+            :theme="isDarkMode ? 'dark' : 'light'"
           />
           <MdEditor 
             v-else 
             v-model="card.body" 
             :toolbars="editorToolbars" 
-            :preview="false" 
+            :preview="false"
+            language="en-US"
             :theme="isDarkMode ? 'dark' : 'light'" 
           />
         </div>

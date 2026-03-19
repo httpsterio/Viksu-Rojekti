@@ -11,6 +11,21 @@ statuses:
 - id: done
   name: Done
 epics:
+- id: epic-1773924443930
+  name: Board
+  color: '#19e1a5'
+- id: epic-1773924449199
+  name: Settings
+  color: '#00c288'
+- id: epic-1773924454503
+  name: Card
+  color: '#019d6e'
+- id: epic-1773924456709
+  name: Editor
+  color: '#137155'
+- id: epic-1773924465611
+  name: Theming
+  color: '#cfe90c'
 - id: epic-1773869062213
   name: Publishing
   color: '#fad000'
@@ -19,7 +34,10 @@ epics:
   color: '#f7a93b'
 - id: epic-1773869087849
   name: Translations
-  color: '#3b82f6'
+  color: '#ff811a'
+- id: epic-1773924068193
+  name: LINUX / MAC
+  color: '#3e3f41'
 tags:
 - id: tag-1773869123619
   name: Feature
@@ -27,8 +45,23 @@ tags:
 - id: tag-1773869127764
   name: Bug
   color: '#ff4d00'
+- id: tag-1773923939233
+  name: UX
+  color: '#faab00'
+- id: tag-1773923949970
+  name: API
+  color: '#50f7bf'
+- id: tag-1773923963358
+  name: Backend
+  color: '#5510bc'
+- id: tag-1773923872831
+  name: Polish
+  color: '#f5e324'
+- id: tag-1773923979395
+  name: Refactor
+  color: '#ff14a9'
 priorities:
-- low
-- medium
-- high
-- critical
+- LOW
+- MED
+- HIGH
+- CRIT

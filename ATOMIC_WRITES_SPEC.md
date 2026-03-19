@@ -1,0 +1,80 @@
+# Task: Atomic File Writes in storage.rs
+
+## Problem
+
+`write_card` and `write_board_config` in `src-tauri/src/storage.rs` both use `fs::write` which writes directly to the target file. If the process crashes mid-write the file is left truncated or corrupted with no recovery path.
+
+## Fix
+
+Change both functions to write to a sibling `.tmp` file first, then `fs::rename` to the final path. `rename` is atomic on all target platforms — it either completes fully or doesn't happen at all, leaving the original file untouched.
+
+## Exact Changes Required
+
+### `write_board_config` (line 31–36)
+
+Current:
+```rust
+pub fn write_board_config(path: &Path, config: &BoardConfig) -> Result<(), String> {
+    let yaml = serde_yaml::to_string(config)
+        .map_err(|e| format!("YAML serialization error: {}", e))?;
+    fs::write(path, yaml)
+        .map_err(|e| format!("Could not write config file: {}", e))
+}
+```
+
+Replace with:
+```rust
+pub fn write_board_config(path: &Path, config: &BoardConfig) -> Result<(), String> {
+    let yaml = serde_yaml::to_string(config)
+        .map_err(|e| format!("YAML serialization error: {}", e))?;
+    let tmp = path.with_extension("yaml.tmp");
+    fs::write(&tmp, yaml)
+        .map_err(|e| format!("Could not write config tmp file: {}", e))?;
+    fs::rename(&tmp, path)
+        .map_err(|e| format!("Could not finalize config file: {}", e))
+}
+```
+
+### `write_card` (lines 45–56)
+
+Current:
+```rust
+pub fn write_card(dir: &Path, card: &Card) -> Result<(), String> {
+    let path = dir.join("rojekti").join("cards").join(format!("{}.md", card.meta.id));
+    let content = serialize_card_file(&card.meta, &card.body);
+
+    if let Some(parent) = path.parent() {
+        fs::create_dir_all(parent)
+            .map_err(|e| format!("Could not create cards directory: {}", e))?;
+    }
+
+    fs::write(path, content)
+        .map_err(|e| format!("Could not write card file: {}", e))
+}
+```
+
+Replace with:
+```rust
+pub fn write_card(dir: &Path, card: &Card) -> Result<(), String> {
+    let path = dir.join("rojekti").join("cards").join(format!("{}.md", card.meta.id));
+    let content = serialize_card_file(&card.meta, &card.body);
+
+    if let Some(parent) = path.parent() {
+        fs::create_dir_all(parent)
+            .map_err(|e| format!("Could not create cards directory: {}", e))?;
+    }
+
+    let tmp = path.with_extension("md.tmp");
+    fs::write(&tmp, content)
+        .map_err(|e| format!("Could not write card tmp file: {}", e))?;
+    fs::rename(&tmp, &path)
+        .map_err(|e| format!("Could not finalize card file: {}", e))
+}
+```
+
+## Notes
+
+- No new dependencies required — `fs::rename` is in `std::fs` which is already imported
+- The file watcher in `src-tauri/src/watcher.rs` already filters `.tmp` files, so the intermediate write will not trigger a board reload
+- No other files need to change — callers of `write_card` and `write_board_config` are unaffected
+- Do not change `delete_card_file` — it already uses `fs::rename` correctly
