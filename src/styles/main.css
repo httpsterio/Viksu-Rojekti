@@ -86,7 +86,7 @@ body {
   overflow-y: auto;
 }
 
-/* md-editor-v3 overrides */
+md-editor-v3 overrides
 .md-editor-code-flag, .md-editor-code-action {
   display: none!important;
 }
@@ -97,4 +97,10 @@ body {
 
 pre > code {
   border-radius: 0.5rem!important;
+}
+
+/* dialog style overrides */
+
+.p-dialog {
+  max-height: 100%;
 }

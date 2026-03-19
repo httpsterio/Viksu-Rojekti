@@ -1,13 +1,91 @@
-generated: 2026-03-19T17:24:00.610640200+02:00
-cardCount: 1
+generated: 2026-03-20T01:00:52.023557200+02:00
+cardCount: 9
 cards:
 - id: roj-009
-  title: Broken cards graceful failing
+  title: 'fix: Broken cards graceful failing'
   status: backlog
   epic: epic-1773924443930
   tags:
   - tag-1773869127764
   - tag-1773869123619
   priority: HIGH
+  position: 1.0
+  created: 2026-03-19
+- id: roj-010
+  title: 'feat: Card attachment files'
+  status: backlog
+  epic: epic-1773924454503
+  tags:
+  - tag-1773869123619
+  priority: MED
+  position: 2.5
+  created: 2026-03-19
+- id: roj-011
+  title: 'feat: File Watcher'
+  status: done
+  epic: epic-1773924443930
+  tags:
+  - tag-1773923963358
+  priority: MED
+  position: 1.0
+  created: 2026-03-19
+- id: roj-012
+  title: 'fix: Atomic File Writes in storage.rs'
+  status: backlog
+  epic: epic-1773924443930
+  tags:
+  - tag-1773923963358
+  priority: HIGH
+  position: 4.0
+  created: 2026-03-19
+- id: roj-013
+  title: 'feat: Sound effects for GUI'
+  status: backlog
+  epic: epic-1773924465611
+  tags:
+  - tag-1773869123619
+  - tag-1773923872831
+  priority: LOW
+  position: 5.0
+  created: 2026-03-19
+- id: roj-014
+  title: 'style: Priority highlight on cards'
+  status: backlog
+  epic: epic-1773924465611
+  tags:
+  - tag-1773923939233
+  - tag-1773923872831
+  priority: LOW
+  position: 6.0
+  created: 2026-03-19
+- id: roj-015
+  title: 'style: Automatic contrast colors utility'
+  status: in-progress
+  epic: epic-1773924443930
+  tags:
+  - tag-1773869127764
+  - tag-1773923939233
+  - tag-1773923872831
+  priority: MED
+  position: 1.0
+  created: 2026-03-19
+- id: roj-016
+  title: 'feat: Hotkeys'
+  status: backlog
+  epic: epic-1773924443930
+  tags:
+  - tag-1773869123619
+  - tag-1773923939233
+  priority: MED
+  position: 8.0
+  created: 2026-03-19
+- id: roj-017
+  title: 'fix: Markdown description box overflow scrolling'
+  status: todo
+  epic: epic-1773924454503
+  tags:
+  - tag-1773923939233
+  - tag-1773869127764
+  priority: MED
   position: 1.0
   created: 2026-03-19

@@ -232,6 +232,7 @@ const removeTag = (tag: string) => {
           <MdPreview
             v-if="descriptionTab === 'view'"
             v-model="card.body"
+            previewTheme="github"
             language="en-US"
             :theme="isDarkMode ? 'dark' : 'light'"
           />
