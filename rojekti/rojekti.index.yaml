@@ -1,5 +1,5 @@
-generated: 2026-03-21T01:33:30.225091400+02:00
-cardCount: 38
+generated: 2026-03-21T01:42:55.551841400+02:00
+cardCount: 39
 cards:
 - id: roj-009
   title: 'fix: Broken cards graceful failing'
@@ -368,4 +368,13 @@ cards:
   - tag-1773869123619
   priority: LOW
   position: 22.0
+  created: 2026-03-21
+- id: roj-047
+  title: 'style: Update epic view group layout'
+  status: status-1774045884765
+  epic: epic-1773924443930
+  tags:
+  - tag-1773923872831
+  priority: LOW
+  position: 9.0
   created: 2026-03-21
