@@ -1,4 +1,4 @@
-generated: 2026-03-20T05:18:08.409964+02:00
+generated: 2026-03-20T05:25:28.996377900+02:00
 cardCount: 27
 cards:
 - id: roj-009
@@ -32,12 +32,12 @@ cards:
   created: 2026-03-19
 - id: roj-012
   title: 'fix: Atomic File Writes in storage.rs'
-  status: done
+  status: status-1773961454787
   epic: epic-1773924443930
   tags:
   - tag-1773923963358
   priority: CRIT
-  position: 1.0
+  position: 0.5
   created: 2026-03-19
 - id: roj-013
   title: 'feat: Sound effects for GUI'
@@ -118,13 +118,13 @@ cards:
   created: 2026-03-20
 - id: roj-021
   title: 'feat: Show deleted cards in settings'
-  status: todo
+  status: backlog
   epic: epic-1773924449199
   tags:
   - tag-1773869123619
   - tag-1773923963358
   priority: medium
-  position: 1.0
+  position: 0.390625
   created: 2026-03-20
 - id: roj-022
   title: 'chore: Name based epics and tags'
@@ -157,23 +157,23 @@ cards:
   created: 2026-03-20
 - id: roj-025
   title: 'fix: Silent overwrites of cards '
-  status: in-progress
+  status: status-1773961454787
   epic: epic-1773924443930
   tags:
   - tag-1773869127764
   - tag-1773923963358
   priority: medium
-  position: 1.0
+  position: 0.125
   created: 2026-03-20
 - id: roj-026
   title: 'fix: Silent background refresh for watcher-triggered reloads'
-  status: todo
+  status: status-1773961454787
   epic: epic-1773924443930
   tags:
   - tag-1773869127764
   - tag-1773923963358
   priority: medium
-  position: 3.0
+  position: 0.25
   created: 2026-03-20
 - id: roj-027
   title: 'feat: Link to another card from card'
