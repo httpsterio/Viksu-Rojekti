@@ -1,15 +1,15 @@
-generated: 2026-03-21T01:25:45.784478900+02:00
-cardCount: 37
+generated: 2026-03-21T01:33:30.225091400+02:00
+cardCount: 38
 cards:
 - id: roj-009
   title: 'fix: Broken cards graceful failing'
-  status: done
+  status: status-1774045884765
   epic: epic-1773924443930
   tags:
   - tag-1773869127764
   - tag-1773869123619
   priority: HIGH
-  position: 1.0
+  position: 0.25
   created: 2026-03-19
 - id: roj-010
   title: 'feat: Card attachment files'
@@ -238,7 +238,7 @@ cards:
   created: 2026-03-20
 - id: roj-033
   title: Validate against OS-reserved names
-  status: in-progress
+  status: done
   epic: epic-1773924443930
   tags:
   - tag-1773923963358
@@ -359,4 +359,13 @@ cards:
   - tag-1773869127764
   priority: MED
   position: 21.0
+  created: 2026-03-21
+- id: roj-046
+  title: 'feat: Filter by ID '
+  status: backlog
+  epic: epic-1773924443930
+  tags:
+  - tag-1773869123619
+  priority: LOW
+  position: 22.0
   created: 2026-03-21

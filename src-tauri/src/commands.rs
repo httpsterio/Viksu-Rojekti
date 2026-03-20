@@ -151,6 +151,8 @@ pub fn init_project(
     app_handle: tauri::AppHandle,
     state: State<AppState>,
 ) -> Result<(), String> {
+    validate_name_and_prefix(&name, &prefix)?;
+
     let _lock = state.write_lock.lock().map_err(|e| format!("Lock error: {}", e))?;
     *state.last_gui_write.lock().map_err(|e| format!("Lock error: {}", e))? = std::time::Instant::now();
     
@@ -190,5 +192,50 @@ pub fn init_project(
         }
     }
     
+    Ok(())
+}
+
+fn validate_name_and_prefix(name: &str, prefix: &str) -> Result<(), String> {
+    // Windows reserved device names (case-insensitive)
+    const RESERVED: &[&str] = &[
+        "CON", "PRN", "AUX", "NUL",
+        "COM1", "COM2", "COM3", "COM4", "COM5", "COM6", "COM7", "COM8", "COM9",
+        "LPT1", "LPT2", "LPT3", "LPT4", "LPT5", "LPT6", "LPT7", "LPT8", "LPT9",
+    ];
+
+    // Illegal filename characters on Windows
+    const ILLEGAL_CHARS: &[char] = &['\\', '/', ':', '*', '?', '"', '<', '>', '|'];
+
+    let prefix_upper = prefix.to_uppercase();
+    if RESERVED.contains(&prefix_upper.as_str()) {
+        return Err(format!(
+            "'{}' is a reserved Windows device name and cannot be used as a card prefix.",
+            prefix
+        ));
+    }
+
+    for ch in ILLEGAL_CHARS {
+        if name.contains(*ch) {
+            return Err(format!(
+                "Board name contains an illegal character: '{}'",
+                ch
+            ));
+        }
+        if prefix.contains(*ch) {
+            return Err(format!(
+                "Card prefix contains an illegal character: '{}'",
+                ch
+            ));
+        }
+    }
+
+    if prefix.trim().is_empty() {
+        return Err("Card prefix cannot be empty.".into());
+    }
+
+    if name.trim().is_empty() {
+        return Err("Board name cannot be empty.".into());
+    }
+
     Ok(())
 }
