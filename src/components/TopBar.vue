@@ -9,7 +9,7 @@ import InputGroup from "primevue/inputgroup"
 import InputGroupAddon from "primevue/inputgroupaddon"
 import Popover from "primevue/popover"
 
-const { config, activeFilters, currentView, isCreating, toggleDarkMode, isDarkMode } = useBoard()
+const { config, activeFilters, currentView, isCreating, toggleDarkMode } = useBoard()
 
 defineEmits(["open-settings"])
 
@@ -120,7 +120,10 @@ const clearAllFilters = () => {
     </div>
 
     <div class="right">
-      <Button icon="pi pi-cog" text @click="$emit('open-settings')" />
+      <ButtonGroup>
+        <Button icon="pi pi-moon" text @click="toggleDarkMode" />
+        <Button icon="pi pi-cog" text @click="$emit('open-settings')" />
+      </ButtonGroup>
       <Button label="New Card" size="small" icon="pi pi-plus" @click="isCreating = true" />
     </div>
   </div>

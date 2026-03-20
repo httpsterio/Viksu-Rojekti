@@ -202,7 +202,7 @@ const removeTag = (index: number) => {
             <label>Priorities</label>
           </div>
           <div class="list-editor">
-            <div v-for="(priority, index) in localConfig.priorities" :key="index" class="list-item">
+            <div v-for="(_, index) in localConfig.priorities" :key="index" class="list-item">
               <InputGroup>
                 <InputText v-model="localConfig.priorities[index]" size="small" />
               </InputGroup>

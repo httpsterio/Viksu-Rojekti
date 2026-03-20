@@ -1,15 +1,15 @@
-generated: 2026-03-20T05:25:28.996377900+02:00
+generated: 2026-03-21T00:16:08.386377600+02:00
 cardCount: 27
 cards:
 - id: roj-009
   title: 'fix: Broken cards graceful failing'
-  status: backlog
+  status: todo
   epic: epic-1773924443930
   tags:
   - tag-1773869127764
   - tag-1773869123619
   priority: HIGH
-  position: 1.5625
+  position: 6.0
   created: 2026-03-19
 - id: roj-010
   title: 'feat: Card attachment files'
@@ -228,33 +228,33 @@ cards:
   created: 2026-03-20
 - id: roj-032
   title: 'chore: Priority system'
-  status: backlog
+  status: todo
   epic: epic-1773924449199
   tags:
   - tag-1773923979395
   - tag-1773923963358
   priority: medium
-  position: 14.0
+  position: 5.0
   created: 2026-03-20
 - id: roj-033
   title: Validate against OS-reserved names
-  status: backlog
+  status: todo
   epic: epic-1773924443930
   tags:
   - tag-1773923963358
   - tag-1773869127764
   priority: MED
-  position: 15.0
+  position: 4.0
   created: 2026-03-20
 - id: roj-034
   title: Safe Epic/Tag Rename with Write-Ahead Log
-  status: backlog
+  status: todo
   epic: epic-1773924443930
   tags:
   - tag-1773923963358
   - tag-1773923979395
   priority: HIGH
-  position: 16.0
+  position: 3.0
   created: 2026-03-20
 - id: roj-035
   title: 'feat: Hotkeys'

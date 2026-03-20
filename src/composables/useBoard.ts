@@ -1,6 +1,6 @@
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed } from 'vue'
 import { invoke } from '@tauri-apps/api/core'
-import type { BoardConfig, Card, Epic } from '@/types'
+import type { BoardConfig, Card } from '@/types'
 import { useToast } from 'primevue/usetoast'
 
 const config = ref<BoardConfig | null>(null)
