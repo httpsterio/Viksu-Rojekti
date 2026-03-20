@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, watch, nextTick } from 'vue'
-import Sortable from 'sortablejs'
-import Card from './Card.vue'
-import type { Card as CardType } from '@/types'
-import { useBoard } from '@/composables/useBoard'
-import Button from 'primevue/button'
+import { ref, onMounted, onUnmounted, watch, nextTick } from "vue"
+import Sortable from "sortablejs"
+import Card from "./Card.vue"
+import type { Card as CardType } from "@/types"
+import { useBoard } from "@/composables/useBoard"
+import Button from "primevue/button"
 
 const props = defineProps<{
   id: string
@@ -21,39 +21,45 @@ const initSortable = () => {
   nextTick(() => {
     if (cardContainer.value && !props.collapsed) {
       sortable = new Sortable(cardContainer.value, {
-        group: 'cards',
+        group: "cards",
         animation: 150,
-        ghostClass: 'ghost-card',
-        dragClass: 'dragging-card',
+        ghostClass: "ghost-card",
+        dragClass: "dragging-card",
         forceFallback: true,
-        fallbackClass: 'dragging-card',
-        dataIdAttr: 'data-card-id',
+        fallbackClass: "dragging-card",
+        dataIdAttr: "data-card-id",
         onEnd: (evt) => {
           if (evt.to && evt.item) {
-            const cardId = evt.item.getAttribute('data-card-id')!
-            const newStatusId = evt.to.getAttribute('data-status-id')!
+            const cardId = evt.item.getAttribute("data-card-id")!
+            const newStatusId = evt.to.getAttribute("data-status-id")!
             const newIndex = evt.newIndex!
-            
+
             const laneCards = Array.from(evt.to.children)
             let newPos = 1.0
-            
+
             if (laneCards.length > 1) {
               if (newIndex === 0) {
-                const nextPos = parseFloat(laneCards[1].getAttribute('data-pos') || '2.0')
+                const nextPos = parseFloat(laneCards[1].getAttribute("data-pos") || "2.0")
                 newPos = nextPos / 2
               } else if (newIndex === laneCards.length - 1) {
-                const prevPos = parseFloat(laneCards[laneCards.length - 2].getAttribute('data-pos') || '0.0')
+                const prevPos = parseFloat(
+                  laneCards[laneCards.length - 2].getAttribute("data-pos") || "0.0",
+                )
                 newPos = prevPos + 1.0
               } else {
-                const prevPos = parseFloat(laneCards[newIndex - 1].getAttribute('data-pos') || '0.0')
-                const nextPos = parseFloat(laneCards[newIndex + 1].getAttribute('data-pos') || '0.0')
+                const prevPos = parseFloat(
+                  laneCards[newIndex - 1].getAttribute("data-pos") || "0.0",
+                )
+                const nextPos = parseFloat(
+                  laneCards[newIndex + 1].getAttribute("data-pos") || "0.0",
+                )
                 newPos = (prevPos + nextPos) / 2
               }
             }
-            
+
             moveCard(cardId, newStatusId, newPos)
           }
-        }
+        },
       })
     }
   })
@@ -61,18 +67,21 @@ const initSortable = () => {
 
 onMounted(() => initSortable())
 
-watch(() => props.collapsed, (isCollapsed) => {
-  if (isCollapsed) {
-    sortable?.destroy()
-    sortable = null
-  } else {
-    setTimeout(initSortable, 0)
-  }
-})
+watch(
+  () => props.collapsed,
+  (isCollapsed) => {
+    if (isCollapsed) {
+      sortable?.destroy()
+      sortable = null
+    } else {
+      setTimeout(initSortable, 0)
+    }
+  },
+)
 
 onUnmounted(() => sortable?.destroy())
 
-const formatName = (name: string) => name.replace(/-/g, ' ').toUpperCase()
+const formatName = (name: string) => name.replace(/-/g, " ").toUpperCase()
 </script>
 
 <template>
@@ -88,25 +97,16 @@ const formatName = (name: string) => name.replace(/-/g, ' ').toUpperCase()
           <h3>{{ formatName(name) }}</h3>
           <span class="lane-count">{{ cards.length }}</span>
         </div>
-        <Button 
-          icon="pi pi-angle-left" 
-          text 
-          rounded 
-          size="small" 
-          @click="toggleStatusCollapse(id)" 
+        <Button
+          icon="pi pi-angle-left"
+          text
+          rounded
+          size="small"
+          @click="toggleStatusCollapse(id)"
         />
       </div>
-      <div 
-        ref="cardContainer" 
-        class="lane-body" 
-        :data-status-id="id"
-      >
-        <Card 
-          v-for="card in cards" 
-          :key="card.id" 
-          :card="card" 
-          :data-pos="card.position"
-        />
+      <div ref="cardContainer" class="lane-body" :data-status-id="id">
+        <Card v-for="card in cards" :key="card.id" :card="card" :data-pos="card.position" />
       </div>
     </template>
   </div>
@@ -118,7 +118,9 @@ const formatName = (name: string) => name.replace(/-/g, ' ').toUpperCase()
   flex-direction: column;
   background: var(--bg-lane);
   border-radius: var(--card-radius);
-  transition: flex 0.2s ease, min-width 0.2s ease;
+  transition:
+    flex 0.2s ease,
+    min-width 0.2s ease;
   height: 100%;
 }
 

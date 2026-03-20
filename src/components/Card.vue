@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { computed } from 'vue'
-import { useBoard } from '@/composables/useBoard'
-import { useColorContrast } from '@/composables/useColorContrast'
-import type { Card } from '@/types'
+import { computed } from "vue"
+import { useBoard } from "@/composables/useBoard"
+import { useColorContrast } from "@/composables/useColorContrast"
+import type { Card } from "@/types"
 
 const props = defineProps<{
   card: Card
@@ -11,11 +11,9 @@ const props = defineProps<{
 const { config, editingCard } = useBoard()
 const { contrastColor } = useColorContrast()
 
-const epic = computed(() => 
-  config.value?.epics.find(e => e.id === props.card.epic)
-)
+const epic = computed(() => config.value?.epics.find((e) => e.id === props.card.epic))
 
-const getTag = (id: string) => config.value?.tags.find(t => t.id === id)
+const getTag = (id: string) => config.value?.tags.find((t) => t.id === id)
 
 const getTagStyle = (id: string) => {
   const tag = getTag(id)
@@ -23,7 +21,7 @@ const getTagStyle = (id: string) => {
     return {
       backgroundColor: tag.color,
       color: contrastColor(tag.color),
-      borderColor: 'transparent'
+      borderColor: "transparent",
     }
   }
   return {}
@@ -31,8 +29,8 @@ const getTagStyle = (id: string) => {
 </script>
 
 <template>
-  <div 
-    class="card" 
+  <div
+    class="card"
     :class="`priority-${card.priority}`"
     :data-card-id="card.id"
     @click="editingCard = card"
@@ -42,19 +40,14 @@ const getTagStyle = (id: string) => {
     </div>
     <h4 class="card-title">{{ card.title }}</h4>
     <div class="card-meta">
-      <span 
-        v-if="epic" 
-        class="epic-badge" 
+      <span
+        v-if="epic"
+        class="epic-badge"
         :style="{ backgroundColor: epic.color, color: contrastColor(epic.color) }"
       >
         {{ epic.name }}
       </span>
-      <span 
-        v-for="tagId in card.tags" 
-        :key="tagId" 
-        class="tag-pill"
-        :style="getTagStyle(tagId)"
-      >
+      <span v-for="tagId in card.tags" :key="tagId" class="tag-pill" :style="getTagStyle(tagId)">
         {{ getTag(tagId)?.name || tagId }}
       </span>
     </div>
@@ -70,7 +63,9 @@ const getTagStyle = (id: string) => {
   margin-bottom: 0.75rem;
   cursor: pointer;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  transition: transform 0.1s, box-shadow 0.1s;
+  transition:
+    transform 0.1s,
+    box-shadow 0.1s;
 }
 
 .card:hover {
@@ -123,8 +118,16 @@ const getTagStyle = (id: string) => {
 }
 
 /* Priority Borders */
-.priority-critical { border-left-color: #e53e3e; }
-.priority-high     { border-left-color: #ed8936; }
-.priority-medium   { border-left-color: #4299e1; }
-.priority-low      { border-left-color: #a0aec0; }
+.priority-critical {
+  border-left-color: #e53e3e;
+}
+.priority-high {
+  border-left-color: #ed8936;
+}
+.priority-medium {
+  border-left-color: #4299e1;
+}
+.priority-low {
+  border-left-color: #a0aec0;
+}
 </style>

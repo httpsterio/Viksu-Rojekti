@@ -1,16 +1,16 @@
 <script setup lang="ts">
-import { useBoard } from '@/composables/useBoard'
-import Lane from './Lane.vue'
+import { useBoard } from "@/composables/useBoard"
+import Lane from "./Lane.vue"
 
 const { config, cardsByStatus, collapsedStatuses } = useBoard()
 </script>
 
 <template>
-  <div class="board-view" v-if="config">
-    <Lane 
-      v-for="status in config.statuses" 
-      :key="status.id"
+  <div v-if="config" class="board-view">
+    <Lane
+      v-for="status in config.statuses"
       :id="status.id"
+      :key="status.id"
       :name="status.name"
       :cards="cardsByStatus[status.id] || []"
       :collapsed="collapsedStatuses.has(status.id)"

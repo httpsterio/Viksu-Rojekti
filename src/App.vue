@@ -1,27 +1,27 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
-import { listen } from '@tauri-apps/api/event'
-import { useBoard } from './composables/useBoard'
-import Toast from 'primevue/toast'
-import Button from 'primevue/button'
-import InputText from 'primevue/inputtext'
-import ProgressSpinner from 'primevue/progressspinner'
-import TopBar from './components/TopBar.vue'
-import BoardView from './components/BoardView.vue'
-import CardModal from './components/CardModal.vue'
-import ConfirmDialog from 'primevue/confirmdialog'
-import EpicView from './components/EpicView.vue'
-import BoardSettingsModal from './components/BoardSettingsModal.vue'
+import { onMounted, ref } from "vue"
+import { listen } from "@tauri-apps/api/event"
+import { useBoard } from "./composables/useBoard"
+import Toast from "primevue/toast"
+import Button from "primevue/button"
+import InputText from "primevue/inputtext"
+import ProgressSpinner from "primevue/progressspinner"
+import TopBar from "./components/TopBar.vue"
+import BoardView from "./components/BoardView.vue"
+import CardModal from "./components/CardModal.vue"
+import ConfirmDialog from "primevue/confirmdialog"
+import EpicView from "./components/EpicView.vue"
+import BoardSettingsModal from "./components/BoardSettingsModal.vue"
 
 const { config, isLoading, needsInit, loadBoard, initBoard, currentView } = useBoard()
 
-const initName = ref('')
-const initPrefix = ref('')
+const initName = ref("")
+const initPrefix = ref("")
 const settingsModal = ref<InstanceType<typeof BoardSettingsModal> | null>(null)
 
 onMounted(async () => {
   await loadBoard()
-  await listen('board-changed', () => {
+  await listen("board-changed", () => {
     loadBoard(true)
   })
 })
@@ -46,23 +46,23 @@ const handleInit = () => {
       <div class="init-card">
         <h1>Welcome to Rojekti</h1>
         <p>No board found in this directory. Initialize a new one?</p>
-        
+
         <div class="field">
           <label for="name">Board Name</label>
           <InputText id="name" v-model="initName" placeholder="My Project" fluid />
         </div>
-        
+
         <div class="field">
           <label for="prefix">Card Prefix</label>
           <InputText id="prefix" v-model="initPrefix" placeholder="ROJ" fluid />
         </div>
-        
-        <Button label="Initialize Board" @click="handleInit" :disabled="!initName || !initPrefix" />
+
+        <Button label="Initialize Board" :disabled="!initName || !initPrefix" @click="handleInit" />
       </div>
     </div>
 
     <template v-else-if="config">
-      <TopBar @open-settings="settingsModal.open()" />
+      <TopBar @open-settings="settingsModal?.open()" />
       <main class="main-content">
         <BoardView v-if="currentView === 'board'" />
         <EpicView v-else />

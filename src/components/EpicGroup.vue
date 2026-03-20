@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type { Card, Epic } from '@/types'
-import CardComponent from './Card.vue'
+import type { Card, Epic } from "@/types"
+import CardComponent from "./Card.vue"
 
 defineProps<{
   epic?: Epic
@@ -10,19 +10,12 @@ defineProps<{
 
 <template>
   <div class="epic-group">
-    <div 
-      class="epic-header" 
-      :style="{ borderLeftColor: epic?.color || 'var(--text-muted)' }"
-    >
-      <h3>{{ epic?.name || 'Unassigned' }}</h3>
+    <div class="epic-header" :style="{ borderLeftColor: epic?.color || 'var(--text-muted)' }">
+      <h3>{{ epic?.name || "Unassigned" }}</h3>
       <span class="count">{{ cards.length }}</span>
     </div>
     <div class="epic-cards">
-      <CardComponent 
-        v-for="card in cards" 
-        :key="card.id" 
-        :card="card" 
-      />
+      <CardComponent v-for="card in cards" :key="card.id" :card="card" />
     </div>
   </div>
 </template>
@@ -41,7 +34,7 @@ defineProps<{
   border-left: 6px solid;
   border-radius: var(--card-radius);
   margin-bottom: 1rem;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
 .epic-header h3 {

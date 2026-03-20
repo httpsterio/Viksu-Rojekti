@@ -1,30 +1,23 @@
 <script setup lang="ts">
-import { useBoard } from '@/composables/useBoard'
-import { ref, computed } from 'vue'
-import Button from 'primevue/button'
-import Select from 'primevue/select'
-import InputText from 'primevue/inputtext'
-import ButtonGroup from 'primevue/buttongroup'
-import InputGroup from 'primevue/inputgroup'
-import InputGroupAddon from 'primevue/inputgroupaddon'
-import Popover from 'primevue/popover'
+import { useBoard } from "@/composables/useBoard"
+import { ref, computed } from "vue"
+import Button from "primevue/button"
+import Select from "primevue/select"
+import InputText from "primevue/inputtext"
+import ButtonGroup from "primevue/buttongroup"
+import InputGroup from "primevue/inputgroup"
+import InputGroupAddon from "primevue/inputgroupaddon"
+import Popover from "primevue/popover"
 
-const {
-  config,
-  activeFilters,
-  currentView,
-  isCreating,
-  toggleDarkMode,
-  isDarkMode
-} = useBoard()
+const { config, activeFilters, currentView, isCreating, toggleDarkMode, isDarkMode } = useBoard()
 
-defineEmits(['open-settings'])
+defineEmits(["open-settings"])
 
 const filterPanel = ref()
 
 const views = [
-  { label: 'Board', value: 'board', icon: 'pi pi-th-large' },
-  { label: 'Epics', value: 'epics', icon: 'pi pi-list' }
+  { label: "Board", value: "board", icon: "pi pi-th-large" },
+  { label: "Epics", value: "epics", icon: "pi pi-list" },
 ]
 
 const activeFilterCount = computed(() => {
@@ -43,39 +36,85 @@ const clearAllFilters = () => {
   activeFilters.value.epic = null
   activeFilters.value.tag = null
   activeFilters.value.priority = null
-  activeFilters.value.search = ''
+  activeFilters.value.search = ""
 }
 </script>
 
 <template>
-  <div class="top-bar" v-if="config">
+  <div v-if="config" class="top-bar">
     <div class="left">
       <ButtonGroup>
-        <Button v-for="view in views" :key="view.value" :icon="view.icon" :label="view.label"
+        <Button
+          v-for="view in views"
+          :key="view.value"
+          :icon="view.icon"
+          :label="view.label"
           :class="{ 'p-button-secondary': currentView !== view.value }"
-          @click="currentView = (view.value as 'board' | 'epics')" size="small" />
+          size="small"
+          @click="currentView = view.value as 'board' | 'epics'"
+        />
       </ButtonGroup>
     </div>
 
     <div class="center">
-      <Button icon="pi pi-filter" :label="activeFilterCount > 0 ? `Filters (${activeFilterCount})` : 'Filters'"
-        :severity="activeFilterCount > 0 ? undefined : 'secondary'" size="small" outlined @click="toggleFilters" />
-      <Button v-if="activeFilterCount > 0" icon="pi pi-filter-slash" size="small" text severity="secondary"
-        @click="clearAllFilters" />
+      <Button
+        icon="pi pi-filter"
+        :label="activeFilterCount > 0 ? `Filters (${activeFilterCount})` : 'Filters'"
+        :severity="activeFilterCount > 0 ? undefined : 'secondary'"
+        size="small"
+        outlined
+        @click="toggleFilters"
+      />
+      <Button
+        v-if="activeFilterCount > 0"
+        icon="pi pi-filter-slash"
+        size="small"
+        text
+        severity="secondary"
+        @click="clearAllFilters"
+      />
       <Popover ref="filterPanel">
         <div class="filter-panel">
-          <Select v-model="activeFilters.epic" :options="config.epics" optionLabel="name" optionValue="id"
-            placeholder="All Epics" showClear size="small" fluid />
-          <Select v-model="activeFilters.tag" :options="config.tags" optionLabel="name" optionValue="id"
-            placeholder="All Tags" showClear size="small" fluid />
-          <Select v-model="activeFilters.priority" :options="config.priorities" placeholder="All Priorities" showClear
-            size="small" fluid />
+          <Select
+            v-model="activeFilters.epic"
+            :options="config.epics"
+            option-label="name"
+            option-value="id"
+            placeholder="All Epics"
+            show-clear
+            size="small"
+            fluid
+          />
+          <Select
+            v-model="activeFilters.tag"
+            :options="config.tags"
+            option-label="name"
+            option-value="id"
+            placeholder="All Tags"
+            show-clear
+            size="small"
+            fluid
+          />
+          <Select
+            v-model="activeFilters.priority"
+            :options="config.priorities"
+            placeholder="All Priorities"
+            show-clear
+            size="small"
+            fluid
+          />
         </div>
       </Popover>
       <InputGroup class="search-group">
         <InputText v-model="activeFilters.search" placeholder="Search..." size="small" />
         <InputGroupAddon>
-          <Button icon="pi pi-times" text severity="secondary" size="small" @click="activeFilters.search = ''" />
+          <Button
+            icon="pi pi-times"
+            text
+            severity="secondary"
+            size="small"
+            @click="activeFilters.search = ''"
+          />
         </InputGroupAddon>
       </InputGroup>
     </div>

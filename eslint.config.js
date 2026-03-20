@@ -1,29 +1,32 @@
 import pluginVue from 'eslint-plugin-vue'
 import tseslint from 'typescript-eslint'
+import vueParser from 'vue-eslint-parser'
+import eslintConfigPrettier from 'eslint-config-prettier'
 
 export default tseslint.config(
   {
     ignores: ['dist/**', 'src-tauri/**', 'node_modules/**'],
   },
 
-  // Vue files: vue-eslint-parser as outer parser, ts parser for <script>
+  // Vue files: explicit vue-eslint-parser as outer, ts parser for <script>
   ...pluginVue.configs['flat/recommended'],
   {
     files: ['**/*.vue'],
     languageOptions: {
+      parser: vueParser,
       parserOptions: {
         parser: tseslint.parser,
       },
     },
   },
 
-  // TypeScript-eslint recommended scoped to .ts only (avoids overriding vue-eslint-parser)
+  // TypeScript-eslint recommended scoped to .ts only
   ...tseslint.configs.recommended.map(config => ({
     ...config,
     files: ['**/*.ts', '**/*.tsx'],
   })),
 
-  // Register the @typescript-eslint plugin globally so rules work in .vue files too
+  // Register @typescript-eslint plugin globally for .vue files
   {
     plugins: { '@typescript-eslint': tseslint.plugin },
     rules: {
@@ -33,6 +36,10 @@ export default tseslint.config(
       'vue/require-default-prop': 'off',
       'vue/max-attributes-per-line': 'off',
       'vue/html-self-closing': ['warn', { html: { void: 'always' } }],
+      'vue/block-lang': ['error', { script: { lang: 'ts' } }],
     },
   },
+
+  // Prettier last — disables conflicting ESLint formatting rules
+  eslintConfigPrettier,
 )

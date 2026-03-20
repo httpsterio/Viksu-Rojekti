@@ -5,6 +5,7 @@
     "rust-lang.rust-analyzer",
     "dbaeumer.vscode-eslint",
     "EditorConfig.EditorConfig",
-    "ms-vscode-remote.remote-wsl"
+    "ms-vscode-remote.remote-wsl",
+    "esbenp.prettier-vscode"
   ]
 }

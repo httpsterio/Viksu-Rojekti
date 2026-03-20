@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import { useBoard } from '@/composables/useBoard'
-import type { BoardConfig } from '@/types'
-import Dialog from 'primevue/dialog'
-import Button from 'primevue/button'
-import InputText from 'primevue/inputtext'
-import InputGroup from 'primevue/inputgroup'
-import InputGroupAddon from 'primevue/inputgroupaddon'
-import { useConfirm } from 'primevue/useconfirm'
-import Sortable from 'sortablejs'
+import { ref } from "vue"
+import { useBoard } from "@/composables/useBoard"
+import type { BoardConfig } from "@/types"
+import Dialog from "primevue/dialog"
+import Button from "primevue/button"
+import InputText from "primevue/inputtext"
+import InputGroup from "primevue/inputgroup"
+import InputGroupAddon from "primevue/inputgroupaddon"
+import { useConfirm } from "primevue/useconfirm"
+import Sortable from "sortablejs"
 
 const { config, cards, saveBoardConfig, updateCard } = useBoard()
 const confirm = useConfirm()
@@ -33,23 +33,24 @@ const onShow = () => {
   statusesSortable?.destroy()
   epicsSortable?.destroy()
   tagsSortable?.destroy()
-  statusesSortable = initSortable(statusesContainer.value, 'statuses')
-  epicsSortable = initSortable(epicsContainer.value, 'epics')
-  tagsSortable = initSortable(tagsContainer.value, 'tags')
+  statusesSortable = initSortable(statusesContainer.value, "statuses")
+  epicsSortable = initSortable(epicsContainer.value, "epics")
+  tagsSortable = initSortable(tagsContainer.value, "tags")
 }
 
-const initSortable = (el: HTMLElement | null, list: 'statuses' | 'epics' | 'tags') => {
+const initSortable = (el: HTMLElement | null, list: "statuses" | "epics" | "tags") => {
   if (el && localConfig.value) {
     return new Sortable(el, {
-      handle: '.drag-handle',
+      handle: ".drag-handle",
       animation: 150,
       forceFallback: true,
       onEnd: (evt) => {
         if (evt.oldIndex !== undefined && evt.newIndex !== undefined && localConfig.value) {
           const item = localConfig.value[list].splice(evt.oldIndex, 1)[0]
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           localConfig.value[list].splice(evt.newIndex, 0, item as any)
         }
-      }
+      },
     })
   }
   return null
@@ -67,32 +68,32 @@ const handleSave = async () => {
 const addStatus = () => {
   localConfig.value?.statuses.push({
     id: `status-${Date.now()}`,
-    name: 'New Status'
+    name: "New Status",
   })
 }
 
 const removeStatus = (index: number) => {
   if (!localConfig.value) return
-  
+
   const statusToRemove = localConfig.value.statuses[index]
-  const cardsInStatus = cards.value.filter(c => c.status === statusToRemove.id)
-  
+  const cardsInStatus = cards.value.filter((c) => c.status === statusToRemove.id)
+
   if (cardsInStatus.length === 0) {
     confirm.require({
       message: `Are you sure you want to delete the "${statusToRemove.name}" status?`,
-      header: 'Delete Status',
-      icon: 'pi pi-exclamation-triangle',
-      acceptClass: 'p-button-danger',
+      header: "Delete Status",
+      icon: "pi pi-exclamation-triangle",
+      acceptClass: "p-button-danger",
       accept: () => {
         localConfig.value?.statuses.splice(index, 1)
-      }
+      },
     })
   } else {
     confirm.require({
       message: `The status "${statusToRemove.name}" has ${cardsInStatus.length} cards assigned to it. If you proceed, these cards will be moved to the first status in the list. Do you want to proceed?`,
-      header: 'Delete Status & Move Cards',
-      icon: 'pi pi-exclamation-triangle',
-      acceptClass: 'p-button-danger',
+      header: "Delete Status & Move Cards",
+      icon: "pi pi-exclamation-triangle",
+      acceptClass: "p-button-danger",
       accept: async () => {
         localConfig.value?.statuses.splice(index, 1)
         if (localConfig.value && localConfig.value.statuses.length > 0) {
@@ -101,7 +102,7 @@ const removeStatus = (index: number) => {
             await updateCard({ ...card, status: firstStatusId })
           }
         }
-      }
+      },
     })
   }
 }
@@ -109,47 +110,54 @@ const removeStatus = (index: number) => {
 const addEpic = () => {
   localConfig.value?.epics.push({
     id: `epic-${Date.now()}`,
-    name: 'New Epic',
-    color: '#3b82f6'
+    name: "New Epic",
+    color: "#3b82f6",
   })
 }
 
 const removeEpic = (index: number) => {
   confirm.require({
-    message: 'Are you sure you want to delete this epic?',
-    header: 'Delete Epic',
-    icon: 'pi pi-exclamation-triangle',
-    acceptClass: 'p-button-danger',
+    message: "Are you sure you want to delete this epic?",
+    header: "Delete Epic",
+    icon: "pi pi-exclamation-triangle",
+    acceptClass: "p-button-danger",
     accept: () => {
       localConfig.value?.epics.splice(index, 1)
-    }
+    },
   })
 }
 
 const addTag = () => {
   localConfig.value?.tags.push({
     id: `tag-${Date.now()}`,
-    name: 'New Tag',
-    color: '#10b981'
+    name: "New Tag",
+    color: "#10b981",
   })
 }
 
 const removeTag = (index: number) => {
   confirm.require({
-    message: 'Are you sure you want to delete this tag?',
-    header: 'Delete Tag',
-    icon: 'pi pi-exclamation-triangle',
-    acceptClass: 'p-button-danger',
+    message: "Are you sure you want to delete this tag?",
+    header: "Delete Tag",
+    icon: "pi pi-exclamation-triangle",
+    acceptClass: "p-button-danger",
     accept: () => {
       localConfig.value?.tags.splice(index, 1)
-    }
+    },
   })
 }
 </script>
 
 <template>
-  <Dialog v-model:visible="visible" modal header="Board Settings" class="settings-modal" @show="onShow"
-    :dismissableMask="true" :draggable="false">
+  <Dialog
+    v-model:visible="visible"
+    modal
+    header="Board Settings"
+    class="settings-modal"
+    :dismissable-mask="true"
+    :draggable="false"
+    @show="onShow"
+  >
     <div v-if="localConfig" class="settings-layout">
       <div class="settings-column">
         <section>
@@ -161,7 +169,7 @@ const removeTag = (index: number) => {
           <div class="section-header">
             <label>Status</label>
           </div>
-          <div class="list-editor" ref="statusesContainer">
+          <div ref="statusesContainer" class="list-editor">
             <div v-for="(status, index) in localConfig.statuses" :key="status.id" class="list-item">
               <InputGroup>
                 <InputGroupAddon class="drag-handle">
@@ -169,11 +177,23 @@ const removeTag = (index: number) => {
                 </InputGroupAddon>
                 <InputText v-model="status.name" size="small" />
                 <InputGroupAddon>
-                  <Button icon="pi pi-trash" text severity="danger" size="small" @click="removeStatus(index)" />
+                  <Button
+                    icon="pi pi-trash"
+                    text
+                    severity="danger"
+                    size="small"
+                    @click="removeStatus(index)"
+                  />
                 </InputGroupAddon>
               </InputGroup>
             </div>
-            <Button icon="pi pi-plus" label="Add Status" size="small" class="add-btn" @click="addStatus" />
+            <Button
+              icon="pi pi-plus"
+              label="Add Status"
+              size="small"
+              class="add-btn"
+              @click="addStatus"
+            />
           </div>
         </section>
 
@@ -196,14 +216,14 @@ const removeTag = (index: number) => {
           <div class="section-header">
             <label>Epics</label>
           </div>
-          <div class="list-editor" ref="epicsContainer">
+          <div ref="epicsContainer" class="list-editor">
             <div v-for="(epic, index) in localConfig.epics" :key="epic.id" class="list-item">
               <InputGroup>
                 <InputGroupAddon class="drag-handle">
                   <i class="pi pi-bars"></i>
                 </InputGroupAddon>
                 <InputGroupAddon class="color-addon">
-                  <input type="color" v-model="epic.color" class="color-swatch" />
+                  <input v-model="epic.color" type="color" class="color-swatch" />
                 </InputGroupAddon>
                 <InputText v-model="epic.name" placeholder="Epic name" />
                 <InputGroupAddon>
@@ -211,7 +231,13 @@ const removeTag = (index: number) => {
                 </InputGroupAddon>
               </InputGroup>
             </div>
-            <Button icon="pi pi-plus" label="Add Epic" size="small" class="add-btn" @click="addEpic" />
+            <Button
+              icon="pi pi-plus"
+              label="Add Epic"
+              size="small"
+              class="add-btn"
+              @click="addEpic"
+            />
           </div>
         </section>
 
@@ -219,14 +245,14 @@ const removeTag = (index: number) => {
           <div class="section-header">
             <label>Tags</label>
           </div>
-          <div class="list-editor" ref="tagsContainer">
+          <div ref="tagsContainer" class="list-editor">
             <div v-for="(tag, index) in localConfig.tags" :key="tag.id" class="list-item">
               <InputGroup>
                 <InputGroupAddon class="drag-handle">
                   <i class="pi pi-bars"></i>
                 </InputGroupAddon>
                 <InputGroupAddon class="color-addon">
-                  <input type="color" v-model="tag.color" class="color-swatch" />
+                  <input v-model="tag.color" type="color" class="color-swatch" />
                 </InputGroupAddon>
                 <InputText v-model="tag.name" placeholder="Tag name" />
                 <InputGroupAddon>
@@ -234,7 +260,13 @@ const removeTag = (index: number) => {
                 </InputGroupAddon>
               </InputGroup>
             </div>
-            <Button icon="pi pi-plus" label="Add Tag" size="small" class="add-btn" @click="addTag" />
+            <Button
+              icon="pi pi-plus"
+              label="Add Tag"
+              size="small"
+              class="add-btn"
+              @click="addTag"
+            />
           </div>
         </section>
       </div>
@@ -248,7 +280,6 @@ const removeTag = (index: number) => {
 </template>
 
 <style scoped>
-
 .settings-layout {
   display: grid;
   grid-template-columns: 1fr;

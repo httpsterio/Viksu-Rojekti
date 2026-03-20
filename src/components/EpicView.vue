@@ -1,23 +1,20 @@
 <script setup lang="ts">
-import { useBoard } from '@/composables/useBoard'
-import EpicGroup from './EpicGroup.vue'
+import { useBoard } from "@/composables/useBoard"
+import EpicGroup from "./EpicGroup.vue"
 
 const { config, cardsByEpic } = useBoard()
 </script>
 
 <template>
-  <div class="epic-view" v-if="config">
-    <EpicGroup 
-      v-for="epic in config.epics" 
+  <div v-if="config" class="epic-view">
+    <EpicGroup
+      v-for="epic in config.epics"
       :key="epic.id"
       :epic="epic"
       :cards="cardsByEpic[epic.id] || []"
     />
-    
-    <EpicGroup 
-      v-if="cardsByEpic['unassigned']?.length > 0"
-      :cards="cardsByEpic['unassigned']"
-    />
+
+    <EpicGroup v-if="cardsByEpic['unassigned']?.length > 0" :cards="cardsByEpic['unassigned']" />
   </div>
 </template>
 
