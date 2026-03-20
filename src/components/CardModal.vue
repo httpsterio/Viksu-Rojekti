@@ -132,6 +132,7 @@ const handleDelete = () => {
 }
 
 const getTag = (id: string) => config.value?.tags.find(t => t.id === id)
+const getEpic = (id: string) => config.value?.epics.find(e => e.id === id)
 
 const removeTag = (tag: string) => {
   if (card.value.tags) {
@@ -175,38 +176,61 @@ const removeTag = (tag: string) => {
 
         <div class="field">
           <label>Epic</label>
-          <Select 
-            v-model="card.epic" 
-            :options="config?.epics" 
-            optionLabel="name" 
-            optionValue="id" 
-            placeholder="No Epic" 
-            showClear 
-            fluid 
-          />
+          <Select
+            v-model="card.epic"
+            :options="config?.epics"
+            optionLabel="name"
+            optionValue="id"
+            placeholder="No Epic"
+            showClear
+            fluid
+          >
+            <template #value="{ value }">
+              <span v-if="value" class="colored-option" :style="{ backgroundColor: getEpic(value)?.color, color: contrastColor(getEpic(value)?.color) }">
+                {{ getEpic(value)?.name }}
+              </span>
+              <span v-else class="p-placeholder">No Epic</span>
+            </template>
+            <template #option="{ option }">
+              <span class="colored-option" :style="{ backgroundColor: option.color, color: contrastColor(option.color) }">
+                {{ option.name }}
+              </span>
+            </template>
+          </Select>
         </div>
 
         <div class="field">
           <label>Tags</label>
-          <MultiSelect 
-            v-model="card.tags" 
-            :options="config?.tags" 
+          <MultiSelect
+            v-model="card.tags"
+            :options="config?.tags"
             optionLabel="name"
             optionValue="id"
-            placeholder="Select Tags" 
-            display="chip" 
-            fluid 
+            placeholder="Select Tags"
+            display="chip"
+            fluid
             :maxSelectedLabels="3"
             :showSelectAll="false"
-          />
+          >
+            <template #chip="{ value }">
+              <span class="colored-chip" :style="{ backgroundColor: getTag(value)?.color, color: contrastColor(getTag(value)?.color) }">
+                {{ getTag(value)?.name || value }}
+              </span>
+            </template>
+            <template #option="{ option }">
+              <span class="colored-option" :style="{ backgroundColor: option.color, color: contrastColor(option.color) }">
+                {{ option.name }}
+              </span>
+            </template>
+          </MultiSelect>
           <div class="selected-tags" v-if="card.tags && card.tags.length > 0">
-            <Tag 
-              v-for="tagId in card.tags" 
-              :key="tagId" 
+            <Tag
+              v-for="tagId in card.tags"
+              :key="tagId"
               :value="getTag(tagId)?.name || tagId"
-              :style="{ 
-                backgroundColor: getTag(tagId)?.color, 
-                color: contrastColor(getTag(tagId)?.color) 
+              :style="{
+                backgroundColor: getTag(tagId)?.color,
+                color: contrastColor(getTag(tagId)?.color)
               }"
               class="removable-tag"
               icon="pi pi-times"
@@ -362,6 +386,20 @@ const removeTag = (tag: string) => {
 
 .removable-tag:hover {
   opacity: 0.8;
+}
+
+.colored-option {
+  display: inline-block;
+  padding: 0.15rem 0.5rem;
+  border-radius: 10px;
+  font-size: 0.85rem;
+}
+
+.colored-chip {
+  display: inline-block;
+  padding: 0.15rem 0.5rem;
+  border-radius: 10px;
+  font-size: 0.75rem;
 }
 
 :deep(.md-editor), :deep(.md-preview) {

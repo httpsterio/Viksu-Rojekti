@@ -67,6 +67,10 @@ body {
   max-height: 100% !important;
 }
 
+.p-multiselect-header {
+  display: none !important;
+}
+
 .p-popover {
   z-index: 1100;
 }

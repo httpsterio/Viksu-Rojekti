@@ -1,4 +1,4 @@
-generated: 2026-03-20T03:10:39.623543600+02:00
+generated: 2026-03-20T03:47:43.122744700+02:00
 cardCount: 16
 cards:
 - id: roj-009
@@ -17,6 +17,7 @@ cards:
   epic: epic-1773924454503
   tags:
   - tag-1773869123619
+  - tag-1773923963358
   priority: MED
   position: 2.5
   created: 2026-03-19
@@ -136,20 +137,18 @@ cards:
   position: 2.0
   created: 2026-03-20
 - id: roj-023
-  title: 'chore: write-ahead-log for rename operations'
-  status: todo
+  title: 'style: cardmodal epics and tags dropdown coloring'
+  status: backlog
+  epic: epic-1773924456709
   tags:
-  - tag-1773923963358
-  - tag-1773923979395
-  priority: MED
-  position: 3.0
+  - tag-1773923939233
+  - tag-1773923872831
+  priority: medium
+  position: 9.0
   created: 2026-03-20
 - id: roj-024
-  title: 'feat: Archive and Deleted fixed statuses'
+  title: a
   status: backlog
-  epic: epic-1773924443930
-  tags:
-  - tag-1773869123619
   priority: medium
-  position: 8.0
+  position: 10.0
   created: 2026-03-20

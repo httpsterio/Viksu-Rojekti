@@ -39,7 +39,10 @@ epics:
   color: '#ff811a'
 - id: epic-1773924068193
   name: LINUX / MAC
-  color: '#3e3f41'
+  color: '#5c5c5c'
+- id: epic-1773969359353
+  name: Command Line
+  color: '#121212'
 tags:
 - id: tag-1773869123619
   name: Feature
@@ -62,6 +65,9 @@ tags:
 - id: tag-1773923979395
   name: Refactor
   color: '#ff14a9'
+- id: tag-1773969345221
+  name: CLI API
+  color: '#3d3d3d'
 priorities:
 - LOW
 - MED
