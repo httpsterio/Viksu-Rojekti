@@ -17,7 +17,7 @@ const { config, isLoading, needsInit, loadBoard, initBoard, currentView } = useB
 
 const initName = ref('')
 const initPrefix = ref('')
-const settingsModal = ref<any>(null)
+const settingsModal = ref<InstanceType<typeof BoardSettingsModal> | null>(null)
 
 onMounted(async () => {
   await loadBoard()

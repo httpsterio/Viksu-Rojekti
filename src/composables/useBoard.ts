@@ -81,7 +81,7 @@ export function useBoard() {
     }
   }
 
-  const createCard = async (cardData: any) => {
+  const createCard = async (cardData: Omit<Card, 'id' | 'created' | 'position'>) => {
     try {
       const newCard = await invoke<Card>('create_card', cardData)
       if (!cards.value.some(c => c.id === newCard.id)) {
