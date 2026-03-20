@@ -1,17 +1,17 @@
 name: Rojekti
 prefix: roj
-nextId: 36
+nextId: 45
 statuses:
 - id: backlog
-  name: Backlog
+  name: BACKLOG
 - id: todo
-  name: Todo
+  name: TODO
 - id: in-progress
-  name: In Progress
+  name: DOING
 - id: done
-  name: Done
-- id: status-1773961454787
-  name: Reviewed
+  name: DONE
+- id: status-1774045884765
+  name: ARCHIVE
 epics:
 - id: epic-1773924443930
   name: Board
