@@ -1,6 +1,6 @@
 import { ref, computed } from 'vue'
 import { invoke } from '@tauri-apps/api/core'
-import type { BoardConfig, Card } from '@/types'
+import type { BoardConfig, Card, AllCardsResult } from '@/types'
 import { useToast } from 'primevue/usetoast'
 
 const config = ref<BoardConfig | null>(null)
@@ -27,10 +27,15 @@ export function useBoard() {
     if (!silent) isLoading.value = true
     try {
       const newConfig = await invoke<BoardConfig>('get_board_config')
-      const newCards = await invoke<Card[]>('get_all_cards')
+      const result = await invoke<AllCardsResult>('get_all_cards')
       if (generation === loadGeneration) {
         config.value = newConfig
-        cards.value = newCards
+        cards.value = result.cards
+        
+        for (const error of result.errors) {
+          toast.add({ severity: 'warn', summary: 'Could not load card', detail: error, life: 6000 })
+        }
+
         needsInit.value = false
       }
     } catch (e) {

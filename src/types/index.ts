@@ -40,6 +40,11 @@ export interface Card extends CardMeta {
   body: string
 }
 
+export interface AllCardsResult {
+  cards: Card[]
+  errors: string[]
+}
+
 export interface Index {
   generated: string
   cardCount: number

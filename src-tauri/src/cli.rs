@@ -73,9 +73,12 @@ pub fn handle_cli(command: Commands, project_dir: PathBuf) {
                 eprintln!("Error: status is required.");
             } else {
                 match storage::read_all_cards(&project_dir) {
-                    Ok(cards) => {
+                    Ok((cards, errors)) => {
+                        if !errors.is_empty() {
+                            for err in errors { eprintln!("Warning: {}", err); }
+                        }
                         let mut status_cards: Vec<Card> = cards.into_iter()
-                            .filter(|c| c.meta.status == status)
+                            .filter(|c| c.meta.status == *status)
                             .collect();
                         status_cards.sort_by(|a, b| a.meta.position.partial_cmp(&b.meta.position).unwrap());
                         
@@ -94,7 +97,10 @@ pub fn handle_cli(command: Commands, project_dir: PathBuf) {
         }
         Commands::List => {
             match storage::read_all_cards(&project_dir) {
-                Ok(mut cards) => {
+                Ok((mut cards, errors)) => {
+                    if !errors.is_empty() {
+                        for err in errors { eprintln!("Warning: {}", err); }
+                    }
                     cards.sort_by(|a, b| {
                         a.meta.status.cmp(&b.meta.status)
                             .then(a.meta.position.partial_cmp(&b.meta.position).unwrap())
@@ -148,7 +154,7 @@ pub fn handle_cli(command: Commands, project_dir: PathBuf) {
                             config.statuses.first().map(|s| s.id.clone()).unwrap_or_else(|| "todo".to_string())
                         });
                         
-                        let cards = storage::read_all_cards(&project_dir).unwrap_or_default();
+                        let (cards, _) = storage::read_all_cards(&project_dir).unwrap_or_default();
                         let max_pos = cards.iter()
                             .filter(|c| c.meta.status == status_val)
                             .map(|c| c.meta.position)

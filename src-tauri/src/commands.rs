@@ -1,7 +1,7 @@
 use tauri::State;
 use chrono::Local;
 use std::fs;
-use crate::models::{AppState, BoardConfig, Card, CardMeta, Index, Status};
+use crate::models::{AppState, BoardConfig, Card, CardMeta, Index, Status, AllCardsResult};
 use crate::{storage, index};
 
 #[tauri::command]
@@ -17,8 +17,9 @@ pub fn save_board_config(config: BoardConfig, state: State<AppState>) -> Result<
 }
 
 #[tauri::command]
-pub fn get_all_cards(state: State<AppState>) -> Result<Vec<Card>, String> {
-    storage::read_all_cards(&state.project_dir)
+pub fn get_all_cards(state: State<AppState>) -> Result<AllCardsResult, String> {
+    let (cards, errors) = storage::read_all_cards(&state.project_dir)?;
+    Ok(AllCardsResult { cards, errors })
 }
 
 #[tauri::command]
@@ -57,7 +58,7 @@ pub fn create_card(
     
     let status = status.unwrap_or_else(|| config.statuses.first().map(|s| s.id.clone()).unwrap_or_default());
     
-    let cards = storage::read_all_cards(&state.project_dir)?;
+    let (cards, _) = storage::read_all_cards(&state.project_dir)?;
     let max_pos = cards.iter()
         .filter(|c| c.meta.status == status)
         .map(|c| c.meta.position)

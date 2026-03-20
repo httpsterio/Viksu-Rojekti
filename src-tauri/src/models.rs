@@ -58,6 +58,13 @@ pub struct Card {
     pub body: String,
 }
 
+#[derive(Serialize, Deserialize, Debug)]
+#[serde(rename_all = "camelCase")]
+pub struct AllCardsResult {
+    pub cards: Vec<Card>,
+    pub errors: Vec<String>,
+}
+
 #[derive(Serialize, Deserialize, Clone, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct Index {

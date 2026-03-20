@@ -95,11 +95,21 @@ pub fn list_card_files(dir: &Path) -> Result<Vec<PathBuf>, String> {
     Ok(files)
 }
 
-pub fn read_all_cards(dir: &Path) -> Result<Vec<Card>, String> {
+pub fn read_all_cards(dir: &Path) -> Result<(Vec<Card>, Vec<String>), String> {
     let files = list_card_files(dir)?;
     let mut cards = Vec::new();
+    let mut errors = Vec::new();
+
     for file in files {
-        cards.push(read_card(&file)?);
+        match read_card(&file) {
+            Ok(card) => cards.push(card),
+            Err(e) => {
+                let filename = file.file_name()
+                    .and_then(|n| n.to_str())
+                    .unwrap_or("unknown");
+                errors.push(format!("Could not load {}: {}", filename, e));
+            }
+        }
     }
-    Ok(cards)
+    Ok((cards, errors))
 }

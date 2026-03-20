@@ -1,15 +1,15 @@
-generated: 2026-03-21T00:39:50.802621400+02:00
-cardCount: 36
+generated: 2026-03-21T00:44:21.466247300+02:00
+cardCount: 37
 cards:
 - id: roj-009
   title: 'fix: Broken cards graceful failing'
-  status: todo
+  status: in-progress
   epic: epic-1773924443930
   tags:
   - tag-1773869127764
   - tag-1773869123619
   priority: HIGH
-  position: 6.0
+  position: 1.0
   created: 2026-03-19
 - id: roj-010
   title: 'feat: Card attachment files'
@@ -350,4 +350,13 @@ cards:
   - tag-1773923979395
   priority: medium
   position: 20.0
+  created: 2026-03-21
+- id: roj-045
+  title: 'feat: Cleared cards in Epics?'
+  status: backlog
+  epic: epic-1773924443930
+  tags:
+  - tag-1773869127764
+  priority: MED
+  position: 21.0
   created: 2026-03-21
