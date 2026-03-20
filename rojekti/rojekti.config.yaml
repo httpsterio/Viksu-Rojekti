@@ -1,6 +1,6 @@
 name: Rojekti
 prefix: roj
-nextId: 25
+nextId: 35
 statuses:
 - id: backlog
   name: Backlog
@@ -53,9 +53,6 @@ tags:
 - id: tag-1773923939233
   name: UX
   color: '#faab00'
-- id: tag-1773923949970
-  name: API
-  color: '#50f7bf'
 - id: tag-1773923963358
   name: Backend
   color: '#5510bc'

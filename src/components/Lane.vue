@@ -201,7 +201,7 @@ const formatName = (name: string) => name.replace(/-/g, ' ').toUpperCase()
 }
 
 :deep(.ghost-card) {
-  opacity: 0.2;
+  opacity: 0.8;
   background: var(--bg-secondary) !important;
   border: 2px dashed var(--border-color) !important;
 }
@@ -209,7 +209,7 @@ const formatName = (name: string) => name.replace(/-/g, ' ').toUpperCase()
 :deep(.dragging-card) {
   cursor: grabbing !important;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2) !important;
-  opacity: 0.9;
+  opacity: 0.4;
   user-select: none;
 }
 </style>

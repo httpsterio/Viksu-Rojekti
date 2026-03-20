@@ -1,8 +1,8 @@
 :root {
   --bg-primary: #ffffff;
-  --bg-secondary: #f7f8fa;
+  --bg-secondary: #ffffff;
   --bg-card: #ffffff;
-  --bg-lane: #f0f2f5;
+  --bg-lane: #ededf1;
   --bg-collapsed: #e2e5ea;
   --text-primary: #1a1a2e;
   --text-secondary: #6b7280;
@@ -65,10 +65,6 @@ body {
 
 .p-select-list-container {
   max-height: 100% !important;
-}
-
-.p-multiselect-header {
-  display: none !important;
 }
 
 .p-popover {

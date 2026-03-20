@@ -1,5 +1,5 @@
-generated: 2026-03-20T03:47:43.122744700+02:00
-cardCount: 16
+generated: 2026-03-20T04:52:17.970390+02:00
+cardCount: 26
 cards:
 - id: roj-009
   title: 'fix: Broken cards graceful failing'
@@ -9,7 +9,7 @@ cards:
   - tag-1773869127764
   - tag-1773869123619
   priority: HIGH
-  position: 1.25
+  position: 1.5625
   created: 2026-03-19
 - id: roj-010
   title: 'feat: Card attachment files'
@@ -32,12 +32,12 @@ cards:
   created: 2026-03-19
 - id: roj-012
   title: 'fix: Atomic File Writes in storage.rs'
-  status: backlog
+  status: in-progress
   epic: epic-1773924443930
   tags:
   - tag-1773923963358
-  priority: HIGH
-  position: 4.0
+  priority: CRIT
+  position: 2.0
   created: 2026-03-19
 - id: roj-013
   title: 'feat: Sound effects for GUI'
@@ -81,12 +81,12 @@ cards:
   created: 2026-03-20
 - id: roj-017
   title: 'fix: Clear Stale Filters on Epic/Tag Deletion'
-  status: done
+  status: status-1773961454787
   epic: epic-1773924443930
   tags:
   - tag-1773869127764
   priority: LOW
-  position: 1.0
+  position: 6.0
   created: 2026-03-20
 - id: roj-018
   title: 'fix: loadBoard race condition dropping optimistic card push'
@@ -147,8 +147,112 @@ cards:
   position: 9.0
   created: 2026-03-20
 - id: roj-024
-  title: a
+  title: 'feat: Archive and Deleted fixed statuses'
   status: backlog
+  epic: epic-1773924443930
+  tags:
+  - tag-1773869123619
   priority: medium
+  position: 8.0
+  created: 2026-03-20
+- id: roj-025
+  title: 'fix: Silent overwrites of cards '
+  status: in-progress
+  epic: epic-1773924443930
+  tags:
+  - tag-1773869127764
+  - tag-1773923963358
+  priority: medium
+  position: 1.0
+  created: 2026-03-20
+- id: roj-026
+  title: 'fix: Silent background refresh for watcher-triggered reloads'
+  status: todo
+  epic: epic-1773924443930
+  tags:
+  - tag-1773869127764
+  - tag-1773923963358
+  priority: medium
+  position: 3.0
+  created: 2026-03-20
+- id: roj-027
+  title: 'feat: Link to another card from card'
+  status: backlog
+  epic: epic-1773924456709
+  tags:
+  - tag-1773869123619
+  - tag-1773923939233
+  priority: LOW
+  position: 0.625
+  created: 2026-03-20
+- id: roj-028
+  title: 'style: Improve sortable card visualisation'
+  status: backlog
+  epic: epic-1773924443930
+  tags:
+  - tag-1773923939233
+  - tag-1773923872831
+  priority: LOW
   position: 10.0
+  created: 2026-03-20
+- id: roj-029
+  title: 'style: New card modal and edit modal inconsistency'
+  status: backlog
+  epic: epic-1773924454503
+  tags:
+  - tag-1773923939233
+  - tag-1773923872831
+  priority: MED
+  position: 11.0
+  created: 2026-03-20
+- id: roj-030
+  title: 'feat: Checklists in Card modal'
+  status: backlog
+  epic: epic-1773924454503
+  tags:
+  - tag-1773869123619
+  - tag-1773923939233
+  priority: medium
+  position: 17.0
+  created: 2026-03-20
+- id: roj-031
+  title: 'style: Store board status to a state json file'
+  status: backlog
+  epic: epic-1773924443930
+  tags:
+  - tag-1773923939233
+  - tag-1773869123619
+  - tag-1773923963358
+  priority: LOW
+  position: 13.0
+  created: 2026-03-20
+- id: roj-032
+  title: 'chore: Priority system'
+  status: backlog
+  epic: epic-1773924449199
+  tags:
+  - tag-1773923979395
+  - tag-1773923963358
+  priority: medium
+  position: 14.0
+  created: 2026-03-20
+- id: roj-033
+  title: Validate against OS-reserved names
+  status: backlog
+  epic: epic-1773924443930
+  tags:
+  - tag-1773923963358
+  - tag-1773869127764
+  priority: MED
+  position: 15.0
+  created: 2026-03-20
+- id: roj-034
+  title: Safe Epic/Tag Rename with Write-Ahead Log
+  status: backlog
+  epic: epic-1773924443930
+  tags:
+  - tag-1773923963358
+  - tag-1773923979395
+  priority: HIGH
+  position: 16.0
   created: 2026-03-20
