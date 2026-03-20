@@ -22,7 +22,7 @@ const settingsModal = ref<any>(null)
 onMounted(async () => {
   await loadBoard()
   await listen('board-changed', () => {
-    loadBoard()
+    loadBoard(true)
   })
 })
 

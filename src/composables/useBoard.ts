@@ -22,31 +22,31 @@ let loadGeneration = 0
 
 export function useBoard() {
   const toast = useToast()
-
-  const loadBoard = async () => {
-    const generation = ++loadGeneration
-    isLoading.value = true
-    try {
-      const newConfig = await invoke<BoardConfig>('get_board_config')
-      const newCards = await invoke<Card[]>('get_all_cards')
-      if (generation === loadGeneration) {
-        config.value = newConfig
-        cards.value = newCards
-        needsInit.value = false
-      }
-    } catch (e) {
-      if (generation !== loadGeneration) return
-      console.error('Failed to load board:', e)
-      if (typeof e === 'string' && (e.includes('config file') || e.includes('board.yaml'))) {
-        needsInit.value = true
-      } else {
-        toast.add({ severity: 'error', summary: 'Error', detail: String(e), life: 3000 })
-      }
-    } finally {
-      if (generation === loadGeneration) isLoading.value = false
+  const loadBoard = async (silent = false) => {
+  const generation = ++loadGeneration
+  if (!silent) isLoading.value = true
+  try {
+    const newConfig = await invoke<BoardConfig>('get_board_config')
+    const newCards = await invoke<Card[]>('get_all_cards')
+    if (generation === loadGeneration) {
+      config.value = newConfig
+      cards.value = newCards
+      needsInit.value = false
+    }
+  } catch (e) {
+    if (generation !== loadGeneration) return
+    console.error('Failed to load board:', e)
+    if (typeof e === 'string' && (e.includes('config file') || e.includes('board.yaml'))) {
+      needsInit.value = true
+    } else {
+      toast.add({ severity: 'error', summary: 'Error', detail: String(e), life: 3000 })
+    }
+  } finally {
+    if (!silent && generation === loadGeneration) {
+      isLoading.value = false
     }
   }
-
+}
   const initBoard = async (name: string, prefix: string) => {
     try {
       await invoke('init_project', { name, prefix })
