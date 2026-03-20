@@ -24,8 +24,12 @@ pub fn rebuild_index(dir: &Path) -> Result<Index, String> {
     let yaml = serde_yaml::to_string(&index)
         .map_err(|e| format!("Index serialization error: {}", e))?;
         
-    fs::write(dir.join("rojekti").join("rojekti.index.yaml"), yaml)
-        .map_err(|e| format!("Could not write index file: {}", e))?;
+    let index_path = dir.join("rojekti").join("rojekti.index.yaml");
+    let tmp = index_path.with_extension("yaml.tmp");
+    fs::write(&tmp, yaml)
+        .map_err(|e| format!("Could not write index tmp file: {}", e))?;
+    fs::rename(&tmp, &index_path)
+        .map_err(|e| format!("Could not finalize index file: {}", e))?;
         
     Ok(index)
 }

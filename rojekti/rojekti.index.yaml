@@ -1,4 +1,4 @@
-generated: 2026-03-20T04:55:44.322508700+02:00
+generated: 2026-03-20T05:18:08.409964+02:00
 cardCount: 27
 cards:
 - id: roj-009
@@ -32,12 +32,12 @@ cards:
   created: 2026-03-19
 - id: roj-012
   title: 'fix: Atomic File Writes in storage.rs'
-  status: in-progress
+  status: done
   epic: epic-1773924443930
   tags:
   - tag-1773923963358
   priority: CRIT
-  position: 2.0
+  position: 1.0
   created: 2026-03-19
 - id: roj-013
   title: 'feat: Sound effects for GUI'
@@ -183,7 +183,7 @@ cards:
   - tag-1773869123619
   - tag-1773923939233
   priority: LOW
-  position: 0.625
+  position: 0.78125
   created: 2026-03-20
 - id: roj-028
   title: 'style: Improve sortable card visualisation'

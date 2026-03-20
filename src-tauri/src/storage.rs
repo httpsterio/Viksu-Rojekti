@@ -31,8 +31,11 @@ pub fn read_board_config(path: &Path) -> Result<BoardConfig, String> {
 pub fn write_board_config(path: &Path, config: &BoardConfig) -> Result<(), String> {
     let yaml = serde_yaml::to_string(config)
         .map_err(|e| format!("YAML serialization error: {}", e))?;
-    fs::write(path, yaml)
-        .map_err(|e| format!("Could not write config file: {}", e))
+    let tmp = path.with_extension("yaml.tmp");
+    fs::write(&tmp, yaml)
+        .map_err(|e| format!("Could not write config tmp file: {}", e))?;
+    fs::rename(&tmp, path)
+        .map_err(|e| format!("Could not finalize config file: {}", e))
 }
 
 pub fn read_card(path: &Path) -> Result<Card, String> {
@@ -51,8 +54,11 @@ pub fn write_card(dir: &Path, card: &Card) -> Result<(), String> {
             .map_err(|e| format!("Could not create cards directory: {}", e))?;
     }
     
-    fs::write(path, content)
-        .map_err(|e| format!("Could not write card file: {}", e))
+    let tmp = path.with_extension("md.tmp");
+    fs::write(&tmp, content)
+        .map_err(|e| format!("Could not write card tmp file: {}", e))?;
+    fs::rename(&tmp, &path)
+        .map_err(|e| format!("Could not finalize card file: {}", e))
 }
 
 pub fn delete_card_file(dir: &Path, id: &str) -> Result<(), String> {

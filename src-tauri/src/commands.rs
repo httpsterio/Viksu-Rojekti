@@ -41,8 +41,18 @@ pub fn create_card(
     
     let mut config = storage::read_board_config(&state.project_dir.join("rojekti").join("rojekti.config.yaml"))?;
     
-    let id = format!("{}-{:03}", config.prefix, config.next_id);
-    config.next_id += 1;
+    let cards_dir = state.project_dir.join("rojekti").join("cards");
+    let deleted_dir = state.project_dir.join("rojekti").join("deleted");
+    let id: String;
+    loop {
+        let candidate = format!("{}-{:03}", config.prefix, config.next_id);
+        config.next_id += 1;
+        if !cards_dir.join(format!("{}.md", candidate)).exists() 
+            && !deleted_dir.join(format!("{}.md", candidate)).exists() {
+            id = candidate;
+            break;
+        }
+    }
     storage::write_board_config(&state.project_dir.join("rojekti").join("rojekti.config.yaml"), &config)?;
     
     let status = status.unwrap_or_else(|| config.statuses.first().map(|s| s.id.clone()).unwrap_or_default());
