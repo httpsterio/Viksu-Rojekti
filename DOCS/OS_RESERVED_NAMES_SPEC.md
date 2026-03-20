@@ -1,0 +1,91 @@
+# Task: Validate Board Name and Prefix Against OS-Reserved Names
+
+## Problem
+
+On Windows, certain filenames are reserved device names (`CON`, `NUL`, `PRN`, etc.) and cannot be used as filenames. The card prefix becomes part of every card filename — e.g. a prefix of `CON` produces `CON-001.md`. Windows will fail silently or behave unpredictably when trying to create or read files with these names.
+
+Additionally, certain characters are illegal in Windows filenames (`\ / : * ? " < > |`) and would corrupt the config or card filenames if used in the board name or prefix.
+
+## Fix
+
+Add validation in `init_project` in `commands.rs` before writing anything to disk. Return a descriptive error if validation fails.
+
+## Changes Required
+
+### `commands.rs` — add validation at the top of `init_project`
+
+Add this validation block before any file I/O in `init_project`:
+
+```rust
+#[tauri::command]
+pub fn init_project(
+    name: String,
+    prefix: String,
+    app_handle: tauri::AppHandle,
+    state: State<AppState>,
+) -> Result<(), String> {
+    // Validate before acquiring lock or touching disk
+    validate_name_and_prefix(&name, &prefix)?;
+
+    let _lock = state.write_lock.lock().map_err(|e| format!("Lock error: {}", e))?;
+    // ... rest of existing logic unchanged ...
+}
+```
+
+Add the validation function in `commands.rs` (not in `storage.rs` — this is input validation, not I/O):
+
+```rust
+fn validate_name_and_prefix(name: &str, prefix: &str) -> Result<(), String> {
+    // Windows reserved device names (case-insensitive)
+    const RESERVED: &[&str] = &[
+        "CON", "PRN", "AUX", "NUL",
+        "COM1", "COM2", "COM3", "COM4", "COM5", "COM6", "COM7", "COM8", "COM9",
+        "LPT1", "LPT2", "LPT3", "LPT4", "LPT5", "LPT6", "LPT7", "LPT8", "LPT9",
+    ];
+
+    // Illegal filename characters on Windows
+    const ILLEGAL_CHARS: &[char] = &['\\', '/', ':', '*', '?', '"', '<', '>', '|'];
+
+    let prefix_upper = prefix.to_uppercase();
+    if RESERVED.contains(&prefix_upper.as_str()) {
+        return Err(format!(
+            "'{}' is a reserved Windows device name and cannot be used as a card prefix.",
+            prefix
+        ));
+    }
+
+    for ch in ILLEGAL_CHARS {
+        if name.contains(*ch) {
+            return Err(format!(
+                "Board name contains an illegal character: '{}'",
+                ch
+            ));
+        }
+        if prefix.contains(*ch) {
+            return Err(format!(
+                "Card prefix contains an illegal character: '{}'",
+                ch
+            ));
+        }
+    }
+
+    if prefix.trim().is_empty() {
+        return Err("Card prefix cannot be empty.".into());
+    }
+
+    if name.trim().is_empty() {
+        return Err("Board name cannot be empty.".into());
+    }
+
+    Ok(())
+}
+```
+
+## Notes
+
+- Validation runs before the `write_lock` is acquired — no cleanup needed if validation fails
+- Only `init_project` needs this — the prefix is set once at init and never changed afterwards
+- The reserved name check is case-insensitive (`CON`, `con`, `Con` are all blocked)
+- The illegal character check applies to both `name` and `prefix` — the name becomes a label in the config file, and illegal chars there could cause issues if the name is ever used in a path context in future
+- Do not add a dependency for this — the blocklist is short and stable, a const array is sufficient
+- The error message is surfaced to the frontend via the existing `Result<(), String>` error path, which the frontend already handles with a toast

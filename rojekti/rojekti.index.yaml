@@ -1,5 +1,5 @@
-generated: 2026-03-20T01:34:39.536376900+02:00
-cardCount: 11
+generated: 2026-03-20T03:10:39.623543600+02:00
+cardCount: 16
 cards:
 - id: roj-009
   title: 'fix: Broken cards graceful failing'
@@ -9,7 +9,7 @@ cards:
   - tag-1773869127764
   - tag-1773869123619
   priority: HIGH
-  position: 1.0
+  position: 1.25
   created: 2026-03-19
 - id: roj-010
   title: 'feat: Card attachment files'
@@ -21,7 +21,7 @@ cards:
   position: 2.5
   created: 2026-03-19
 - id: roj-011
-  title: 'feat: File Watcher'
+  title: 'feat: File Watcher (real time refresh)'
   status: status-1773961454787
   epic: epic-1773924443930
   tags:
@@ -89,15 +89,15 @@ cards:
   created: 2026-03-20
 - id: roj-018
   title: 'fix: loadBoard race condition dropping optimistic card push'
-  status: done
+  status: status-1773961454787
   epic: epic-1773924443930
   tags:
   - tag-1773869127764
   priority: MED
-  position: 2.0
+  position: 5.0
   created: 2026-03-20
 - id: roj-019
-  title: 'fix: minimum distance to consider moving a card vs. opening a card'
+  title: 'fix: minimum distance to consider Moving a card vs. opening a card'
   status: backlog
   epic: epic-1773924443930
   tags:
@@ -105,4 +105,51 @@ cards:
   - tag-1773923939233
   priority: LOW
   position: 7.0
+  created: 2026-03-20
+- id: roj-020
+  title: 'feat: Soft delete cards'
+  status: status-1773961454787
+  epic: epic-1773924443930
+  tags:
+  - tag-1773869123619
+  priority: medium
+  position: 4.0
+  created: 2026-03-20
+- id: roj-021
+  title: 'feat: Show deleted cards in settings'
+  status: todo
+  epic: epic-1773924449199
+  tags:
+  - tag-1773869123619
+  - tag-1773923963358
+  priority: medium
+  position: 1.0
+  created: 2026-03-20
+- id: roj-022
+  title: 'chore: Name based epics and tags'
+  status: todo
+  epic: epic-1773924443930
+  tags:
+  - tag-1773923963358
+  - tag-1773923979395
+  priority: MED
+  position: 2.0
+  created: 2026-03-20
+- id: roj-023
+  title: 'chore: write-ahead-log for rename operations'
+  status: todo
+  tags:
+  - tag-1773923963358
+  - tag-1773923979395
+  priority: MED
+  position: 3.0
+  created: 2026-03-20
+- id: roj-024
+  title: 'feat: Archive and Deleted fixed statuses'
+  status: backlog
+  epic: epic-1773924443930
+  tags:
+  - tag-1773869123619
+  priority: medium
+  position: 8.0
   created: 2026-03-20

@@ -86,11 +86,17 @@ body {
   overflow-y: auto;
 }
 
-md-editor-v3 overrides
+/* md-editor-v3 overrides */
 .md-editor-code-flag, .md-editor-code-action {
   display: none!important;
 }
 
+.md-editor-preview {
+  overflow-y: auto;
+  min-width: 20rem;
+  max-width: 40rem;
+  word-break: normal;
+}
 .md-editor-code summary {
   display: none!important;
 }
