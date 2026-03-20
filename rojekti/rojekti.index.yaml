@@ -1,5 +1,5 @@
-generated: 2026-03-20T04:52:17.970390+02:00
-cardCount: 26
+generated: 2026-03-20T04:55:44.322508700+02:00
+cardCount: 27
 cards:
 - id: roj-009
   title: 'fix: Broken cards graceful failing'
@@ -255,4 +255,14 @@ cards:
   - tag-1773923979395
   priority: HIGH
   position: 16.0
+  created: 2026-03-20
+- id: roj-035
+  title: 'feat: Hotkeys'
+  status: backlog
+  epic: epic-1773924443930
+  tags:
+  - tag-1773869123619
+  - tag-1773923872831
+  priority: MED
+  position: 18.0
   created: 2026-03-20
