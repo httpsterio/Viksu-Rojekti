@@ -1,10 +1,15 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, watch, nextTick } from "vue"
 import Sortable from "sortablejs"
+import { dragAndDrop } from "@formkit/drag-and-drop/vue"
+import { animations, tearDown } from "@formkit/drag-and-drop"
 import Card from "./Card.vue"
 import type { Card as CardType } from "@/types"
 import { useBoard } from "@/composables/useBoard"
 import Button from "primevue/button"
+
+let dragPending: { cardId: string; statusId: string; pos: number } | null = null
+let draggedEl: HTMLElement | null = null
 
 const props = defineProps<{
   id: string
@@ -17,6 +22,75 @@ const { toggleStatusCollapse, moveCard } = useBoard()
 const cardContainer = ref<HTMLElement | null>(null)
 let sortable: Sortable | null = null
 
+const cardValues = ref<CardType[]>([...props.cards])
+const isDragging = ref(false)
+
+watch(
+  () => props.cards,
+  (cards) => {
+    if (isDragging.value) return
+    cardValues.value = [...cards]
+  },
+)
+
+const calcPosition = (values: CardType[], index: number): number => {
+  if (values.length === 1) return 1.0
+  if (index === 0) return values[1].position / 2
+  if (index === values.length - 1) return values[index - 1].position + 1.0
+  return (values[index - 1].position + values[index + 1].position) / 2
+}
+
+const initFormKit = () => {
+  if (!cardContainer.value || props.collapsed) return
+  dragAndDrop({
+    parent: cardContainer,
+    values: cardValues,
+    group: "cards",
+    plugins: [animations()],
+    draggingClass: "dragging-card",
+    dragPlaceholderClass: "ghost-card",
+    onDragstart: () => {
+      isDragging.value = true
+      dragPending = null
+    },
+    onSort: ({ values, draggedNodes }: any) => {
+      const draggedCard = draggedNodes[0].data.value as CardType
+      const index = values.findIndex((c: CardType) => c.id === draggedCard.id)
+      dragPending = { cardId: draggedCard.id, statusId: props.id, pos: calcPosition(values, index) }
+    },
+    onTransfer: ({ draggedNodes, targetIndex, targetParent }: any) => {
+      if (targetParent.el !== cardContainer.value) return
+      const draggedCard = draggedNodes[0].data.value as CardType
+      dragPending = {
+        cardId: draggedCard.id,
+        statusId: props.id,
+        pos: calcPosition(cardValues.value, targetIndex),
+      }
+    },
+    onDragend: () => {
+      isDragging.value = false
+      if (dragPending) {
+        moveCard(dragPending.cardId, dragPending.statusId, dragPending.pos)
+        dragPending = null
+      }
+    },
+  })
+
+  const el = cardContainer.value
+  el.addEventListener("dragstart", (e: DragEvent) => {
+    draggedEl = e.target as HTMLElement
+    requestAnimationFrame(() => {
+      if (draggedEl) draggedEl.style.opacity = "0"
+    })
+  })
+  el.addEventListener("dragend", () => {
+    if (draggedEl) {
+      draggedEl.style.opacity = ""
+      draggedEl = null
+    }
+  })
+}
+
 const initSortable = () => {
   nextTick(() => {
     if (cardContainer.value && !props.collapsed) {
@@ -28,6 +102,7 @@ const initSortable = () => {
         forceFallback: true,
         fallbackClass: "dragging-card",
         dataIdAttr: "data-card-id",
+        disabled: true,
         onEnd: (evt) => {
           if (evt.to && evt.item) {
             const cardId = evt.item.getAttribute("data-card-id")!
@@ -65,7 +140,10 @@ const initSortable = () => {
   })
 }
 
-onMounted(() => initSortable())
+onMounted(() => {
+  initSortable()
+  nextTick(() => initFormKit())
+})
 
 watch(
   () => props.collapsed,
@@ -73,13 +151,20 @@ watch(
     if (isCollapsed) {
       sortable?.destroy()
       sortable = null
+      if (cardContainer.value) tearDown(cardContainer.value)
     } else {
-      setTimeout(initSortable, 0)
+      setTimeout(() => {
+        initSortable()
+        initFormKit()
+      }, 0)
     }
   },
 )
 
-onUnmounted(() => sortable?.destroy())
+onUnmounted(() => {
+  sortable?.destroy()
+  if (cardContainer.value) tearDown(cardContainer.value)
+})
 
 const formatName = (name: string) => name.replace(/-/g, " ").toUpperCase()
 </script>
@@ -106,7 +191,7 @@ const formatName = (name: string) => name.replace(/-/g, " ").toUpperCase()
         />
       </div>
       <div ref="cardContainer" class="lane-body" :data-status-id="id">
-        <Card v-for="card in cards" :key="card.id" :card="card" :data-pos="card.position" />
+        <Card v-for="card in cardValues" :key="card.id" :card="card" :data-pos="card.position" />
       </div>
     </template>
   </div>
@@ -203,15 +288,11 @@ const formatName = (name: string) => name.replace(/-/g, " ").toUpperCase()
 }
 
 :deep(.ghost-card) {
-  opacity: 1;
-  background: #00cc693a !important;
-  border: 4px solid #00cc6a !important;
+  opacity: 0;
 }
 
 :deep(.dragging-card) {
   cursor: grabbing !important;
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2) !important;
-  opacity: 0;
   user-select: none;
 }
 </style>

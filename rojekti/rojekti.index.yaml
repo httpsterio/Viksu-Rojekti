@@ -1,4 +1,4 @@
-generated: 2026-03-21T23:50:29.339293800+02:00
+generated: 2026-03-22T01:09:15.568595600+02:00
 cardCount: 43
 cards:
 - id: roj-009
@@ -153,7 +153,7 @@ cards:
   tags:
   - Feature
   priority: 4
-  position: 0.63671875
+  position: 0.2920592948794365
   created: 2026-03-20
 - id: roj-025
   title: 'fix: Silent overwrites of cards'
@@ -183,7 +183,7 @@ cards:
   - Feature
   - UX
   priority: 5
-  position: 0.611328125
+  position: 0.669921875
   created: 2026-03-20
 - id: roj-028
   title: 'style: Improve sortable card visualisation'
@@ -193,7 +193,7 @@ cards:
   - UX
   - Polish
   priority: 5
-  position: 0.29296875
+  position: 0.1754174679517746
   created: 2026-03-20
 - id: roj-029
   title: 'style: New card modal and edit modal inconsistency'
@@ -224,7 +224,7 @@ cards:
   - Feature
   - Backend
   priority: 5
-  position: 0.5859375
+  position: 0.48099058493971825
   created: 2026-03-20
 - id: roj-032
   title: 'chore: Priority system'
@@ -234,7 +234,7 @@ cards:
   - Refactor
   - Backend
   priority: 4
-  position: 0.00390625
+  position: 0.0048828125
   created: 2026-03-20
 - id: roj-033
   title: Validate against OS-reserved names
