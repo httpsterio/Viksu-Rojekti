@@ -1,5 +1,5 @@
-generated: 2026-03-21T01:43:45.566769+02:00
-cardCount: 39
+generated: 2026-03-21T02:09:07.228285300+02:00
+cardCount: 40
 cards:
 - id: roj-009
   title: 'fix: Broken cards graceful failing'
@@ -377,4 +377,13 @@ cards:
   - tag-1773923872831
   priority: LOW
   position: 9.0
+  created: 2026-03-21
+- id: roj-048
+  title: 'chore: One-shot migration script for ID-to-name epic/tag data'
+  status: in-progress
+  epic: epic-1773924443930
+  tags:
+  - tag-1773923963358
+  priority: MED
+  position: 2.0
   created: 2026-03-21
