@@ -205,13 +205,13 @@ const formatName = (name: string) => name.replace(/-/g, " ").toUpperCase()
 :deep(.ghost-card) {
   opacity: 1;
   background: var(--bg-secondary) !important;
-  border: 4px solid --var(--border-color) !important;
+  border: 4px solid pink !important;
 }
 
 :deep(.dragging-card) {
   cursor: grabbing !important;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2) !important;
-  opacity: 0.4;
+  opacity: 0;
   user-select: none;
 }
 </style>
