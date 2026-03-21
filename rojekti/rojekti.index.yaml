@@ -1,4 +1,4 @@
-generated: 2026-03-22T01:09:15.568595600+02:00
+generated: 2026-03-22T01:49:06.473833900+02:00
 cardCount: 43
 cards:
 - id: roj-009
@@ -148,12 +148,12 @@ cards:
   created: 2026-03-20
 - id: roj-024
   title: 'feat: Archive and Deleted fixed statuses'
-  status: todo
+  status: in-progress
   epic: Board
   tags:
   - Feature
   priority: 4
-  position: 0.2920592948794365
+  position: 2.0
   created: 2026-03-20
 - id: roj-025
   title: 'fix: Silent overwrites of cards'
@@ -224,7 +224,7 @@ cards:
   - Feature
   - Backend
   priority: 5
-  position: 0.48099058493971825
+  position: 0.4990629507228732
   created: 2026-03-20
 - id: roj-032
   title: 'chore: Priority system'

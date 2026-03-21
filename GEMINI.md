@@ -146,3 +146,11 @@ The binary uses console subsystem. In GUI mode, the console is hidden programmat
 - Card file schema: see section 3.2 in PROJECT_PLAN.md
 - Tauri command signatures: see section 4.4 in PROJECT_PLAN.md
 - Component tree and UI details: see section 7 in PROJECT_PLAN.md
+
+## 9. Task Execution Protocol
+
+- **Directives vs. Inquiries**: Distinguish between explicit commands ("Fix this bug") and observations/inquiries ("There is a bug").
+- **Implied Tasks**:
+  - **Research OK**: You may read files and analyze code to investigate implied tasks or user hints.
+  - **No Implementation**: Do NOT edit files or modify system state for implied tasks without an explicit confirmation or directive from the user.
+- **Confirmation**: If a user hint implies a fix (e.g., "Lane.vue has a CSS issue"), ask for permission to proceed with the fix after your research.
