@@ -1,4 +1,4 @@
-generated: 2026-03-21T03:57:15.124310800+02:00
+generated: 2026-03-21T04:44:26.527367600+02:00
 cardCount: 40
 cards:
   - id: roj-009
@@ -8,7 +8,7 @@ cards:
     tags:
       - Bug
       - Feature
-    priority: 4
+    priority: "2"
     position: 0.25
     created: 2026-03-19
   - id: roj-010
@@ -18,7 +18,7 @@ cards:
     tags:
       - Feature
       - Backend
-    priority: 2
+    priority: "4"
     position: 1.0
     created: 2026-03-19
   - id: roj-011
@@ -27,7 +27,7 @@ cards:
     epic: Board
     tags:
       - Backend
-    priority: 2
+    priority: "4"
     position: 3.0
     created: 2026-03-19
   - id: roj-012
@@ -36,7 +36,7 @@ cards:
     epic: Board
     tags:
       - Backend
-    priority: 5
+    priority: 1
     position: 0.5
     created: 2026-03-19
   - id: roj-013
@@ -46,18 +46,18 @@ cards:
     tags:
       - Feature
       - Polish
-    priority: 1
+    priority: "5"
     position: 5.0
     created: 2026-03-19
   - id: roj-014
     title: "style: Priority highlight on cards"
-    status: todo
+    status: in-progress
     epic: Theming
     tags:
       - UX
       - Polish
-    priority: 1
-    position: 7.0
+    priority: "5"
+    position: 1.0
     created: 2026-03-19
   - id: roj-015
     title: "style: Automatic contrast colors utility"
@@ -67,7 +67,7 @@ cards:
       - Bug
       - UX
       - Polish
-    priority: 2
+    priority: "4"
     position: 0.625
     created: 2026-03-19
   - id: roj-016
@@ -76,7 +76,7 @@ cards:
     epic: Card
     tags:
       - Bug
-    priority: 2
+    priority: "4"
     position: 0.75
     created: 2026-03-20
   - id: roj-017
@@ -85,7 +85,7 @@ cards:
     epic: Board
     tags:
       - Bug
-    priority: 1
+    priority: "5"
     position: 0.515625
     created: 2026-03-20
   - id: roj-018
@@ -94,7 +94,7 @@ cards:
     epic: Board
     tags:
       - Bug
-    priority: 2
+    priority: "4"
     position: 0.53125
     created: 2026-03-20
   - id: roj-019
@@ -104,7 +104,7 @@ cards:
     tags:
       - Bug
       - UX
-    priority: 1
+    priority: "5"
     position: 7.0
     created: 2026-03-20
   - id: roj-020
@@ -113,7 +113,7 @@ cards:
     epic: Board
     tags:
       - Feature
-    priority: 2
+    priority: "4"
     position: 0.5625
     created: 2026-03-20
   - id: roj-021
@@ -123,7 +123,7 @@ cards:
     tags:
       - Feature
       - Backend
-    priority: 2
+    priority: "4"
     position: 0.390625
     created: 2026-03-20
   - id: roj-022
@@ -133,7 +133,7 @@ cards:
     tags:
       - Backend
       - Refactor
-    priority: 2
+    priority: "4"
     position: 1.0
     created: 2026-03-20
   - id: roj-023
@@ -143,7 +143,7 @@ cards:
     tags:
       - UX
       - Polish
-    priority: 2
+    priority: "4"
     position: 9.0
     created: 2026-03-20
   - id: roj-024
@@ -152,7 +152,7 @@ cards:
     epic: Board
     tags:
       - Feature
-    priority: 2
+    priority: "4"
     position: 8.0
     created: 2026-03-20
   - id: roj-025
@@ -162,7 +162,7 @@ cards:
     tags:
       - Bug
       - Backend
-    priority: 2
+    priority: "4"
     position: 1.0
     created: 2026-03-20
   - id: roj-026
@@ -172,7 +172,7 @@ cards:
     tags:
       - Bug
       - Backend
-    priority: 2
+    priority: "4"
     position: 2.0
     created: 2026-03-20
   - id: roj-027
@@ -182,7 +182,7 @@ cards:
     tags:
       - Feature
       - UX
-    priority: 1
+    priority: "5"
     position: 0.78125
     created: 2026-03-20
   - id: roj-028
@@ -192,7 +192,7 @@ cards:
     tags:
       - UX
       - Polish
-    priority: 1
+    priority: "5"
     position: 10.0
     created: 2026-03-20
   - id: roj-029
@@ -202,7 +202,7 @@ cards:
     tags:
       - UX
       - Polish
-    priority: 2
+    priority: "4"
     position: 11.0
     created: 2026-03-20
   - id: roj-030
@@ -212,7 +212,7 @@ cards:
     tags:
       - Feature
       - UX
-    priority: 2
+    priority: "4"
     position: 17.0
     created: 2026-03-20
   - id: roj-031
@@ -223,18 +223,18 @@ cards:
       - UX
       - Feature
       - Backend
-    priority: 1
+    priority: "5"
     position: 0.5
     created: 2026-03-20
   - id: roj-032
     title: "chore: Priority system"
-    status: todo
+    status: in-progress
     epic: Settings
     tags:
       - Refactor
       - Backend
-    priority: 2
-    position: 5.0
+    priority: "4"
+    position: 2.0
     created: 2026-03-20
   - id: roj-033
     title: Validate against OS-reserved names
@@ -243,7 +243,7 @@ cards:
     tags:
       - Backend
       - Bug
-    priority: 2
+    priority: "4"
     position: 0.125
     created: 2026-03-20
   - id: roj-034
@@ -253,7 +253,7 @@ cards:
     tags:
       - Backend
       - Refactor
-    priority: 4
+    priority: "2"
     position: 3.0
     created: 2026-03-20
   - id: roj-035
@@ -263,7 +263,7 @@ cards:
     tags:
       - Feature
       - Polish
-    priority: 2
+    priority: "4"
     position: 18.0
     created: 2026-03-20
   - id: roj-036
@@ -273,7 +273,7 @@ cards:
     tags:
       - Polish
       - Feature
-    priority: 1
+    priority: "5"
     position: 19.0
     created: 2026-03-21
   - id: roj-037
@@ -283,7 +283,7 @@ cards:
     tags:
       - Backend
       - Refactor
-    priority: 1
+    priority: "5"
     position: 0.5078125
     created: 2026-03-21
   - id: roj-038
@@ -292,7 +292,7 @@ cards:
     epic: Editor
     tags:
       - Bug
-    priority: 1
+    priority: "5"
     position: 0.50390625
     created: 2026-03-21
   - id: roj-039
@@ -301,7 +301,7 @@ cards:
     epic: Board
     tags:
       - Bug
-    priority: 1
+    priority: "5"
     position: 4.0
     created: 2026-03-21
   - id: roj-040
@@ -310,7 +310,7 @@ cards:
     epic: Settings
     tags:
       - Bug
-    priority: 1
+    priority: "5"
     position: 5.0
     created: 2026-03-21
   - id: roj-041
@@ -320,14 +320,14 @@ cards:
     tags:
       - Feature
       - UX
-    priority: 1
+    priority: "5"
     position: 6.0
     created: 2026-03-21
   - id: roj-042
     title: "fix: Tags not assignable from card modal"
     status: status-1774045884765
     epic: Editor
-    priority: 1
+    priority: "5"
     position: 7.0
     created: 2026-03-21
   - id: roj-043
@@ -337,7 +337,7 @@ cards:
     tags:
       - Feature
       - UX
-    priority: 1
+    priority: "5"
     position: 8.0
     created: 2026-03-21
   - id: roj-044
@@ -348,7 +348,7 @@ cards:
       - Backend
       - Feature
       - Refactor
-    priority: 2
+    priority: "4"
     position: 20.0
     created: 2026-03-21
   - id: roj-045
@@ -357,7 +357,7 @@ cards:
     epic: Board
     tags:
       - Bug
-    priority: 2
+    priority: "4"
     position: 21.0
     created: 2026-03-21
   - id: roj-046
@@ -366,7 +366,7 @@ cards:
     epic: Board
     tags:
       - Feature
-    priority: 1
+    priority: "5"
     position: 22.0
     created: 2026-03-21
   - id: roj-047
@@ -375,7 +375,7 @@ cards:
     epic: Board
     tags:
       - Polish
-    priority: 1
+    priority: "5"
     position: 9.0
     created: 2026-03-21
   - id: roj-048
@@ -384,6 +384,6 @@ cards:
     epic: Board
     tags:
       - Backend
-    priority: 2
+    priority: "4"
     position: 2.0
     created: 2026-03-21
