@@ -1,389 +1,389 @@
-generated: 2026-03-21T02:09:07.228285300+02:00
+generated: 2026-03-21T03:47:26.006909100+02:00
 cardCount: 40
 cards:
 - id: roj-009
   title: 'fix: Broken cards graceful failing'
   status: status-1774045884765
-  epic: epic-1773924443930
+  epic: Board
   tags:
-  - tag-1773869127764
-  - tag-1773869123619
+  - Bug
+  - Feature
   priority: HIGH
   position: 0.25
   created: 2026-03-19
 - id: roj-010
   title: 'feat: Card attachment files'
   status: todo
-  epic: epic-1773924454503
+  epic: Card
   tags:
-  - tag-1773869123619
-  - tag-1773923963358
+  - Feature
+  - Backend
   priority: MED
   position: 1.0
   created: 2026-03-19
 - id: roj-011
   title: 'feat: File Watcher (real time refresh)'
   status: status-1774045884765
-  epic: epic-1773924443930
+  epic: Board
   tags:
-  - tag-1773923963358
+  - Backend
   priority: MED
   position: 3.0
   created: 2026-03-19
 - id: roj-012
   title: 'fix: Atomic File Writes in storage.rs'
   status: status-1774045884765
-  epic: epic-1773924443930
+  epic: Board
   tags:
-  - tag-1773923963358
+  - Backend
   priority: CRIT
   position: 0.5
   created: 2026-03-19
 - id: roj-013
   title: 'feat: Sound effects for GUI'
   status: backlog
-  epic: epic-1773924465611
+  epic: Theming
   tags:
-  - tag-1773869123619
-  - tag-1773923872831
+  - Feature
+  - Polish
   priority: LOW
   position: 5.0
   created: 2026-03-19
 - id: roj-014
   title: 'style: Priority highlight on cards'
   status: todo
-  epic: epic-1773924465611
+  epic: Theming
   tags:
-  - tag-1773923939233
-  - tag-1773923872831
+  - UX
+  - Polish
   priority: LOW
   position: 7.0
   created: 2026-03-19
 - id: roj-015
   title: 'style: Automatic contrast colors utility'
   status: status-1774045884765
-  epic: epic-1773924443930
+  epic: Board
   tags:
-  - tag-1773869127764
-  - tag-1773923939233
-  - tag-1773923872831
+  - Bug
+  - UX
+  - Polish
   priority: MED
   position: 0.625
   created: 2026-03-19
 - id: roj-016
   title: 'fix: CardModal silently dropping card fields on save'
   status: status-1774045884765
-  epic: epic-1773924454503
+  epic: Card
   tags:
-  - tag-1773869127764
+  - Bug
   priority: MED
   position: 0.75
   created: 2026-03-20
 - id: roj-017
   title: 'fix: Clear Stale Filters on Epic/Tag Deletion'
   status: status-1774045884765
-  epic: epic-1773924443930
+  epic: Board
   tags:
-  - tag-1773869127764
+  - Bug
   priority: LOW
   position: 0.515625
   created: 2026-03-20
 - id: roj-018
   title: 'fix: loadBoard race condition dropping optimistic card push'
   status: status-1774045884765
-  epic: epic-1773924443930
+  epic: Board
   tags:
-  - tag-1773869127764
+  - Bug
   priority: MED
   position: 0.53125
   created: 2026-03-20
 - id: roj-019
   title: 'fix: minimum distance to consider Moving a card vs. opening a card'
   status: backlog
-  epic: epic-1773924443930
+  epic: Board
   tags:
-  - tag-1773869127764
-  - tag-1773923939233
+  - Bug
+  - UX
   priority: LOW
   position: 7.0
   created: 2026-03-20
 - id: roj-020
   title: 'feat: Soft delete cards'
   status: status-1774045884765
-  epic: epic-1773924443930
+  epic: Board
   tags:
-  - tag-1773869123619
+  - Feature
   priority: medium
   position: 0.5625
   created: 2026-03-20
 - id: roj-021
   title: 'feat: Show deleted cards in settings'
   status: backlog
-  epic: epic-1773924449199
+  epic: Settings
   tags:
-  - tag-1773869123619
-  - tag-1773923963358
+  - Feature
+  - Backend
   priority: medium
   position: 0.390625
   created: 2026-03-20
 - id: roj-022
   title: 'chore: Name based epics and tags'
-  status: in-progress
-  epic: epic-1773924443930
+  status: done
+  epic: Board
   tags:
-  - tag-1773923963358
-  - tag-1773923979395
+  - Backend
+  - Refactor
   priority: MED
   position: 1.0
   created: 2026-03-20
 - id: roj-023
   title: 'style: cardmodal epics and tags dropdown coloring'
   status: backlog
-  epic: epic-1773924456709
+  epic: Editor
   tags:
-  - tag-1773923939233
-  - tag-1773923872831
+  - UX
+  - Polish
   priority: medium
   position: 9.0
   created: 2026-03-20
 - id: roj-024
   title: 'feat: Archive and Deleted fixed statuses'
   status: backlog
-  epic: epic-1773924443930
+  epic: Board
   tags:
-  - tag-1773869123619
+  - Feature
   priority: medium
   position: 8.0
   created: 2026-03-20
 - id: roj-025
   title: 'fix: Silent overwrites of cards '
   status: status-1774045884765
-  epic: epic-1773924443930
+  epic: Board
   tags:
-  - tag-1773869127764
-  - tag-1773923963358
+  - Bug
+  - Backend
   priority: medium
   position: 1.0
   created: 2026-03-20
 - id: roj-026
   title: 'fix: Silent background refresh for watcher-triggered reloads'
   status: status-1774045884765
-  epic: epic-1773924443930
+  epic: Board
   tags:
-  - tag-1773869127764
-  - tag-1773923963358
+  - Bug
+  - Backend
   priority: medium
   position: 2.0
   created: 2026-03-20
 - id: roj-027
   title: 'feat: Link to another card from card'
   status: backlog
-  epic: epic-1773924456709
+  epic: Editor
   tags:
-  - tag-1773869123619
-  - tag-1773923939233
+  - Feature
+  - UX
   priority: LOW
   position: 0.78125
   created: 2026-03-20
 - id: roj-028
   title: 'style: Improve sortable card visualisation'
   status: backlog
-  epic: epic-1773924443930
+  epic: Board
   tags:
-  - tag-1773923939233
-  - tag-1773923872831
+  - UX
+  - Polish
   priority: LOW
   position: 10.0
   created: 2026-03-20
 - id: roj-029
   title: 'style: New card modal and edit modal inconsistency'
   status: backlog
-  epic: epic-1773924454503
+  epic: Card
   tags:
-  - tag-1773923939233
-  - tag-1773923872831
+  - UX
+  - Polish
   priority: MED
   position: 11.0
   created: 2026-03-20
 - id: roj-030
   title: 'feat: Checklists in Card modal'
   status: backlog
-  epic: epic-1773924454503
+  epic: Card
   tags:
-  - tag-1773869123619
-  - tag-1773923939233
+  - Feature
+  - UX
   priority: medium
   position: 17.0
   created: 2026-03-20
 - id: roj-031
   title: 'style: Store board status to a state json file'
   status: todo
-  epic: epic-1773924443930
+  epic: Board
   tags:
-  - tag-1773923939233
-  - tag-1773869123619
-  - tag-1773923963358
+  - UX
+  - Feature
+  - Backend
   priority: LOW
   position: 0.5
   created: 2026-03-20
 - id: roj-032
   title: 'chore: Priority system'
   status: todo
-  epic: epic-1773924449199
+  epic: Settings
   tags:
-  - tag-1773923979395
-  - tag-1773923963358
+  - Refactor
+  - Backend
   priority: medium
   position: 5.0
   created: 2026-03-20
 - id: roj-033
   title: Validate against OS-reserved names
-  status: done
-  epic: epic-1773924443930
+  status: status-1774045884765
+  epic: Board
   tags:
-  - tag-1773923963358
-  - tag-1773869127764
+  - Backend
+  - Bug
   priority: MED
-  position: 1.0
+  position: 0.125
   created: 2026-03-20
 - id: roj-034
   title: Safe Epic/Tag Rename with Write-Ahead Log
   status: todo
-  epic: epic-1773924443930
+  epic: Board
   tags:
-  - tag-1773923963358
-  - tag-1773923979395
+  - Backend
+  - Refactor
   priority: HIGH
   position: 3.0
   created: 2026-03-20
 - id: roj-035
   title: 'feat: Hotkeys'
   status: backlog
-  epic: epic-1773924443930
+  epic: Board
   tags:
-  - tag-1773869123619
-  - tag-1773923872831
+  - Feature
+  - Polish
   priority: MED
   position: 18.0
   created: 2026-03-20
 - id: roj-036
   title: 'feat: Internationalisation'
   status: backlog
-  epic: epic-1773869087849
+  epic: Translations
   tags:
-  - tag-1773923872831
-  - tag-1773869123619
+  - Polish
+  - Feature
   priority: LOW
   position: 19.0
   created: 2026-03-21
 - id: roj-037
   title: 'chore: Rename tickets to Cards'
   status: status-1774045884765
-  epic: epic-1773924443930
+  epic: Board
   tags:
-  - tag-1773923963358
-  - tag-1773923979395
+  - Backend
+  - Refactor
   priority: LOW
   position: 0.5078125
   created: 2026-03-21
 - id: roj-038
   title: 'fix: Card edit modal is draggable'
   status: status-1774045884765
-  epic: epic-1773924456709
+  epic: Editor
   tags:
-  - tag-1773869127764
+  - Bug
   priority: LOW
   position: 0.50390625
   created: 2026-03-21
 - id: roj-039
   title: 'fix: Drag-and-drop reordering and lane switching'
   status: status-1774045884765
-  epic: epic-1773924443930
+  epic: Board
   tags:
-  - tag-1773869127764
+  - Bug
   priority: LOW
   position: 4.0
   created: 2026-03-21
 - id: roj-040
   title: 'fix: settings saving (epics and tags) broken'
   status: status-1774045884765
-  epic: epic-1773924449199
+  epic: Settings
   tags:
-  - tag-1773869127764
+  - Bug
   priority: LOW
   position: 5.0
   created: 2026-03-21
 - id: roj-041
   title: 'feat: Status reordering in settings'
   status: status-1774045884765
-  epic: epic-1773924449199
+  epic: Settings
   tags:
-  - tag-1773869123619
-  - tag-1773923939233
+  - Feature
+  - UX
   priority: LOW
   position: 6.0
   created: 2026-03-21
 - id: roj-042
   title: 'fix: Tags not assignable from card modal'
   status: status-1774045884765
-  epic: epic-1773924456709
+  epic: Editor
   priority: LOW
   position: 7.0
   created: 2026-03-21
 - id: roj-043
   title: 'feat: Tags colors and reordering in settings'
   status: status-1774045884765
-  epic: epic-1773924449199
+  epic: Settings
   tags:
-  - tag-1773869123619
-  - tag-1773923939233
+  - Feature
+  - UX
   priority: LOW
   position: 8.0
   created: 2026-03-21
 - id: roj-044
   title: 'feat: ID for status/epics/tags'
   status: backlog
-  epic: epic-1773924449199
+  epic: Settings
   tags:
-  - tag-1773923963358
-  - tag-1773869123619
-  - tag-1773923979395
+  - Backend
+  - Feature
+  - Refactor
   priority: medium
   position: 20.0
   created: 2026-03-21
 - id: roj-045
   title: 'feat: Cleared cards in Epics?'
   status: backlog
-  epic: epic-1773924443930
+  epic: Board
   tags:
-  - tag-1773869127764
+  - Bug
   priority: MED
   position: 21.0
   created: 2026-03-21
 - id: roj-046
   title: 'feat: Filter by ID '
   status: backlog
-  epic: epic-1773924443930
+  epic: Board
   tags:
-  - tag-1773869123619
+  - Feature
   priority: LOW
   position: 22.0
   created: 2026-03-21
 - id: roj-047
   title: 'style: Update epic view group layout'
   status: status-1774045884765
-  epic: epic-1773924443930
+  epic: Board
   tags:
-  - tag-1773923872831
+  - Polish
   priority: LOW
   position: 9.0
   created: 2026-03-21
 - id: roj-048
   title: 'chore: One-shot migration script for ID-to-name epic/tag data'
-  status: in-progress
-  epic: epic-1773924443930
+  status: done
+  epic: Board
   tags:
-  - tag-1773923963358
+  - Backend
   priority: MED
   position: 2.0
   created: 2026-03-21

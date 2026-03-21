@@ -99,19 +99,20 @@ pub fn rename_epic_or_tag(
     dir: &Path,
     config: &mut BoardConfig,
     is_epic: bool,
+    index: usize,
     old_name: &str,
     new_name: &str,
     config_path: &Path,
 ) -> Result<(), String> {
     if is_epic {
-        let entry = config.epics.iter_mut()
-            .find(|e| e.name == old_name)
-            .ok_or_else(|| format!("Epic '{}' not found", old_name))?;
+        let entry = config.epics.get_mut(index)
+            .ok_or_else(|| format!("Epic at index {} not found", index))?;
+        entry.name = old_name.to_string();
         entry.pending_rename = Some(new_name.to_string());
     } else {
-        let entry = config.tags.iter_mut()
-            .find(|t| t.name == old_name)
-            .ok_or_else(|| format!("Tag '{}' not found", old_name))?;
+        let entry = config.tags.get_mut(index)
+            .ok_or_else(|| format!("Tag at index {} not found", index))?;
+        entry.name = old_name.to_string();
         entry.pending_rename = Some(new_name.to_string());
     }
     write_board_config(config_path, config)?;

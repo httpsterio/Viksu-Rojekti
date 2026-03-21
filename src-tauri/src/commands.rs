@@ -18,26 +18,26 @@ pub fn save_board_config(mut config: BoardConfig, state: State<AppState>) -> Res
     let old_config = storage::read_board_config(&config_path)?;
 
     // Collect renames before mutating config (position-stable: same index = same entry)
-    let epic_renames: Vec<(String, String)> = config.epics.iter().enumerate()
+    let epic_renames: Vec<(usize, String, String)> = config.epics.iter().enumerate()
         .filter_map(|(i, new)| {
             old_config.epics.get(i)
                 .filter(|old| old.name != new.name)
-                .map(|old| (old.name.clone(), new.name.clone()))
+                .map(|old| (i, old.name.clone(), new.name.clone()))
         })
         .collect();
-    let tag_renames: Vec<(String, String)> = config.tags.iter().enumerate()
+    let tag_renames: Vec<(usize, String, String)> = config.tags.iter().enumerate()
         .filter_map(|(i, new)| {
             old_config.tags.get(i)
                 .filter(|old| old.name != new.name)
-                .map(|old| (old.name.clone(), new.name.clone()))
+                .map(|old| (i, old.name.clone(), new.name.clone()))
         })
         .collect();
 
-    for (old_name, new_name) in epic_renames {
-        storage::rename_epic_or_tag(&state.project_dir, &mut config, true, &old_name, &new_name, &config_path)?;
+    for (index, old_name, new_name) in epic_renames {
+        storage::rename_epic_or_tag(&state.project_dir, &mut config, true, index, &old_name, &new_name, &config_path)?;
     }
-    for (old_name, new_name) in tag_renames {
-        storage::rename_epic_or_tag(&state.project_dir, &mut config, false, &old_name, &new_name, &config_path)?;
+    for (index, old_name, new_name) in tag_renames {
+        storage::rename_epic_or_tag(&state.project_dir, &mut config, false, index, &old_name, &new_name, &config_path)?;
     }
 
     storage::write_board_config(&config_path, &config)
