@@ -1,5 +1,5 @@
-generated: 2026-03-21T17:53:59.223254+02:00
-cardCount: 40
+generated: 2026-03-21T18:58:01.753397+02:00
+cardCount: 43
 cards:
 - id: roj-009
   title: 'fix: Broken cards graceful failing'
@@ -41,23 +41,23 @@ cards:
   created: 2026-03-19
 - id: roj-013
   title: 'feat: Sound effects for GUI'
-  status: todo
+  status: backlog
   epic: Theming
   tags:
   - Feature
   - Polish
   priority: 5
-  position: 2.0
+  position: 21.5
   created: 2026-03-19
 - id: roj-014
   title: 'style: Priority highlight on cards'
-  status: done
+  status: status-1774045884765
   epic: Theming
   tags:
   - UX
   - Polish
   priority: 5
-  position: 5.0
+  position: 0.001953125
   created: 2026-03-19
 - id: roj-015
   title: 'style: Automatic contrast colors utility'
@@ -128,13 +128,13 @@ cards:
   created: 2026-03-20
 - id: roj-022
   title: 'chore: Name based epics and tags'
-  status: done
+  status: status-1774045884765
   epic: Board
   tags:
   - Backend
   - Refactor
   priority: 4
-  position: 1.0
+  position: 0.03125
   created: 2026-03-20
 - id: roj-023
   title: 'style: cardmodal epics and tags dropdown coloring'
@@ -228,13 +228,13 @@ cards:
   created: 2026-03-20
 - id: roj-032
   title: 'chore: Priority system'
-  status: done
+  status: status-1774045884765
   epic: Settings
   tags:
   - Refactor
   - Backend
   priority: 4
-  position: 4.0
+  position: 0.00390625
   created: 2026-03-20
 - id: roj-033
   title: Validate against OS-reserved names
@@ -248,13 +248,13 @@ cards:
   created: 2026-03-20
 - id: roj-034
   title: Safe Epic/Tag Rename with Write-Ahead Log
-  status: done
+  status: status-1774045884765
   epic: Board
   tags:
   - Backend
   - Refactor
   priority: 2
-  position: 3.0
+  position: 0.0078125
   created: 2026-03-20
 - id: roj-035
   title: 'feat: Hotkeys'
@@ -380,10 +380,40 @@ cards:
   created: 2026-03-21
 - id: roj-048
   title: 'chore: One-shot migration script for ID-to-name epic/tag data'
-  status: done
+  status: status-1774045884765
   epic: Board
   tags:
   - Backend
   priority: 4
-  position: 2.0
+  position: 0.015625
+  created: 2026-03-21
+- id: roj-049
+  title: 'refactor: Replace SortableJS with Pragmatic DND'
+  status: todo
+  epic: Board
+  tags:
+  - Refactor
+  - UX
+  priority: 3
+  position: 1.5
+  created: 2026-03-21
+- id: roj-050
+  title: 'feat: Improve settings page'
+  status: backlog
+  epic: Settings
+  tags:
+  - Feature
+  - UX
+  - Polish
+  priority: 4
+  position: 23.0
+  created: 2026-03-21
+- id: roj-051
+  title: 'fix: DnD on Linux/Mac'
+  status: backlog
+  epic: Board
+  tags:
+  - Bug
+  priority: 3
+  position: 24.0
   created: 2026-03-21

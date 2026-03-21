@@ -1,6 +1,6 @@
 name: Rojekti
 prefix: roj
-nextId: 48
+nextId: 52
 statuses:
 - id: backlog
   name: BACKLOG
@@ -13,57 +13,40 @@ statuses:
 - id: status-1774045884765
   name: ARCHIVE
 epics:
--
-  name: Board
+- name: Board
   color: '#19e1a5'
--
-  name: Settings
+- name: Settings
   color: '#00c288'
--
-  name: Card
+- name: Card
   color: '#019d6e'
--
-  name: Editor
+- name: Editor
   color: '#137155'
--
-  name: Theming
+- name: Theming
   color: '#cfe90c'
--
-  name: Publishing
+- name: Publishing
   color: '#fad000'
--
-  name: Licensing
+- name: Licensing
   color: '#f7a93b'
--
-  name: Translations
+- name: Translations
   color: '#ff811a'
--
-  name: LINUX / MAC
+- name: LINUX / MAC
   color: '#5c5c5c'
--
-  name: Command Line
+- name: Command Line
   color: '#121212'
 tags:
--
-  name: Feature
+- name: Feature
   color: '#10b981'
--
-  name: Bug
+- name: Bug
   color: '#ff4d00'
--
-  name: UX
+- name: UX
   color: '#faab00'
--
-  name: Backend
+- name: Backend
   color: '#5510bc'
--
-  name: Polish
+- name: Polish
   color: '#f5e324'
--
-  name: Refactor
+- name: Refactor
   color: '#ff14a9'
--
-  name: CLI API
+- name: CLI API
   color: '#3d3d3d'
 priorities:
 - name: Critical
