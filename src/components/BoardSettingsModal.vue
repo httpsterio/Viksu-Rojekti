@@ -8,10 +8,12 @@ import InputText from "primevue/inputtext"
 import InputGroup from "primevue/inputgroup"
 import InputGroupAddon from "primevue/inputgroupaddon"
 import { useConfirm } from "primevue/useconfirm"
+import { useToast } from "primevue/usetoast"
 import Sortable from "sortablejs"
 
 const { config, cards, saveBoardConfig, updateCard } = useBoard()
 const confirm = useConfirm()
+const toast = useToast()
 
 const visible = ref(false)
 const localConfig = ref<BoardConfig | null>(null)
@@ -60,6 +62,27 @@ defineExpose({ open })
 
 const handleSave = async () => {
   if (localConfig.value) {
+    const epicNames = localConfig.value.epics.map((e) => e.name.trim())
+    if (new Set(epicNames).size !== epicNames.length) {
+      toast.add({
+        severity: "error",
+        summary: "Validation Error",
+        detail: "Epic names must be unique.",
+        life: 4000,
+      })
+      return
+    }
+    const tagNames = localConfig.value.tags.map((t) => t.name.trim())
+    if (new Set(tagNames).size !== tagNames.length) {
+      toast.add({
+        severity: "error",
+        summary: "Validation Error",
+        detail: "Tag names must be unique.",
+        life: 4000,
+      })
+      return
+    }
+
     await saveBoardConfig(localConfig.value)
     visible.value = false
   }
@@ -109,7 +132,6 @@ const removeStatus = (index: number) => {
 
 const addEpic = () => {
   localConfig.value?.epics.push({
-    id: `epic-${Date.now()}`,
     name: "New Epic",
     color: "#3b82f6",
   })
@@ -129,7 +151,6 @@ const removeEpic = (index: number) => {
 
 const addTag = () => {
   localConfig.value?.tags.push({
-    id: `tag-${Date.now()}`,
     name: "New Tag",
     color: "#10b981",
   })
@@ -217,7 +238,7 @@ const removeTag = (index: number) => {
             <label>Epics</label>
           </div>
           <div ref="epicsContainer" class="list-editor">
-            <div v-for="(epic, index) in localConfig.epics" :key="epic.id" class="list-item">
+            <div v-for="(epic, index) in localConfig.epics" :key="epic.name" class="list-item">
               <InputGroup>
                 <InputGroupAddon class="drag-handle">
                   <i class="pi pi-bars"></i>
@@ -246,7 +267,7 @@ const removeTag = (index: number) => {
             <label>Tags</label>
           </div>
           <div ref="tagsContainer" class="list-editor">
-            <div v-for="(tag, index) in localConfig.tags" :key="tag.id" class="list-item">
+            <div v-for="(tag, index) in localConfig.tags" :key="tag.name" class="list-item">
               <InputGroup>
                 <InputGroupAddon class="drag-handle">
                   <i class="pi pi-bars"></i>

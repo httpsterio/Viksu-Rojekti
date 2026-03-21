@@ -9,9 +9,9 @@ const { config, cardsByEpic } = useBoard()
   <div v-if="config" class="epic-view">
     <EpicGroup
       v-for="epic in config.epics"
-      :key="epic.id"
+      :key="epic.name"
       :epic="epic"
-      :cards="cardsByEpic[epic.id] || []"
+      :cards="cardsByEpic[epic.name] || []"
     />
 
     <EpicGroup v-if="cardsByEpic['unassigned']?.length > 0" :cards="cardsByEpic['unassigned']" />

@@ -14,15 +14,15 @@ export interface Status {
 }
 
 export interface Epic {
-  id: string
   name: string
   color: string
+  pendingRename?: string
 }
 
 export interface Tag {
-  id: string
   name: string
   color: string
+  pendingRename?: string
 }
 
 export interface CardMeta {

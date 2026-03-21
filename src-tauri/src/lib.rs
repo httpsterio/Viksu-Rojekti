@@ -59,6 +59,20 @@ pub fn run() {
                 let _ = window.show();
             }
 
+            // Recover any interrupted rename operations from a previous session
+            let config_path = project_dir.join("rojekti").join("rojekti.config.yaml");
+            if config_path.exists() {
+                if let Ok(mut config) = storage::read_board_config(&config_path) {
+                    let has_pending = config.epics.iter().any(|e| e.pending_rename.is_some())
+                        || config.tags.iter().any(|t| t.pending_rename.is_some());
+                    if has_pending {
+                        if let Err(e) = storage::apply_pending_renames(&project_dir, &mut config, &config_path) {
+                            eprintln!("[warn] Failed to recover pending rename: {}", e);
+                        }
+                    }
+                }
+            }
+
             // Start the watcher immediately if the board already exists
             let rojekti_dir = project_dir.join("rojekti");
             if rojekti_dir.exists() {

@@ -79,7 +79,7 @@ const clearAllFilters = () => {
             v-model="activeFilters.epic"
             :options="config.epics"
             option-label="name"
-            option-value="id"
+            option-value="name"
             placeholder="All Epics"
             show-clear
             size="small"
@@ -89,7 +89,7 @@ const clearAllFilters = () => {
             v-model="activeFilters.tag"
             :options="config.tags"
             option-label="name"
-            option-value="id"
+            option-value="name"
             placeholder="All Tags"
             show-clear
             size="small"

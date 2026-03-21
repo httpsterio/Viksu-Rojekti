@@ -67,10 +67,10 @@ export function useBoard() {
       config.value = newConfig
 
       // Clear stale filters
-      if (activeFilters.value.epic && !newConfig.epics.some(e => e.id === activeFilters.value.epic)) {
+      if (activeFilters.value.epic && !newConfig.epics.some(e => e.name === activeFilters.value.epic)) {
         activeFilters.value.epic = null
       }
-      if (activeFilters.value.tag && !newConfig.tags.some(t => t.id === activeFilters.value.tag)) {
+      if (activeFilters.value.tag && !newConfig.tags.some(t => t.name === activeFilters.value.tag)) {
         activeFilters.value.tag = null
       }
       if (activeFilters.value.priority && !newConfig.priorities.includes(activeFilters.value.priority)) {
@@ -178,7 +178,7 @@ export function useBoard() {
     if (!config.value) return grouped
 
     for (const epic of config.value.epics) {
-      grouped[epic.id] = []
+      grouped[epic.name] = []
     }
 
     for (const card of filteredCards.value) {

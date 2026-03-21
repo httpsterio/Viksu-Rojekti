@@ -36,7 +36,7 @@ def parse_id_name_map(config_content, section):
         if in_section:
             if line and not line.startswith(" ") and not line.startswith("-"):
                 break  # left the section
-            id_match = re.match(r"^\s+-?\s*id:\s*['\"]?(.+?)['\"]?\s*$", line)
+            id_match = re.match(r"^-?\s*id:\s*['\"]?(.+?)['\"]?\s*$", line)
             name_match = re.match(r"^\s+name:\s*['\"]?(.+?)['\"]?\s*$", line)
             if id_match:
                 current_id = id_match.group(1).strip()
@@ -104,6 +104,10 @@ def migrate_config(config_path, epic_map, tag_map):
             in_tags = False
 
         # Drop id: lines inside epics or tags sections
+        # "- id: ..." becomes "-" (keep list marker), "  id: ..." is dropped entirely
+        if (in_epics or in_tags) and re.match(r"^-\s+id:\s*", line):
+            result.append("-\n")
+            continue
         if (in_epics or in_tags) and re.match(r"^\s+id:\s*", line):
             continue
 

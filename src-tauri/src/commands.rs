@@ -10,10 +10,37 @@ pub fn get_board_config(state: State<AppState>) -> Result<BoardConfig, String> {
 }
 
 #[tauri::command]
-pub fn save_board_config(config: BoardConfig, state: State<AppState>) -> Result<(), String> {
+pub fn save_board_config(mut config: BoardConfig, state: State<AppState>) -> Result<(), String> {
     let _lock = state.write_lock.lock().map_err(|e| format!("Lock error: {}", e))?;
     *state.last_gui_write.lock().map_err(|e| format!("Lock error: {}", e))? = std::time::Instant::now();
-    storage::write_board_config(&state.project_dir.join("rojekti").join("rojekti.config.yaml"), &config)
+    let config_path = state.project_dir.join("rojekti").join("rojekti.config.yaml");
+
+    let old_config = storage::read_board_config(&config_path)?;
+
+    // Collect renames before mutating config (position-stable: same index = same entry)
+    let epic_renames: Vec<(String, String)> = config.epics.iter().enumerate()
+        .filter_map(|(i, new)| {
+            old_config.epics.get(i)
+                .filter(|old| old.name != new.name)
+                .map(|old| (old.name.clone(), new.name.clone()))
+        })
+        .collect();
+    let tag_renames: Vec<(String, String)> = config.tags.iter().enumerate()
+        .filter_map(|(i, new)| {
+            old_config.tags.get(i)
+                .filter(|old| old.name != new.name)
+                .map(|old| (old.name.clone(), new.name.clone()))
+        })
+        .collect();
+
+    for (old_name, new_name) in epic_renames {
+        storage::rename_epic_or_tag(&state.project_dir, &mut config, true, &old_name, &new_name, &config_path)?;
+    }
+    for (old_name, new_name) in tag_renames {
+        storage::rename_epic_or_tag(&state.project_dir, &mut config, false, &old_name, &new_name, &config_path)?;
+    }
+
+    storage::write_board_config(&config_path, &config)
 }
 
 #[tauri::command]

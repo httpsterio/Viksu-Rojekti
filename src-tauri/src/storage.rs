@@ -95,6 +95,87 @@ pub fn list_card_files(dir: &Path) -> Result<Vec<PathBuf>, String> {
     Ok(files)
 }
 
+pub fn rename_epic_or_tag(
+    dir: &Path,
+    config: &mut BoardConfig,
+    is_epic: bool,
+    old_name: &str,
+    new_name: &str,
+    config_path: &Path,
+) -> Result<(), String> {
+    if is_epic {
+        let entry = config.epics.iter_mut()
+            .find(|e| e.name == old_name)
+            .ok_or_else(|| format!("Epic '{}' not found", old_name))?;
+        entry.pending_rename = Some(new_name.to_string());
+    } else {
+        let entry = config.tags.iter_mut()
+            .find(|t| t.name == old_name)
+            .ok_or_else(|| format!("Tag '{}' not found", old_name))?;
+        entry.pending_rename = Some(new_name.to_string());
+    }
+    write_board_config(config_path, config)?;
+
+    apply_pending_renames(dir, config, config_path)
+}
+
+pub fn apply_pending_renames(
+    dir: &Path,
+    config: &mut BoardConfig,
+    config_path: &Path,
+) -> Result<(), String> {
+    let epic_renames: Vec<(String, String)> = config.epics.iter()
+        .filter_map(|e| e.pending_rename.as_ref().map(|new| (e.name.clone(), new.clone())))
+        .collect();
+    let tag_renames: Vec<(String, String)> = config.tags.iter()
+        .filter_map(|t| t.pending_rename.as_ref().map(|new| (t.name.clone(), new.clone())))
+        .collect();
+
+    if epic_renames.is_empty() && tag_renames.is_empty() {
+        return Ok(());
+    }
+
+    let (cards, _) = read_all_cards(dir)?;
+    for card in cards {
+        let mut updated = card.clone();
+        let mut changed = false;
+
+        if let Some(ref epic) = card.meta.epic {
+            if let Some((_, new)) = epic_renames.iter().find(|(old, _)| old == epic) {
+                updated.meta.epic = Some(new.clone());
+                changed = true;
+            }
+        }
+
+        let new_tags: Vec<String> = card.meta.tags.iter().map(|t| {
+            tag_renames.iter()
+                .find(|(old, _)| old == t)
+                .map(|(_, new)| new.clone())
+                .unwrap_or_else(|| t.clone())
+        }).collect();
+        if new_tags != card.meta.tags {
+            updated.meta.tags = new_tags;
+            changed = true;
+        }
+
+        if changed {
+            write_card(dir, &updated)?;
+        }
+    }
+
+    for epic in config.epics.iter_mut() {
+        if let Some(new_name) = epic.pending_rename.take() {
+            epic.name = new_name;
+        }
+    }
+    for tag in config.tags.iter_mut() {
+        if let Some(new_name) = tag.pending_rename.take() {
+            tag.name = new_name;
+        }
+    }
+    write_board_config(config_path, config)
+}
+
 pub fn read_all_cards(dir: &Path) -> Result<(Vec<Card>, Vec<String>), String> {
     let files = list_card_files(dir)?;
     let mut cards = Vec::new();

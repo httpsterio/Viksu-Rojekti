@@ -3,9 +3,10 @@ use serde::{Deserialize, Serialize};
 #[derive(Serialize, Deserialize, Clone, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct Tag {
-    pub id: String,
     pub name: String,
     pub color: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub pending_rename: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug)]
@@ -30,9 +31,10 @@ pub struct BoardConfig {
 #[derive(Serialize, Deserialize, Clone, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct Epic {
-    pub id: String,
     pub name: String,
     pub color: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub pending_rename: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug)]

@@ -11,12 +11,12 @@ const props = defineProps<{
 const { config, editingCard } = useBoard()
 const { contrastColor } = useColorContrast()
 
-const epic = computed(() => config.value?.epics.find((e) => e.id === props.card.epic))
+const epic = computed(() => config.value?.epics.find((e) => e.name === props.card.epic))
 
-const getTag = (id: string) => config.value?.tags.find((t) => t.id === id)
+const getTag = (name: string) => config.value?.tags.find((t) => t.name === name)
 
-const getTagStyle = (id: string) => {
-  const tag = getTag(id)
+const getTagStyle = (name: string) => {
+  const tag = getTag(name)
   if (tag?.color) {
     return {
       backgroundColor: tag.color,
@@ -47,8 +47,8 @@ const getTagStyle = (id: string) => {
       >
         {{ epic.name }}
       </span>
-      <span v-for="tagId in card.tags" :key="tagId" class="tag-pill" :style="getTagStyle(tagId)">
-        {{ getTag(tagId)?.name || tagId }}
+      <span v-for="tagName in card.tags" :key="tagName" class="tag-pill" :style="getTagStyle(tagName)">
+        {{ getTag(tagName)?.name || tagName }}
       </span>
     </div>
   </div>

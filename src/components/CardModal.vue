@@ -44,6 +44,22 @@ const getInitialCard = (): Card => ({
 
 const card = ref<Card>(getInitialCard())
 
+const knownTags = computed({
+  get: () => card.value.tags.filter((name) => config.value?.tags.some((t) => t.name === name)),
+  set: (val) => {
+    card.value.tags = [...val, ...orphanedTags.value]
+  },
+})
+
+const orphanedTags = computed(() =>
+  card.value.tags.filter((name) => !config.value?.tags.some((t) => t.name === name)),
+)
+
+const isEpicOrphaned = computed(
+  () =>
+    card.value.epic && !config.value?.epics.some((e) => e.name === card.value.epic),
+)
+
 const descriptionTab = ref<"view" | "edit">("view")
 const confirm = useConfirm()
 
@@ -124,12 +140,12 @@ const handleDelete = () => {
   }
 }
 
-const getTag = (id: string) => config.value?.tags.find((t) => t.id === id)
-const getEpic = (id: string) => config.value?.epics.find((e) => e.id === id)
+const getTag = (name: string) => config.value?.tags.find((t) => t.name === name)
+const getEpic = (name: string) => config.value?.epics.find((e) => e.name === name)
 
-const removeTag = (tag: string) => {
+const removeTag = (name: string) => {
   if (card.value.tags) {
-    card.value.tags = card.value.tags.filter((t) => t !== tag)
+    card.value.tags = card.value.tags.filter((t) => t !== name)
   }
 }
 </script>
@@ -178,7 +194,7 @@ const removeTag = (tag: string) => {
             v-model="card.epic"
             :options="config?.epics"
             option-label="name"
-            option-value="id"
+            option-value="name"
             placeholder="No Epic"
             show-clear
             fluid
@@ -192,7 +208,7 @@ const removeTag = (tag: string) => {
                   color: contrastColor(getEpic(value)?.color),
                 }"
               >
-                {{ getEpic(value)?.name }}
+                {{ getEpic(value)?.name || value }}
               </span>
               <span v-else class="p-placeholder">No Epic</span>
             </template>
@@ -205,15 +221,19 @@ const removeTag = (tag: string) => {
               </span>
             </template>
           </Select>
+          <div v-if="isEpicOrphaned" class="orphaned-info">
+            <i class="pi pi-info-circle"></i>
+            Current epic "{{ card.epic }}" is no longer in settings.
+          </div>
         </div>
 
         <div class="field">
           <label>Tags</label>
           <MultiSelect
-            v-model="card.tags"
+            v-model="knownTags"
             :options="config?.tags"
             option-label="name"
-            option-value="id"
+            option-value="name"
             placeholder="Select Tags"
             display="chip"
             fluid
@@ -242,16 +262,25 @@ const removeTag = (tag: string) => {
           </MultiSelect>
           <div v-if="card.tags && card.tags.length > 0" class="selected-tags">
             <Tag
-              v-for="tagId in card.tags"
-              :key="tagId"
-              :value="getTag(tagId)?.name || tagId"
+              v-for="tagName in knownTags"
+              :key="tagName"
+              :value="getTag(tagName)?.name || tagName"
               :style="{
-                backgroundColor: getTag(tagId)?.color,
-                color: contrastColor(getTag(tagId)?.color),
+                backgroundColor: getTag(tagName)?.color,
+                color: contrastColor(getTag(tagName)?.color),
               }"
               class="removable-tag"
               icon="pi pi-times"
-              @click="removeTag(tagId)"
+              @click="removeTag(tagName)"
+            />
+            <Tag
+              v-for="tagName in orphanedTags"
+              :key="tagName"
+              :value="tagName"
+              severity="secondary"
+              class="removable-tag orphaned-tag"
+              icon="pi pi-times"
+              @click="removeTag(tagName)"
             />
           </div>
         </div>
@@ -397,6 +426,23 @@ const removeTag = (tag: string) => {
 
 .removable-tag:hover {
   opacity: 0.8;
+}
+
+.orphaned-info {
+  margin-top: 0.5rem;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.orphaned-info i {
+  color: var(--text-muted);
+}
+
+.orphaned-tag {
+  opacity: 0.7;
 }
 
 .colored-option {
