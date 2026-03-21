@@ -106,6 +106,7 @@ cmd.exe /c "npm create tauri-app@latest . -- --template vue-ts"
 ```
 
 When prompted:
+
 - Package manager: npm
 - UI template: Vue
 - TypeScript: Yes
@@ -255,11 +256,11 @@ fn get_board_config(state: tauri::State<AppState>) -> Result<BoardConfig, String
 Example invoke pattern:
 
 ```typescript
-import { invoke } from '@tauri-apps/api/core'
-import type { Ticket } from '@/types'
+import { invoke } from "@tauri-apps/api/core"
+import type { Ticket } from "@/types"
 
 async function getAllTickets(): Promise<Ticket[]> {
-  return invoke<Ticket[]>('get_all_tickets')
+  return invoke<Ticket[]>("get_all_tickets")
 }
 ```
 
@@ -274,26 +275,26 @@ async function getAllTickets(): Promise<Ticket[]> {
 PrimeVue setup in `main.ts`:
 
 ```typescript
-import { createApp } from 'vue'
-import PrimeVue from 'primevue/config'
-import Aura from '@primevue/themes/aura'
-import ToastService from 'primevue/toastservice'
-import ConfirmationService from 'primevue/confirmationservice'
-import 'primeicons/primeicons.css'
-import App from './App.vue'
+import { createApp } from "vue"
+import PrimeVue from "primevue/config"
+import Aura from "@primevue/themes/aura"
+import ToastService from "primevue/toastservice"
+import ConfirmationService from "primevue/confirmationservice"
+import "primeicons/primeicons.css"
+import App from "./App.vue"
 
 const app = createApp(App)
 app.use(PrimeVue, {
   theme: {
     preset: Aura,
     options: {
-      darkModeSelector: '.dark-mode'
-    }
-  }
+      darkModeSelector: ".dark-mode",
+    },
+  },
 })
 app.use(ToastService)
 app.use(ConfirmationService)
-app.mount('#app')
+app.mount("#app")
 ```
 
 ### CSS
@@ -484,10 +485,7 @@ Tauri 2 uses a capability/permission system. In `src-tauri/capabilities/default.
   "identifier": "default",
   "description": "Default capability",
   "windows": ["main"],
-  "permissions": [
-    "core:default",
-    "cli:default"
-  ]
+  "permissions": ["core:default", "cli:default"]
 }
 ```
 
@@ -502,6 +500,7 @@ The app does not use Tauri's filesystem plugin. All file I/O goes through custom
 GitHub: https://github.com/imzbf/md-editor-v3
 
 A Vue 3 native markdown editor component. Ships two components:
+
 - `MdEditor`: editor with toolbar (bold, italic, headings, lists, code, links, etc.).
 - `MdPreview`: rendered markdown output.
 
@@ -522,37 +521,23 @@ The description field in the ticket modal has two tabs: **View** (default) and *
 
 ```vue
 <script setup lang="ts">
-import { MdEditor, MdPreview } from 'md-editor-v3'
-import 'md-editor-v3/lib/style.css'
+import { MdEditor, MdPreview } from "md-editor-v3"
+import "md-editor-v3/lib/style.css"
 </script>
 
 <template>
   <div class="description-field">
     <div class="description-tabs">
-      <button
-        :class="{ active: descriptionTab === 'view' }"
-        @click="descriptionTab = 'view'"
-      >
+      <button :class="{ active: descriptionTab === 'view' }" @click="descriptionTab = 'view'">
         View
       </button>
-      <button
-        :class="{ active: descriptionTab === 'edit' }"
-        @click="descriptionTab = 'edit'"
-      >
+      <button :class="{ active: descriptionTab === 'edit' }" @click="descriptionTab = 'edit'">
         Edit
       </button>
     </div>
 
-    <MdPreview
-      v-if="descriptionTab === 'view'"
-      :modelValue="ticket.body"
-    />
-    <MdEditor
-      v-else
-      v-model="ticket.body"
-      :toolbars="editorToolbars"
-      :preview="false"
-    />
+    <MdPreview v-if="descriptionTab === 'view'" :modelValue="ticket.body" />
+    <MdEditor v-else v-model="ticket.body" :toolbars="editorToolbars" :preview="false" />
   </div>
 </template>
 ```
@@ -563,21 +548,21 @@ Only include the formatting tools that make sense for ticket descriptions. No ne
 
 ```typescript
 const editorToolbars = [
-  'bold',
-  'italic',
-  'strikeThrough',
-  '-',
-  'title',
-  'unorderedList',
-  'orderedList',
-  'task',
-  '-',
-  'code',
-  'codeRow',
-  'link',
-  '-',
-  'revoke',
-  'next'
+  "bold",
+  "italic",
+  "strikeThrough",
+  "-",
+  "title",
+  "unorderedList",
+  "orderedList",
+  "task",
+  "-",
+  "code",
+  "codeRow",
+  "link",
+  "-",
+  "revoke",
+  "next",
 ]
 ```
 
@@ -800,7 +785,7 @@ status: in-progress
 epic: auth
 tags:
   - feature
-priority: high
+priority: 4
 position: 1.0
 created: 2026-03-10
 ---

@@ -9,6 +9,7 @@ Rojekti is a local-first kanban board built with Tauri 2. Cards are stored as Ma
 The dev environment is WSL2 (Ubuntu). The agent edits files from WSL2. All build and runtime commands are executed by the user on the Windows side manually.
 
 Rules:
+
 - Never run `cmd.exe`, `npm`, `cargo`, or `npx` from the agent shell. These do not work from WSL2 for this project.
 - When a build or install step is needed, provide the exact command and state what output or confirmation is needed before proceeding.
 - Do not manage `node_modules`. If deps are missing, ask the user to run the install command.
@@ -51,7 +52,7 @@ status: backlog
 epic: receipt-handling
 tags:
   - feature
-priority: high
+priority: 4
 position: 1.0
 created: 2026-03-10
 ---
@@ -83,6 +84,7 @@ fn main() {
 ```
 
 Do NOT put CLI dispatch inside Tauri's `.setup()` hook. That causes:
+
 - Shell prompt returning before output finishes (Windows treats it as GUI app)
 - Console window flash/ghost errors from WebView2 cleanup
 - 500ms+ startup delay from unnecessary Tauri initialization

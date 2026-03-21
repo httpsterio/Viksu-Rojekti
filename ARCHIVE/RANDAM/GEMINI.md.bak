@@ -754,7 +754,7 @@ status: in-progress
 epic: auth
 tags:
   - feature
-priority: high
+priority: 4
 position: 1.0
 created: 2026-03-10
 ---

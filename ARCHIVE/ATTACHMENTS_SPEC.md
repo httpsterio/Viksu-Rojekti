@@ -8,6 +8,7 @@ disk. The mode is a global board setting; it applies to new attachments only —
 not retroactively migrated when the setting changes.
 
 Supported attachment types have three display behaviours:
+
 - **Images** (jpg, jpeg, png, gif, webp, svg): rendered as a thumbnail inline in the card.
 - **Audio** (mp3, wav, ogg, flac, m4a): rendered with an HTML5 `<audio>` player inline.
 - **Video** (mp4, webm): rendered with an HTML5 `<video>` player inline.
@@ -19,6 +20,7 @@ Supported attachment types have three display behaviours:
 ## Project Structure Reference
 
 Refer to `GEMINI.md` for the full project conventions. Key points:
+
 - All structs in `models.rs`. All file I/O in `storage.rs`. Commands in `commands.rs`.
 - All state in `composables/useBoard.ts`. Components never call `invoke()` directly.
 - Error handling: always `Result<T, String>`. No `unwrap()` in command handlers.
@@ -116,7 +118,7 @@ attachmentMode: 'copy' | 'link'
 id: ROJ-001
 title: Add receipt OCR pipeline
 status: in-progress
-priority: high
+priority: 4
 position: 1.0
 created: 2026-03-19
 attachments:
@@ -138,6 +140,7 @@ When a file is copied into `rojekti/attachments/`, the filename is constructed a
 ```
 
 Rules:
+
 1. Truncate the base name (without extension) to **50 characters**.
 2. Preserve the original extension as-is.
 3. If the resulting filename already exists in `rojekti/attachments/`, append a 4-character
@@ -165,6 +168,7 @@ pub fn copy_attachment(project_dir: &Path, card_id: &str, source_path: &Path) ->
 ```
 
 Logic:
+
 1. Extract the base name and extension from `source_path`.
 2. Truncate base name to 50 chars.
 3. Construct candidate filename: `{card_id}_{base}.{ext}`.
@@ -182,6 +186,7 @@ pub fn move_card_attachments_to_deleted(project_dir: &Path, attachments: &[Attac
 ```
 
 Logic:
+
 1. Construct the canonical local attachments path: `project_dir/rojekti/attachments/`.
 2. For each attachment, check if its `path` starts with the local attachments path.
 3. If yes: `fs::create_dir_all(rojekti/attachments/deleted/)`, then `fs::rename(src, deleted/filename)`.
@@ -201,6 +206,7 @@ pub fn add_attachment(
 ```
 
 Logic:
+
 1. Acquire `write_lock` and stamp `last_gui_write`.
 2. Read `BoardConfig` to check `attachment_mode`.
 3. If `Copy`: call `storage::copy_attachment(...)` to get the dest path. Set `path = dest_path`,
@@ -222,6 +228,7 @@ pub fn remove_attachment(
 ```
 
 Logic:
+
 1. Acquire `write_lock` and stamp `last_gui_write`.
 2. Read the card, remove the attachment matching `attachment_path` from `card.meta.attachments`.
 3. Check if the removed path is inside `rojekti/attachments/` — if yes, delete the file with
@@ -293,6 +300,7 @@ pub fn delete_card(id: String, state: State<AppState>) -> Result<(), String> {
 ### Step 5 — Register new commands in `lib.rs`
 
 Add to `tauri::generate_handler![]`:
+
 ```rust
 commands::add_attachment,
 commands::remove_attachment,
@@ -306,6 +314,7 @@ protocol needs permission to access the attachments directory. Since the path is
 (relative to the executable), configure a broad scope and/or add the path at runtime in `setup()`:
 
 In `tauri.conf.json`:
+
 ```json
 "app": {
   "security": {
@@ -318,6 +327,7 @@ In `tauri.conf.json`:
 ```
 
 Alternatively, scope it more tightly in `setup()` at runtime using:
+
 ```rust
 app.asset_protocol_scope().allow_directory(&attachments_dir, true);
 ```
@@ -334,6 +344,7 @@ when a card is open (not during initial card creation — attachments can be add
 **Display existing attachments:**
 
 For each attachment in `card.attachments`:
+
 - Determine type from file extension.
 - **Image**: `<img>` with `src="convertFileSrc(attachment.path)"`. Show filename below. Button
   to open in default app. Button to remove.
@@ -349,8 +360,9 @@ For each attachment in `card.attachments`:
 **Adding attachments:**
 
 A button ("Add attachment") opens a file picker dialog using Tauri's dialog plugin:
+
 ```typescript
-import { open } from '@tauri-apps/plugin-dialog'
+import { open } from "@tauri-apps/plugin-dialog"
 const filePath = await open({ multiple: false })
 if (filePath) await addAttachment(card.id, filePath)
 ```
@@ -388,23 +400,23 @@ Add the following methods and expose them from `useBoard()`:
 
 ```typescript
 const addAttachment = async (cardId: string, sourcePath: string) => {
-    const attachment = await invoke<Attachment>('add_attachment', { cardId, sourcePath })
-    const card = cards.value.find(c => c.id === cardId)
-    if (card) card.attachments.push(attachment)
+  const attachment = await invoke<Attachment>("add_attachment", { cardId, sourcePath })
+  const card = cards.value.find((c) => c.id === cardId)
+  if (card) card.attachments.push(attachment)
 }
 
 const removeAttachment = async (cardId: string, attachmentPath: string) => {
-    await invoke('remove_attachment', { cardId, attachmentPath })
-    const card = cards.value.find(c => c.id === cardId)
-    if (card) card.attachments = card.attachments.filter(a => a.path !== attachmentPath)
+  await invoke("remove_attachment", { cardId, attachmentPath })
+  const card = cards.value.find((c) => c.id === cardId)
+  if (card) card.attachments = card.attachments.filter((a) => a.path !== attachmentPath)
 }
 
 const openFile = async (path: string) => {
-    await invoke('open_file', { path })
+  await invoke("open_file", { path })
 }
 
 const checkAttachment = async (path: string): Promise<boolean> => {
-    return await invoke<boolean>('check_attachment', { path })
+  return await invoke<boolean>("check_attachment", { path })
 }
 ```
 
@@ -415,11 +427,11 @@ const checkAttachment = async (path: string): Promise<boolean> => {
 Use file extension to determine display behaviour. Check extension in the frontend (lowercase,
 strip the leading dot).
 
-| Category | Extensions |
-|---|---|
-| Image | jpg, jpeg, png, gif, webp, svg |
-| Audio | mp3, wav, ogg, flac, m4a |
-| Video | mp4, webm |
+| Category                    | Extensions                                              |
+| --------------------------- | ------------------------------------------------------- |
+| Image                       | jpg, jpeg, png, gif, webp, svg                          |
+| Audio                       | mp3, wav, ogg, flac, m4a                                |
+| Video                       | mp4, webm                                               |
 | Other (open in default app) | Everything else — pdf, docx, xlsx, pptx, fig, zip, etc. |
 
 Video and audio formats not listed (e.g. mkv, avi, mov) fall into "Other" and open via the
@@ -429,16 +441,16 @@ default app handler.
 
 ## Behaviour Summary
 
-| Action | Result |
-|---|---|
-| Add attachment, mode = Copy | File copied to `rojekti/attachments/ROJ-XXX_name.ext`. Card frontmatter updated. |
-| Add attachment, mode = Link | Path stored as-is. Nothing copied. Card frontmatter updated. |
-| Remove attachment (local) | File deleted from `rojekti/attachments/`. Reference removed from frontmatter. |
-| Remove attachment (linked) | Original file left untouched. Reference removed from frontmatter. |
-| Delete card | Local attachments moved to `rojekti/attachments/deleted/`. Linked files left alone. |
-| Open non-inline file | OS default app launched via platform-specific `std::process::Command`. |
-| Missing file detected | "⚠ File not found" shown with option to remove reference. |
-| Switch attachment mode in settings | Only affects future attachments. Existing ones unchanged. |
+| Action                             | Result                                                                              |
+| ---------------------------------- | ----------------------------------------------------------------------------------- |
+| Add attachment, mode = Copy        | File copied to `rojekti/attachments/ROJ-XXX_name.ext`. Card frontmatter updated.    |
+| Add attachment, mode = Link        | Path stored as-is. Nothing copied. Card frontmatter updated.                        |
+| Remove attachment (local)          | File deleted from `rojekti/attachments/`. Reference removed from frontmatter.       |
+| Remove attachment (linked)         | Original file left untouched. Reference removed from frontmatter.                   |
+| Delete card                        | Local attachments moved to `rojekti/attachments/deleted/`. Linked files left alone. |
+| Open non-inline file               | OS default app launched via platform-specific `std::process::Command`.              |
+| Missing file detected              | "⚠ File not found" shown with option to remove reference.                           |
+| Switch attachment mode in settings | Only affects future attachments. Existing ones unchanged.                           |
 
 ---
 
