@@ -1,4 +1,4 @@
-generated: 2026-03-21T05:30:32.900938+02:00
+generated: 2026-03-21T05:43:02.266809400+02:00
 cardCount: 40
 cards:
 - id: roj-009
@@ -41,13 +41,13 @@ cards:
   created: 2026-03-19
 - id: roj-013
   title: 'feat: Sound effects for GUI'
-  status: backlog
+  status: todo
   epic: Theming
   tags:
   - Feature
   - Polish
   priority: 5
-  position: 5.0
+  position: 2.0
   created: 2026-03-19
 - id: roj-014
   title: 'style: Priority highlight on cards'
@@ -105,7 +105,7 @@ cards:
   - Bug
   - UX
   priority: 5
-  position: 7.0
+  position: 8.9375
   created: 2026-03-20
 - id: roj-020
   title: 'feat: Soft delete cards'
@@ -118,13 +118,13 @@ cards:
   created: 2026-03-20
 - id: roj-021
   title: 'feat: Show deleted cards in settings'
-  status: backlog
+  status: todo
   epic: Settings
   tags:
   - Feature
   - Backend
   priority: 4
-  position: 0.390625
+  position: 0.6875
   created: 2026-03-20
 - id: roj-022
   title: 'chore: Name based epics and tags'
@@ -144,16 +144,16 @@ cards:
   - UX
   - Polish
   priority: 4
-  position: 9.0
+  position: 11.75
   created: 2026-03-20
 - id: roj-024
   title: 'feat: Archive and Deleted fixed statuses'
-  status: backlog
+  status: todo
   epic: Board
   tags:
   - Feature
   priority: 4
-  position: 8.0
+  position: 0.625
   created: 2026-03-20
 - id: roj-025
   title: 'fix: Silent overwrites of cards'
@@ -177,13 +177,13 @@ cards:
   created: 2026-03-20
 - id: roj-027
   title: 'feat: Link to another card from card'
-  status: backlog
+  status: todo
   epic: Editor
   tags:
   - Feature
   - UX
   priority: 5
-  position: 0.78125
+  position: 0.75
   created: 2026-03-20
 - id: roj-028
   title: 'style: Improve sortable card visualisation'
@@ -193,7 +193,7 @@ cards:
   - UX
   - Polish
   priority: 5
-  position: 10.0
+  position: 10.34375
   created: 2026-03-20
 - id: roj-029
   title: 'style: New card modal and edit modal inconsistency'
@@ -203,7 +203,7 @@ cards:
   - UX
   - Polish
   priority: 4
-  position: 11.0
+  position: 13.5
   created: 2026-03-20
 - id: roj-030
   title: 'feat: Checklists in Card modal'
@@ -342,14 +342,14 @@ cards:
   created: 2026-03-21
 - id: roj-044
   title: 'feat: ID for status/epics/tags'
-  status: backlog
+  status: status-1774045884765
   epic: Settings
   tags:
   - Backend
   - Feature
   - Refactor
   priority: 4
-  position: 20.0
+  position: 0.0625
   created: 2026-03-21
 - id: roj-045
   title: 'feat: Cleared cards in Epics?'
@@ -361,7 +361,7 @@ cards:
   position: 21.0
   created: 2026-03-21
 - id: roj-046
-  title: 'feat: Filter by ID'
+  title: 'feat: Search by ID'
   status: backlog
   epic: Board
   tags:

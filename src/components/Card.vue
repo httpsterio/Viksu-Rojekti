@@ -52,7 +52,12 @@ const getTagStyle = (name: string) => {
       >
         {{ epic.name }}
       </span>
-      <span v-for="tagName in card.tags" :key="tagName" class="tag-pill" :style="getTagStyle(tagName)">
+      <span
+        v-for="tagName in card.tags"
+        :key="tagName"
+        class="tag-pill"
+        :style="getTagStyle(tagName)"
+      >
         {{ getTag(tagName)?.name || tagName }}
       </span>
     </div>
@@ -113,6 +118,10 @@ const getTagStyle = (name: string) => {
   font-weight: 600;
 }
 
+.epic-badge::before {
+  content: "@";
+}
+
 .tag-pill {
   font-size: 0.7rem;
   padding: 0.1rem 0.4rem;
@@ -120,5 +129,9 @@ const getTagStyle = (name: string) => {
   background: var(--bg-secondary);
   color: var(--text-secondary);
   border: 1px solid var(--border-color);
+}
+
+.tag-pill::before {
+  content: "#";
 }
 </style>

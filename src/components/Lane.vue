@@ -203,9 +203,9 @@ const formatName = (name: string) => name.replace(/-/g, " ").toUpperCase()
 }
 
 :deep(.ghost-card) {
-  opacity: 0.8;
+  opacity: 1;
   background: var(--bg-secondary) !important;
-  border: 2px dashed var(--border-color) !important;
+  border: 4px solid --var(--border-color) !important;
 }
 
 :deep(.dragging-card) {
