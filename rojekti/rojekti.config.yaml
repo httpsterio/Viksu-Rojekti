@@ -15,12 +15,12 @@ statuses:
 epics:
 - name: Board
   color: '#19e1a5'
+- name: Editor
+  color: '#137155'
 - name: Settings
   color: '#00c288'
 - name: Card
   color: '#019d6e'
-- name: Editor
-  color: '#137155'
 - name: Theming
   color: '#cfe90c'
 - name: Publishing

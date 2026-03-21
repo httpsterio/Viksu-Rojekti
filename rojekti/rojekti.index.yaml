@@ -1,4 +1,4 @@
-generated: 2026-03-21T18:58:01.753397+02:00
+generated: 2026-03-21T22:46:41.613187+02:00
 cardCount: 43
 cards:
 - id: roj-009
@@ -144,7 +144,7 @@ cards:
   - UX
   - Polish
   priority: 4
-  position: 10.015625
+  position: 5.87890625
   created: 2026-03-20
 - id: roj-024
   title: 'feat: Archive and Deleted fixed statuses'
@@ -388,14 +388,14 @@ cards:
   position: 0.015625
   created: 2026-03-21
 - id: roj-049
-  title: 'refactor: Replace SortableJS with Pragmatic DND'
-  status: todo
+  title: 'refactor: Replace SortableJS with FormKit DnD'
+  status: in-progress
   epic: Board
   tags:
   - Refactor
   - UX
   priority: 3
-  position: 1.5
+  position: 1.0
   created: 2026-03-21
 - id: roj-050
   title: 'feat: Improve settings page'

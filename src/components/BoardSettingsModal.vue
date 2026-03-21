@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from "vue"
+import { ref, watch } from "vue"
 import { useBoard } from "@/composables/useBoard"
 import type { BoardConfig } from "@/types"
 import Dialog from "primevue/dialog"
@@ -9,7 +9,8 @@ import InputGroup from "primevue/inputgroup"
 import InputGroupAddon from "primevue/inputgroupaddon"
 import { useConfirm } from "primevue/useconfirm"
 import { useToast } from "primevue/usetoast"
-import Sortable from "sortablejs"
+import { animations } from "@formkit/drag-and-drop"
+import { useDragAndDrop } from "@formkit/drag-and-drop/vue"
 
 const { config, cards, saveBoardConfig, updateCard } = useBoard()
 const confirm = useConfirm()
@@ -17,12 +18,42 @@ const toast = useToast()
 
 const visible = ref(false)
 const localConfig = ref<BoardConfig | null>(null)
-const statusesContainer = ref<HTMLElement | null>(null)
-const epicsContainer = ref<HTMLElement | null>(null)
-const tagsContainer = ref<HTMLElement | null>(null)
-let statusesSortable: Sortable | null = null
-let epicsSortable: Sortable | null = null
-let tagsSortable: Sortable | null = null
+
+// Phase 1: DnD setup for Statuses, Epics, and Tags
+const [statusesParent, statusValues] = useDragAndDrop<BoardConfig["statuses"][number]>([], {
+  nativeDrag: true,
+  dragHandle: ".drag-handle",
+  plugins: [animations()],
+  onSort: (event: any) => {
+    if (localConfig.value) localConfig.value.statuses = [...event.values]
+  },
+})
+
+const [epicsParent, epicValues] = useDragAndDrop<BoardConfig["epics"][number]>([], {
+  nativeDrag: true,
+  dragHandle: ".drag-handle",
+  plugins: [animations()],
+  onSort: (event: any) => {
+    if (localConfig.value) localConfig.value.epics = [...event.values]
+  },
+})
+
+const [tagsParent, tagValues] = useDragAndDrop<BoardConfig["tags"][number]>([], {
+  nativeDrag: true,
+  dragHandle: ".drag-handle",
+  plugins: [animations()],
+  onSort: (event: any) => {
+    if (localConfig.value) localConfig.value.tags = [...event.values]
+  },
+})
+
+watch(visible, (isVisible) => {
+  if (isVisible && localConfig.value) {
+    statusValues.value = [...localConfig.value.statuses]
+    epicValues.value = [...localConfig.value.epics]
+    tagValues.value = [...localConfig.value.tags]
+  }
+})
 
 const open = () => {
   if (config.value) {
@@ -31,55 +62,18 @@ const open = () => {
   }
 }
 
-const onShow = () => {
-  statusesSortable?.destroy()
-  epicsSortable?.destroy()
-  tagsSortable?.destroy()
-  statusesSortable = initSortable(statusesContainer.value, "statuses")
-  epicsSortable = initSortable(epicsContainer.value, "epics")
-  tagsSortable = initSortable(tagsContainer.value, "tags")
-}
-
-const initSortable = (el: HTMLElement | null, list: "statuses" | "epics" | "tags") => {
-  if (el && localConfig.value) {
-    return new Sortable(el, {
-      handle: ".drag-handle",
-      animation: 150,
-      forceFallback: true,
-      onEnd: (evt) => {
-        if (evt.oldIndex !== undefined && evt.newIndex !== undefined && localConfig.value) {
-          const item = localConfig.value[list].splice(evt.oldIndex, 1)[0]
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          localConfig.value[list].splice(evt.newIndex, 0, item as any)
-        }
-      },
-    })
-  }
-  return null
-}
-
 defineExpose({ open })
 
 const handleSave = async () => {
   if (localConfig.value) {
     const epicNames = localConfig.value.epics.map((e) => e.name.trim())
     if (new Set(epicNames).size !== epicNames.length) {
-      toast.add({
-        severity: "error",
-        summary: "Validation Error",
-        detail: "Epic names must be unique.",
-        life: 4000,
-      })
+      toast.add({ severity: "error", summary: "Validation Error", detail: "Epic names must be unique.", life: 4000 })
       return
     }
     const tagNames = localConfig.value.tags.map((t) => t.name.trim())
     if (new Set(tagNames).size !== tagNames.length) {
-      toast.add({
-        severity: "error",
-        summary: "Validation Error",
-        detail: "Tag names must be unique.",
-        life: 4000,
-      })
+      toast.add({ severity: "error", summary: "Validation Error", detail: "Tag names must be unique.", life: 4000 })
       return
     }
 
@@ -89,16 +83,14 @@ const handleSave = async () => {
 }
 
 const addStatus = () => {
-  localConfig.value?.statuses.push({
-    id: `status-${Date.now()}`,
-    name: "New Status",
-  })
+  const newStatus = { id: `status-${Date.now()}`, name: "New Status" }
+  statusValues.value.push(newStatus)
+  if (localConfig.value) localConfig.value.statuses = [...statusValues.value]
 }
 
 const removeStatus = (index: number) => {
   if (!localConfig.value) return
-
-  const statusToRemove = localConfig.value.statuses[index]
+  const statusToRemove = statusValues.value[index]
   const cardsInStatus = cards.value.filter((c) => c.status === statusToRemove.id)
 
   if (cardsInStatus.length === 0) {
@@ -108,7 +100,8 @@ const removeStatus = (index: number) => {
       icon: "pi pi-exclamation-triangle",
       acceptClass: "p-button-danger",
       accept: () => {
-        localConfig.value?.statuses.splice(index, 1)
+        statusValues.value.splice(index, 1)
+        if (localConfig.value) localConfig.value.statuses = [...statusValues.value]
       },
     })
   } else {
@@ -118,7 +111,8 @@ const removeStatus = (index: number) => {
       icon: "pi pi-exclamation-triangle",
       acceptClass: "p-button-danger",
       accept: async () => {
-        localConfig.value?.statuses.splice(index, 1)
+        statusValues.value.splice(index, 1)
+        if (localConfig.value) localConfig.value.statuses = [...statusValues.value]
         if (localConfig.value && localConfig.value.statuses.length > 0) {
           const firstStatusId = localConfig.value.statuses[0].id
           for (const card of cardsInStatus) {
@@ -131,10 +125,9 @@ const removeStatus = (index: number) => {
 }
 
 const addEpic = () => {
-  localConfig.value?.epics.push({
-    name: "New Epic",
-    color: "#3b82f6",
-  })
+  const newEpic = { name: "New Epic", color: "#3b82f6" }
+  epicValues.value.push(newEpic)
+  if (localConfig.value) localConfig.value.epics = [...epicValues.value]
 }
 
 const removeEpic = (index: number) => {
@@ -144,16 +137,16 @@ const removeEpic = (index: number) => {
     icon: "pi pi-exclamation-triangle",
     acceptClass: "p-button-danger",
     accept: () => {
-      localConfig.value?.epics.splice(index, 1)
+      epicValues.value.splice(index, 1)
+      if (localConfig.value) localConfig.value.epics = [...epicValues.value]
     },
   })
 }
 
 const addTag = () => {
-  localConfig.value?.tags.push({
-    name: "New Tag",
-    color: "#10b981",
-  })
+  const newTag = { name: "New Tag", color: "#10b981" }
+  tagValues.value.push(newTag)
+  if (localConfig.value) localConfig.value.tags = [...tagValues.value]
 }
 
 const removeTag = (index: number) => {
@@ -163,7 +156,8 @@ const removeTag = (index: number) => {
     icon: "pi pi-exclamation-triangle",
     acceptClass: "p-button-danger",
     accept: () => {
-      localConfig.value?.tags.splice(index, 1)
+      tagValues.value.splice(index, 1)
+      if (localConfig.value) localConfig.value.tags = [...tagValues.value]
     },
   })
 }
@@ -177,7 +171,6 @@ const removeTag = (index: number) => {
     class="settings-modal"
     :dismissable-mask="true"
     :draggable="false"
-    @show="onShow"
   >
     <div v-if="localConfig" class="settings-layout">
       <div class="settings-column">
@@ -190,8 +183,8 @@ const removeTag = (index: number) => {
           <div class="section-header">
             <label>Status</label>
           </div>
-          <div ref="statusesContainer" class="list-editor">
-            <div v-for="(status, index) in localConfig.statuses" :key="status.id" class="list-item">
+          <div ref="statusesParent" class="list-editor">
+            <div v-for="status in statusValues" :key="status.id" class="list-item">
               <InputGroup>
                 <InputGroupAddon class="drag-handle">
                   <i class="pi pi-bars"></i>
@@ -203,19 +196,20 @@ const removeTag = (index: number) => {
                     text
                     severity="danger"
                     size="small"
-                    @click="removeStatus(index)"
+                    @click="removeStatus(statusValues.indexOf(status))"
                   />
                 </InputGroupAddon>
               </InputGroup>
             </div>
-            <Button
-              icon="pi pi-plus"
-              label="Add Status"
-              size="small"
-              class="add-btn"
-              @click="addStatus"
-            />
           </div>
+          <Button
+            icon="pi pi-plus"
+            label="Add Status"
+            size="small"
+            class="add-btn"
+            style="margin-top: 0.5rem"
+            @click="addStatus"
+          />
         </section>
 
         <section>
@@ -225,9 +219,7 @@ const removeTag = (index: number) => {
           <div class="list-editor">
             <div v-for="(priority, index) in localConfig.priorities" :key="index" class="list-item">
               <InputGroup>
-                <InputGroupAddon>
-                  {{ index + 1 }}
-                </InputGroupAddon>
+                <InputGroupAddon>{{ index + 1 }}</InputGroupAddon>
                 <InputGroupAddon class="color-addon">
                   <input v-model="priority.color" type="color" class="color-swatch" />
                 </InputGroupAddon>
@@ -247,8 +239,8 @@ const removeTag = (index: number) => {
           <div class="section-header">
             <label>Epics</label>
           </div>
-          <div ref="epicsContainer" class="list-editor">
-            <div v-for="(epic, index) in localConfig.epics" :key="epic.name" class="list-item">
+          <div ref="epicsParent" class="list-editor">
+            <div v-for="epic in epicValues" :key="epic.name" class="list-item">
               <InputGroup>
                 <InputGroupAddon class="drag-handle">
                   <i class="pi pi-bars"></i>
@@ -258,26 +250,32 @@ const removeTag = (index: number) => {
                 </InputGroupAddon>
                 <InputText v-model="epic.name" placeholder="Epic name" />
                 <InputGroupAddon>
-                  <Button icon="pi pi-times" text severity="secondary" @click="removeEpic(index)" />
+                  <Button
+                    icon="pi pi-times"
+                    text
+                    severity="secondary"
+                    @click="removeEpic(epicValues.indexOf(epic))"
+                  />
                 </InputGroupAddon>
               </InputGroup>
             </div>
-            <Button
-              icon="pi pi-plus"
-              label="Add Epic"
-              size="small"
-              class="add-btn"
-              @click="addEpic"
-            />
           </div>
+          <Button
+            icon="pi pi-plus"
+            label="Add Epic"
+            size="small"
+            class="add-btn"
+            style="margin-top: 0.5rem"
+            @click="addEpic"
+          />
         </section>
 
         <section>
           <div class="section-header">
             <label>Tags</label>
           </div>
-          <div ref="tagsContainer" class="list-editor">
-            <div v-for="(tag, index) in localConfig.tags" :key="tag.name" class="list-item">
+          <div ref="tagsParent" class="list-editor">
+            <div v-for="tag in tagValues" :key="tag.name" class="list-item">
               <InputGroup>
                 <InputGroupAddon class="drag-handle">
                   <i class="pi pi-bars"></i>
@@ -287,18 +285,24 @@ const removeTag = (index: number) => {
                 </InputGroupAddon>
                 <InputText v-model="tag.name" placeholder="Tag name" />
                 <InputGroupAddon>
-                  <Button icon="pi pi-times" text severity="secondary" @click="removeTag(index)" />
+                  <Button
+                    icon="pi pi-times"
+                    text
+                    severity="secondary"
+                    @click="removeTag(tagValues.indexOf(tag))"
+                  />
                 </InputGroupAddon>
               </InputGroup>
             </div>
-            <Button
-              icon="pi pi-plus"
-              label="Add Tag"
-              size="small"
-              class="add-btn"
-              @click="addTag"
-            />
           </div>
+          <Button
+            icon="pi pi-plus"
+            label="Add Tag"
+            size="small"
+            class="add-btn"
+            style="margin-top: 0.5rem"
+            @click="addTag"
+          />
         </section>
       </div>
     </div>
