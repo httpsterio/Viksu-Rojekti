@@ -15,6 +15,7 @@
     "lint:fix": "eslint src --fix"
   },
   "dependencies": {
+    "@formkit/drag-and-drop": "^0.5.3",
     "@primevue/themes": "^4.5.4",
     "@tauri-apps/api": "^2",
     "marked": "^17.0.4",

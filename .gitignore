@@ -13,7 +13,7 @@ node_modules
 dist
 dist-ssr
 *.local
-DOCS/formkit-dnd-docs
+DOCS/formkit*/
 
 # Editor directories and files
 .vscode/*
