@@ -1,4 +1,4 @@
-generated: 2026-03-21T22:46:41.613187+02:00
+generated: 2026-03-21T23:50:29.339293800+02:00
 cardCount: 43
 cards:
 - id: roj-009
@@ -14,7 +14,7 @@ cards:
 - id: roj-010
   title: 'feat: Card attachment files'
   status: todo
-  epic: Card
+  epic: Settings
   tags:
   - Feature
   - Backend
@@ -73,7 +73,7 @@ cards:
 - id: roj-016
   title: 'fix: CardModal silently dropping card fields on save'
   status: status-1774045884765
-  epic: Card
+  epic: Settings
   tags:
   - Bug
   priority: 4
@@ -119,7 +119,7 @@ cards:
 - id: roj-021
   title: 'feat: Show deleted cards in settings'
   status: todo
-  epic: Settings
+  epic: Card
   tags:
   - Feature
   - Backend
@@ -139,7 +139,7 @@ cards:
 - id: roj-023
   title: 'style: cardmodal epics and tags dropdown coloring'
   status: backlog
-  epic: Editor
+  epic: Card
   tags:
   - UX
   - Polish
@@ -178,7 +178,7 @@ cards:
 - id: roj-027
   title: 'feat: Link to another card from card'
   status: todo
-  epic: Editor
+  epic: Card
   tags:
   - Feature
   - UX
@@ -198,7 +198,7 @@ cards:
 - id: roj-029
   title: 'style: New card modal and edit modal inconsistency'
   status: backlog
-  epic: Card
+  epic: Settings
   tags:
   - UX
   - Polish
@@ -208,7 +208,7 @@ cards:
 - id: roj-030
   title: 'feat: Checklists in Card modal'
   status: backlog
-  epic: Card
+  epic: Settings
   tags:
   - Feature
   - UX
@@ -229,7 +229,7 @@ cards:
 - id: roj-032
   title: 'chore: Priority system'
   status: status-1774045884765
-  epic: Settings
+  epic: Card
   tags:
   - Refactor
   - Backend
@@ -289,7 +289,7 @@ cards:
 - id: roj-038
   title: 'fix: Card edit modal is draggable'
   status: status-1774045884765
-  epic: Editor
+  epic: Card
   tags:
   - Bug
   priority: 5
@@ -307,7 +307,7 @@ cards:
 - id: roj-040
   title: 'fix: settings saving (epics and tags) broken'
   status: status-1774045884765
-  epic: Settings
+  epic: Card
   tags:
   - Bug
   priority: 5
@@ -316,7 +316,7 @@ cards:
 - id: roj-041
   title: 'feat: Status reordering in settings'
   status: status-1774045884765
-  epic: Settings
+  epic: Card
   tags:
   - Feature
   - UX
@@ -326,14 +326,14 @@ cards:
 - id: roj-042
   title: 'fix: Tags not assignable from card modal'
   status: status-1774045884765
-  epic: Editor
+  epic: Card
   priority: 5
   position: 7.0
   created: 2026-03-21
 - id: roj-043
   title: 'feat: Tags colors and reordering in settings'
   status: status-1774045884765
-  epic: Settings
+  epic: Card
   tags:
   - Feature
   - UX
@@ -343,7 +343,7 @@ cards:
 - id: roj-044
   title: 'feat: ID for status/epics/tags'
   status: status-1774045884765
-  epic: Settings
+  epic: Card
   tags:
   - Backend
   - Feature
@@ -400,7 +400,7 @@ cards:
 - id: roj-050
   title: 'feat: Improve settings page'
   status: backlog
-  epic: Settings
+  epic: Card
   tags:
   - Feature
   - UX

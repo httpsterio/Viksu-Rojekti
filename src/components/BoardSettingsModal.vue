@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch } from "vue"
+import { ref, watch, nextTick } from "vue"
 import { useBoard } from "@/composables/useBoard"
 import type { BoardConfig } from "@/types"
 import Dialog from "primevue/dialog"
@@ -10,7 +10,7 @@ import InputGroupAddon from "primevue/inputgroupaddon"
 import { useConfirm } from "primevue/useconfirm"
 import { useToast } from "primevue/usetoast"
 import { animations } from "@formkit/drag-and-drop"
-import { useDragAndDrop } from "@formkit/drag-and-drop/vue"
+import { useDragAndDrop, dragAndDrop } from "@formkit/drag-and-drop/vue"
 
 const { config, cards, saveBoardConfig, updateCard } = useBoard()
 const confirm = useConfirm()
@@ -19,40 +19,45 @@ const toast = useToast()
 const visible = ref(false)
 const localConfig = ref<BoardConfig | null>(null)
 
-// Phase 1: DnD setup for Statuses, Epics, and Tags
-const [statusesParent, statusValues] = useDragAndDrop<BoardConfig["statuses"][number]>([], {
-  nativeDrag: true,
-  dragHandle: ".drag-handle",
-  plugins: [animations()],
-  onSort: (event: any) => {
-    if (localConfig.value) localConfig.value.statuses = [...event.values]
-  },
-})
+const [statusesParent, statusValues] = useDragAndDrop<BoardConfig["statuses"][number]>([])
+const [epicsParent, epicValues] = useDragAndDrop<BoardConfig["epics"][number]>([])
+const [tagsParent, tagValues] = useDragAndDrop<BoardConfig["tags"][number]>([])
 
-const [epicsParent, epicValues] = useDragAndDrop<BoardConfig["epics"][number]>([], {
-  nativeDrag: true,
-  dragHandle: ".drag-handle",
-  plugins: [animations()],
-  onSort: (event: any) => {
-    if (localConfig.value) localConfig.value.epics = [...event.values]
-  },
-})
-
-const [tagsParent, tagValues] = useDragAndDrop<BoardConfig["tags"][number]>([], {
-  nativeDrag: true,
-  dragHandle: ".drag-handle",
-  plugins: [animations()],
-  onSort: (event: any) => {
-    if (localConfig.value) localConfig.value.tags = [...event.values]
-  },
-})
-
-watch(visible, (isVisible) => {
-  if (isVisible && localConfig.value) {
-    statusValues.value = [...localConfig.value.statuses]
-    epicValues.value = [...localConfig.value.epics]
-    tagValues.value = [...localConfig.value.tags]
-  }
+watch(visible, async (isVisible) => {
+  if (!isVisible || !localConfig.value) return
+  statusValues.value = [...localConfig.value.statuses]
+  epicValues.value = [...localConfig.value.epics]
+  tagValues.value = [...localConfig.value.tags]
+  await nextTick()
+  dragAndDrop([
+    {
+      parent: statusesParent,
+      values: statusValues,
+      dragHandle: ".drag-handle",
+      plugins: [animations()],
+      onSort: ({ values }: any) => {
+        if (localConfig.value) localConfig.value.statuses = values
+      },
+    },
+    {
+      parent: epicsParent,
+      values: epicValues,
+      dragHandle: ".drag-handle",
+      plugins: [animations()],
+      onSort: ({ values }: any) => {
+        if (localConfig.value) localConfig.value.epics = values
+      },
+    },
+    {
+      parent: tagsParent,
+      values: tagValues,
+      dragHandle: ".drag-handle",
+      plugins: [animations()],
+      onSort: ({ values }: any) => {
+        if (localConfig.value) localConfig.value.tags = values
+      },
+    },
+  ])
 })
 
 const open = () => {
