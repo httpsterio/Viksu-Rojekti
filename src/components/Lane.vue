@@ -168,7 +168,7 @@ const formatName = (name: string) => name.replace(/-/g, " ").toUpperCase()
 
 .lane-body {
   flex: 1;
-  overflow-y: auto;
+  overflow-y: scroll;
   padding: 0 0.75rem 0.75rem 0.75rem;
   min-height: 100px;
 }
@@ -204,8 +204,8 @@ const formatName = (name: string) => name.replace(/-/g, " ").toUpperCase()
 
 :deep(.ghost-card) {
   opacity: 1;
-  background: var(--bg-secondary) !important;
-  border: 4px solid pink !important;
+  background: #00cc693a !important;
+  border: 4px solid #00cc6a !important;
 }
 
 :deep(.dragging-card) {

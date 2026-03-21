@@ -29,7 +29,7 @@
 body {
   margin: 0;
   padding: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   background-color: var(--bg-primary);
   color: var(--text-primary);
   height: 100vh;
@@ -87,8 +87,9 @@ body {
 }
 
 /* md-editor-v3 overrides */
-.md-editor-code-flag, .md-editor-code-action {
-  display: none!important;
+.md-editor-code-flag,
+.md-editor-code-action {
+  display: none !important;
 }
 
 .md-editor-preview {
@@ -98,11 +99,11 @@ body {
   word-break: normal;
 }
 .md-editor-code summary {
-  display: none!important;
+  display: none !important;
 }
 
 pre > code {
-  border-radius: 0.5rem!important;
+  border-radius: 0.5rem !important;
 }
 
 /* dialog style overrides */
