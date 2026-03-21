@@ -28,6 +28,15 @@ const activeFilterCount = computed(() => {
   return count
 })
 
+const priorityFilterOptions = computed(() => {
+  if (!config.value) return []
+  return config.value.priorities.map((p, i) => ({
+    label: p.name,
+    value: i + 1,
+    color: p.color,
+  }))
+})
+
 const toggleFilters = (event: Event) => {
   filterPanel.value.toggle(event)
 }
@@ -97,12 +106,36 @@ const clearAllFilters = () => {
           />
           <Select
             v-model="activeFilters.priority"
-            :options="config.priorities"
+            :options="priorityFilterOptions"
+            option-label="label"
+            option-value="value"
             placeholder="All Priorities"
             show-clear
             size="small"
             fluid
-          />
+          >
+            <template #value="{ value, placeholder }">
+              <div v-if="value" style="display: flex; align-items: center; gap: 0.5rem">
+                <span
+                  style="width: 0.6rem; height: 0.6rem; border-radius: 50%; display: inline-block"
+                  :style="{
+                    backgroundColor: priorityFilterOptions.find((o) => o.value === value)?.color,
+                  }"
+                ></span>
+                <span>{{ priorityFilterOptions.find((o) => o.value === value)?.label }}</span>
+              </div>
+              <span v-else>{{ placeholder }}</span>
+            </template>
+            <template #option="{ option }">
+              <div style="display: flex; align-items: center; gap: 0.5rem">
+                <span
+                  style="width: 0.6rem; height: 0.6rem; border-radius: 50%; display: inline-block"
+                  :style="{ backgroundColor: option.color }"
+                ></span>
+                <span>{{ option.label }}</span>
+              </div>
+            </template>
+          </Select>
         </div>
       </Popover>
       <InputGroup class="search-group">

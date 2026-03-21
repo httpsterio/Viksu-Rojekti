@@ -9,7 +9,7 @@ const collapsedStatuses = ref<Set<string>>(new Set())
 const activeFilters = ref({
   epic: null as string | null,
   tag: null as string | null,
-  priority: null as string | null,
+  priority: null as number | null,
   search: ''
 })
 const currentView = ref<'board' | 'epics'>('board')
@@ -73,7 +73,7 @@ export function useBoard() {
       if (activeFilters.value.tag && !newConfig.tags.some(t => t.name === activeFilters.value.tag)) {
         activeFilters.value.tag = null
       }
-      if (activeFilters.value.priority && !newConfig.priorities.includes(activeFilters.value.priority)) {
+      if (activeFilters.value.priority && activeFilters.value.priority > newConfig.priorities.length) {
         activeFilters.value.priority = null
       }
 

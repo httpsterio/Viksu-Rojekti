@@ -31,7 +31,12 @@ const getTagStyle = (name: string) => {
 <template>
   <div
     class="card"
-    :class="`priority-${card.priority}`"
+    :class="card.priority === 0 ? 'priority-0' : ''"
+    :style="
+      card.priority > 0 && config
+        ? { borderLeftColor: config.priorities[card.priority - 1]?.color }
+        : {}
+    "
     :data-card-id="card.id"
     @click="editingCard = card"
   >
@@ -115,19 +120,5 @@ const getTagStyle = (name: string) => {
   background: var(--bg-secondary);
   color: var(--text-secondary);
   border: 1px solid var(--border-color);
-}
-
-/* Priority Borders */
-.priority-critical {
-  border-left-color: #e53e3e;
-}
-.priority-high {
-  border-left-color: #ed8936;
-}
-.priority-medium {
-  border-left-color: #4299e1;
-}
-.priority-low {
-  border-left-color: #a0aec0;
 }
 </style>

@@ -36,13 +36,23 @@ const getInitialCard = (): Card => ({
   status: "",
   epic: null,
   tags: [],
-  priority: "medium",
+  priority: 0,
   position: 0,
   created: "",
   body: "",
 })
 
 const card = ref<Card>(getInitialCard())
+
+const priorityOptions = computed(() => {
+  const options = [{ label: "None", value: 0, color: "transparent" }]
+  if (config.value) {
+    config.value.priorities.forEach((p, index) => {
+      options.push({ label: p.name, value: index + 1, color: p.color })
+    })
+  }
+  return options
+})
 
 const knownTags = computed({
   get: () => card.value.tags.filter((name) => config.value?.tags.some((t) => t.name === name)),
@@ -181,10 +191,34 @@ const removeTag = (name: string) => {
             <label>Priority</label>
             <Select
               v-model="card.priority"
-              :options="config?.priorities"
+              :options="priorityOptions"
+              option-label="label"
+              option-value="value"
               placeholder="Select Priority"
               fluid
-            />
+            >
+              <template #value="{ value, placeholder }">
+                <div v-if="value !== undefined" class="priority-option">
+                  <span
+                    v-if="value > 0"
+                    class="priority-swatch"
+                    :style="{ backgroundColor: priorityOptions.find((o) => o.value === value)?.color }"
+                  ></span>
+                  <span>{{ priorityOptions.find((o) => o.value === value)?.label }}</span>
+                </div>
+                <span v-else>{{ placeholder }}</span>
+              </template>
+              <template #option="{ option }">
+                <div class="priority-option">
+                  <span
+                    v-if="option.value > 0"
+                    class="priority-swatch"
+                    :style="{ backgroundColor: option.color }"
+                  ></span>
+                  <span>{{ option.label }}</span>
+                </div>
+              </template>
+            </Select>
           </div>
         </div>
 
@@ -475,5 +509,18 @@ const removeTag = (name: string) => {
 
 :deep(.md-editor-preview) {
   padding: 0;
+}
+
+.priority-option {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.priority-swatch {
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: 50%;
+  display: inline-block;
 }
 </style>

@@ -1,7 +1,7 @@
 use tauri::State;
 use chrono::Local;
 use std::fs;
-use crate::models::{AppState, BoardConfig, Card, CardMeta, Index, Status, AllCardsResult};
+use crate::models::{AppState, BoardConfig, Card, CardMeta, Index, Status, AllCardsResult, Priority};
 use crate::{storage, index};
 
 #[tauri::command]
@@ -60,7 +60,7 @@ pub fn create_card(
     status: Option<String>,
     epic: Option<String>,
     tags: Vec<String>,
-    priority: String,
+    priority: u8,
     body: String,
     state: State<AppState>,
 ) -> Result<Card, String> {
@@ -196,7 +196,13 @@ pub fn init_project(
         ],
         epics: Vec::new(),
         tags: Vec::new(),
-        priorities: vec!["low".into(), "medium".into(), "high".into(), "critical".into()],
+        priorities: vec![
+            Priority { name: "Critical".into(),    color: "#e53e3e".into() },
+            Priority { name: "Severe".into(),      color: "#ed8936".into() },
+            Priority { name: "Substantial".into(), color: "#ecc94b".into() },
+            Priority { name: "Moderate".into(),    color: "#68d391".into() },
+            Priority { name: "Low".into(),         color: "#a0aec0".into() },
+        ],
     };
     
     let rojekti_dir = state.project_dir.join("rojekti");

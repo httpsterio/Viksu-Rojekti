@@ -66,7 +66,13 @@ tags:
   name: CLI API
   color: '#3d3d3d'
 priorities:
-- LOW
-- MED
-- HIGH
-- CRIT
+- name: Critical
+  color: '#e53e3e'
+- name: Severe
+  color: '#ed8936'
+- name: Substantial
+  color: '#ecc94b'
+- name: Moderate
+  color: '#68d391'
+- name: Low
+  color: '#a0aec0'

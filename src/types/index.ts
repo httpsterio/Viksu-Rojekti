@@ -5,12 +5,17 @@ export interface BoardConfig {
   statuses: Status[]
   epics: Epic[]
   tags: Tag[]
-  priorities: string[]
+  priorities: Priority[]
 }
 
 export interface Status {
   id: string
   name: string
+}
+
+export interface Priority {
+  name: string
+  color: string
 }
 
 export interface Epic {
@@ -31,7 +36,7 @@ export interface CardMeta {
   status: string
   epic: string | null
   tags: string[]
-  priority: string
+  priority: number
   position: number
   created: string
 }

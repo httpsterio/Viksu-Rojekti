@@ -1,6 +1,6 @@
 use clap::{Parser, Subcommand};
 use std::path::PathBuf;
-use crate::models::{BoardConfig, Card, CardMeta, Status};
+use crate::models::{BoardConfig, Card, CardMeta, Status, Priority};
 use crate::{storage, index};
 use chrono::Local;
 use std::io::Write;
@@ -39,10 +39,10 @@ pub enum Commands {
         /// Status (defaults to first status)
         #[arg(short, long)]
         status: Option<String>,
-        /// Priority level (defaults to medium)
+        /// Priority level (1-5, defaults to 0/None)
         #[arg(short, long)]
-        priority: Option<String>,
-        /// Epic ID
+        priority: Option<u8>,
+        /// Epic name
         #[arg(short, long)]
         epic: Option<String>,
         /// Comma-separated tags
@@ -136,7 +136,7 @@ pub fn handle_cli(command: Commands, project_dir: PathBuf) {
             if title.is_empty() {
                 eprintln!("Error: title is required.");
             } else {
-                let priority_val = priority.unwrap_or_else(|| "medium".to_string());
+                let priority_val = priority.unwrap_or(0);
                 let tags_str = tags.unwrap_or_default();
                 let tags_vec: Vec<String> = if tags_str.is_empty() { 
                     Vec::new() 
@@ -203,7 +203,13 @@ pub fn handle_cli(command: Commands, project_dir: PathBuf) {
                     ],
                     epics: Vec::new(),
                     tags: Vec::new(),
-                    priorities: vec!["low".into(), "medium".into(), "high".into(), "critical".into()],
+                    priorities: vec![
+                        Priority { name: "Critical".into(),    color: "#e53e3e".into() },
+                        Priority { name: "Severe".into(),      color: "#ed8936".into() },
+                        Priority { name: "Substantial".into(), color: "#ecc94b".into() },
+                        Priority { name: "Moderate".into(),    color: "#68d391".into() },
+                        Priority { name: "Low".into(),         color: "#a0aec0".into() },
+                    ],
                 };
                 
                 let rojekti_dir = project_dir.join("rojekti");

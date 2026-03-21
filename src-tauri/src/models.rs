@@ -18,6 +18,13 @@ pub struct Status {
 
 #[derive(Serialize, Deserialize, Clone, Debug)]
 #[serde(rename_all = "camelCase")]
+pub struct Priority {
+    pub name: String,
+    pub color: String,
+}
+
+#[derive(Serialize, Deserialize, Clone, Debug)]
+#[serde(rename_all = "camelCase")]
 pub struct BoardConfig {
     pub name: String,
     pub prefix: String,
@@ -25,7 +32,7 @@ pub struct BoardConfig {
     pub statuses: Vec<Status>,
     pub epics: Vec<Epic>,
     pub tags: Vec<Tag>,
-    pub priorities: Vec<String>,
+    pub priorities: Vec<Priority>,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug)]
@@ -47,9 +54,27 @@ pub struct CardMeta {
     pub epic: Option<String>,
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub tags: Vec<String>,
-    pub priority: String,
+    #[serde(deserialize_with = "deserialize_priority")]
+    pub priority: u8,
     pub position: f64,
     pub created: String,
+}
+
+fn deserialize_priority<'de, D>(deserializer: D) -> Result<u8, D::Error>
+where
+    D: serde::Deserializer<'de>,
+{
+    let value = serde_yaml::Value::deserialize(deserializer)?;
+    let n = match value {
+        serde_yaml::Value::Number(n) => n.as_u64().unwrap_or(0),
+        serde_yaml::Value::String(s) => s.trim().parse::<u64>().unwrap_or(0),
+        _ => 0,
+    };
+    if n >= 1 && n <= 5 {
+        Ok(n as u8)
+    } else {
+        Ok(0)
+    }
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug)]

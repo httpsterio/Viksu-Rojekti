@@ -223,9 +223,23 @@ const removeTag = (index: number) => {
             <label>Priorities</label>
           </div>
           <div class="list-editor">
-            <div v-for="(_, index) in localConfig.priorities" :key="index" class="list-item">
+            <div
+              v-for="(priority, index) in localConfig.priorities"
+              :key="index"
+              class="list-item"
+            >
               <InputGroup>
-                <InputText v-model="localConfig.priorities[index]" size="small" />
+                <InputGroupAddon>
+                  {{ index + 1 }}
+                </InputGroupAddon>
+                <InputGroupAddon class="color-addon">
+                  <input v-model="priority.color" type="color" class="color-swatch" />
+                </InputGroupAddon>
+                <InputText
+                  v-model="priority.name"
+                  size="small"
+                  :placeholder="['Critical', 'Severe', 'Substantial', 'Moderate', 'Low'][index]"
+                />
               </InputGroup>
             </div>
           </div>
