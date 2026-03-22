@@ -1,15 +1,14 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, watch, nextTick } from "vue"
-import Sortable from "sortablejs"
 import { dragAndDrop } from "@formkit/drag-and-drop/vue"
 import { animations, tearDown } from "@formkit/drag-and-drop"
+import type { DragstartEventData, SortEventData, TransferEventData } from "@formkit/drag-and-drop"
 import Card from "./Card.vue"
 import type { Card as CardType } from "@/types"
 import { useBoard } from "@/composables/useBoard"
 import Button from "primevue/button"
 
 let dragPending: { cardId: string; statusId: string; pos: number } | null = null
-let draggedEl: HTMLElement | null = null
 
 const props = defineProps<{
   id: string
@@ -18,9 +17,8 @@ const props = defineProps<{
   collapsed: boolean
 }>()
 
-const { toggleStatusCollapse, moveCard } = useBoard()
-const cardContainer = ref<HTMLElement | null>(null)
-let sortable: Sortable | null = null
+const { toggleStatusCollapse, moveCard, draggedCardId } = useBoard()
+const cardContainer = ref<HTMLElement | undefined>(undefined)
 
 const cardValues = ref<CardType[]>([...props.cards])
 const isDragging = ref(false)
@@ -46,102 +44,48 @@ const initFormKit = () => {
     parent: cardContainer,
     values: cardValues,
     group: "cards",
+    nativeDrag: true,
     plugins: [animations()],
     draggingClass: "dragging-card",
     dragPlaceholderClass: "ghost-card",
-    onDragstart: () => {
+    onDragstart: (data: DragstartEventData<CardType>) => {
       isDragging.value = true
       dragPending = null
+      const id = data.draggedNode.data.value.id
+      requestAnimationFrame(() => {
+        draggedCardId.value = id
+      })
     },
-    onSort: ({ values, draggedNodes }: any) => {
-      const draggedCard = draggedNodes[0].data.value as CardType
-      const index = values.findIndex((c: CardType) => c.id === draggedCard.id)
-      dragPending = { cardId: draggedCard.id, statusId: props.id, pos: calcPosition(values, index) }
-    },
-    onTransfer: ({ draggedNodes, targetIndex, targetParent }: any) => {
-      if (targetParent.el !== cardContainer.value) return
-      const draggedCard = draggedNodes[0].data.value as CardType
+    onSort: (data: SortEventData<CardType>) => {
+      const draggedCard = data.draggedNodes[0].data.value
+      const index = data.values.findIndex((c) => c.id === draggedCard.id)
       dragPending = {
         cardId: draggedCard.id,
         statusId: props.id,
-        pos: calcPosition(cardValues.value, targetIndex),
+        pos: calcPosition(data.values, index),
+      }
+    },
+    onTransfer: (data: TransferEventData<CardType>) => {
+      if (data.targetParent.el !== cardContainer.value) return
+      const draggedCard = data.draggedNodes[0].data.value
+      dragPending = {
+        cardId: draggedCard.id,
+        statusId: props.id,
+        pos: calcPosition(cardValues.value, data.targetIndex),
       }
     },
     onDragend: () => {
       isDragging.value = false
+      draggedCardId.value = null
       if (dragPending) {
         moveCard(dragPending.cardId, dragPending.statusId, dragPending.pos)
         dragPending = null
       }
     },
   })
-
-  const el = cardContainer.value
-  el.addEventListener("dragstart", (e: DragEvent) => {
-    draggedEl = e.target as HTMLElement
-    requestAnimationFrame(() => {
-      if (draggedEl) draggedEl.style.opacity = "0"
-    })
-  })
-  el.addEventListener("dragend", () => {
-    if (draggedEl) {
-      draggedEl.style.opacity = ""
-      draggedEl = null
-    }
-  })
-}
-
-const initSortable = () => {
-  nextTick(() => {
-    if (cardContainer.value && !props.collapsed) {
-      sortable = new Sortable(cardContainer.value, {
-        group: "cards",
-        animation: 150,
-        ghostClass: "ghost-card",
-        dragClass: "dragging-card",
-        forceFallback: true,
-        fallbackClass: "dragging-card",
-        dataIdAttr: "data-card-id",
-        disabled: true,
-        onEnd: (evt) => {
-          if (evt.to && evt.item) {
-            const cardId = evt.item.getAttribute("data-card-id")!
-            const newStatusId = evt.to.getAttribute("data-status-id")!
-            const newIndex = evt.newIndex!
-
-            const laneCards = Array.from(evt.to.children)
-            let newPos = 1.0
-
-            if (laneCards.length > 1) {
-              if (newIndex === 0) {
-                const nextPos = parseFloat(laneCards[1].getAttribute("data-pos") || "2.0")
-                newPos = nextPos / 2
-              } else if (newIndex === laneCards.length - 1) {
-                const prevPos = parseFloat(
-                  laneCards[laneCards.length - 2].getAttribute("data-pos") || "0.0",
-                )
-                newPos = prevPos + 1.0
-              } else {
-                const prevPos = parseFloat(
-                  laneCards[newIndex - 1].getAttribute("data-pos") || "0.0",
-                )
-                const nextPos = parseFloat(
-                  laneCards[newIndex + 1].getAttribute("data-pos") || "0.0",
-                )
-                newPos = (prevPos + nextPos) / 2
-              }
-            }
-
-            moveCard(cardId, newStatusId, newPos)
-          }
-        },
-      })
-    }
-  })
 }
 
 onMounted(() => {
-  initSortable()
   nextTick(() => initFormKit())
 })
 
@@ -149,12 +93,9 @@ watch(
   () => props.collapsed,
   (isCollapsed) => {
     if (isCollapsed) {
-      sortable?.destroy()
-      sortable = null
       if (cardContainer.value) tearDown(cardContainer.value)
     } else {
       setTimeout(() => {
-        initSortable()
         initFormKit()
       }, 0)
     }
@@ -162,7 +103,6 @@ watch(
 )
 
 onUnmounted(() => {
-  sortable?.destroy()
   if (cardContainer.value) tearDown(cardContainer.value)
 })
 
@@ -191,7 +131,14 @@ const formatName = (name: string) => name.replace(/-/g, " ").toUpperCase()
         />
       </div>
       <div ref="cardContainer" class="lane-body" :data-status-id="id">
-        <Card v-for="card in cardValues" :key="card.id" :card="card" :data-pos="card.position" />
+        <Card
+          v-for="card in cardValues"
+          :key="card.id"
+          :card="card"
+          :data-pos="card.position"
+          :data-card-id="card.id"
+          :class="{ 'drag-placeholder': draggedCardId === card.id }"
+        />
       </div>
     </template>
   </div>
@@ -287,8 +234,18 @@ const formatName = (name: string) => name.replace(/-/g, " ").toUpperCase()
   font-weight: 600;
 }
 
-:deep(.ghost-card) {
-  opacity: 0;
+:deep(.ghost-card),
+.drag-placeholder {
+  background: transparent !important;
+  border: 3px dashed #059669 !important;
+  border-radius: var(--card-radius);
+  box-shadow: none !important;
+  pointer-events: none;
+}
+
+:deep(.ghost-card) *,
+.drag-placeholder * {
+  visibility: hidden;
 }
 
 :deep(.dragging-card) {

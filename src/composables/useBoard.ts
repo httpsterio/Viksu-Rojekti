@@ -18,6 +18,7 @@ const isCreating = ref(false)
 const isDarkMode = ref(false)
 const isLoading = ref(true)
 const needsInit = ref(false)
+const draggedCardId = ref<string | null>(null)
 let loadGeneration = 0
 
 export function useBoard() {
@@ -201,6 +202,7 @@ export function useBoard() {
     editingCard,
     isCreating,
     isDarkMode,
+    draggedCardId,
     isLoading,
     needsInit,
     loadBoard,

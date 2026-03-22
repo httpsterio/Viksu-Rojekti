@@ -1,4 +1,4 @@
-generated: 2026-03-22T01:49:06.473833900+02:00
+generated: 2026-03-22T03:00:43.257579900+02:00
 cardCount: 43
 cards:
 - id: roj-009
@@ -19,7 +19,7 @@ cards:
   - Feature
   - Backend
   priority: 4
-  position: 1.0
+  position: 1.875
   created: 2026-03-19
 - id: roj-011
   title: 'feat: File Watcher (real time refresh)'
@@ -148,12 +148,12 @@ cards:
   created: 2026-03-20
 - id: roj-024
   title: 'feat: Archive and Deleted fixed statuses'
-  status: in-progress
+  status: todo
   epic: Board
   tags:
   - Feature
   priority: 4
-  position: 2.0
+  position: 0.31351011618971825
   created: 2026-03-20
 - id: roj-025
   title: 'fix: Silent overwrites of cards'
@@ -183,7 +183,7 @@ cards:
   - Feature
   - UX
   priority: 5
-  position: 0.669921875
+  position: 0.3736984096467495
   created: 2026-03-20
 - id: roj-028
   title: 'style: Improve sortable card visualisation'
@@ -193,7 +193,7 @@ cards:
   - UX
   - Polish
   priority: 5
-  position: 0.1754174679517746
+  position: 0.15675505809485912
   created: 2026-03-20
 - id: roj-029
   title: 'style: New card modal and edit modal inconsistency'
@@ -224,7 +224,7 @@ cards:
   - Feature
   - Backend
   priority: 5
-  position: 0.4990629507228732
+  position: 0.48099058493971825
   created: 2026-03-20
 - id: roj-032
   title: 'chore: Priority system'
@@ -385,7 +385,7 @@ cards:
   tags:
   - Backend
   priority: 4
-  position: 0.015625
+  position: 0.00634765625
   created: 2026-03-21
 - id: roj-049
   title: 'refactor: Replace SortableJS with FormKit DnD'
