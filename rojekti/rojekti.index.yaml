@@ -1,4 +1,4 @@
-generated: 2026-03-22T04:36:37.328103500+02:00
+generated: 2026-03-22T04:47:02.991725900+02:00
 cardCount: 45
 cards:
 - id: roj-009
@@ -153,7 +153,7 @@ cards:
   tags:
   - Feature
   priority: 4
-  position: 0.15769550018012524
+  position: 0.1389715732075274
   created: 2026-03-20
 - id: roj-025
   title: 'fix: Silent overwrites of cards'
@@ -183,7 +183,7 @@ cards:
   - Feature
   - UX
   priority: 5
-  position: 0.3981907926499843
+  position: 0.2084573598112911
   created: 2026-03-20
 - id: roj-028
   title: 'style: Improve sortable card visualisation'
@@ -193,7 +193,7 @@ cards:
   - UX
   - Polish
   priority: 5
-  position: 0.3153910003602505
+  position: 0.2779431464150548
   created: 2026-03-20
 - id: roj-029
   title: 'style: New card modal and edit modal inconsistency'
@@ -389,13 +389,13 @@ cards:
   created: 2026-03-21
 - id: roj-049
   title: 'refactor: Replace SortableJS with FormKit DnD'
-  status: done
+  status: status-1774045884765
   epic: Board
   tags:
   - Refactor
   - UX
   priority: 3
-  position: 1.0
+  position: 0.0009765625
   created: 2026-03-21
 - id: roj-050
   title: 'feat: Improve settings page'

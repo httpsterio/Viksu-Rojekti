@@ -3,19 +3,15 @@ import { ref, onMounted, onUnmounted, watch, nextTick } from "vue"
 import { dragAndDrop } from "@formkit/drag-and-drop/vue"
 import { animations, tearDown } from "@formkit/drag-and-drop"
 import type {
+  DragendEvent,
+  DragendEventData,
   DragstartEvent,
   DragstartEventData,
-  SortEvent,
-  SortEventData,
-  TransferEvent,
-  TransferEventData,
 } from "@formkit/drag-and-drop"
 import Card from "./Card.vue"
 import type { Card as CardType } from "@/types"
 import { useBoard } from "@/composables/useBoard"
 import Button from "primevue/button"
-
-let dragPending: { cardId: string; statusId: string; pos: number } | null = null
 
 const props = defineProps<{
   id: string
@@ -57,38 +53,21 @@ const initFormKit = () => {
     dragPlaceholderClass: "ghost-card",
     onDragstart: ((data: DragstartEventData<CardType>) => {
       isDragging.value = true
-      dragPending = null
       const id = data.draggedNode.data.value.id
       requestAnimationFrame(() => {
         draggedCardId.value = id
       })
     }) as DragstartEvent,
-    onSort: ((data: SortEventData<CardType>) => {
-      const draggedCard = data.draggedNodes[0].data.value
-      const index = data.values.findIndex((c) => c.id === draggedCard.id)
-      dragPending = {
-        cardId: draggedCard.id,
-        statusId: props.id,
-        pos: calcPosition(data.values, index),
-      }
-    }) as SortEvent,
-    onTransfer: ((data: TransferEventData<CardType>) => {
-      if (data.targetParent.el !== cardContainer.value) return
-      const draggedCard = data.draggedNodes[0].data.value
-      dragPending = {
-        cardId: draggedCard.id,
-        statusId: props.id,
-        pos: calcPosition(cardValues.value, data.targetIndex),
-      }
-    }) as TransferEvent,
-    onDragend: () => {
+    onDragend: ((data: DragendEventData<CardType>) => {
       isDragging.value = false
       draggedCardId.value = null
-      if (dragPending) {
-        moveCard(dragPending.cardId, dragPending.statusId, dragPending.pos)
-        dragPending = null
-      }
-    },
+      const statusId = data.parent.el.getAttribute("data-status-id")
+      if (!statusId) return
+      const draggedCard = data.draggedNode.data.value
+      const index = data.values.findIndex((c) => c.id === draggedCard.id)
+      if (index === -1) return
+      moveCard(draggedCard.id, statusId, calcPosition(data.values, index))
+    }) as DragendEvent,
   })
 }
 
