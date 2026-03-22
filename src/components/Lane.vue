@@ -257,8 +257,7 @@ const formatName = (name: string) => name.replace(/-/g, " ").toUpperCase()
 :deep(.dragging-card) {
   cursor: grabbing !important;
   user-select: none;
-  opacity: 1 !important;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.7) !important;
-  rotate: 1deg;
+  transform: rotate(20deg);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.4);
 }
 </style>
