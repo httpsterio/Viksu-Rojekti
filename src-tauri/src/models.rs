@@ -52,7 +52,7 @@ pub struct CardMeta {
     pub status: String,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub epic: Option<String>,
-    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    #[serde(default)]
     pub tags: Vec<String>,
     #[serde(deserialize_with = "deserialize_priority")]
     pub priority: u8,

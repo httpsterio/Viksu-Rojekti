@@ -155,7 +155,7 @@ export function useBoard() {
   const filteredCards = computed(() => {
     return cards.value.filter(c => {
       if (activeFilters.value.epic && c.epic !== activeFilters.value.epic) return false
-      if (activeFilters.value.tag && !c.tags.includes(activeFilters.value.tag)) return false
+      if (activeFilters.value.tag && !c.tags?.includes(activeFilters.value.tag)) return false
       if (activeFilters.value.priority && c.priority !== activeFilters.value.priority) return false
       if (activeFilters.value.search && !c.title.toLowerCase().includes(activeFilters.value.search.toLowerCase())) return false
       return true
