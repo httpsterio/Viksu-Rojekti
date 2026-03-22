@@ -2,7 +2,14 @@
 import { ref, onMounted, onUnmounted, watch, nextTick } from "vue"
 import { dragAndDrop } from "@formkit/drag-and-drop/vue"
 import { animations, tearDown } from "@formkit/drag-and-drop"
-import type { DragstartEventData, SortEventData, TransferEventData } from "@formkit/drag-and-drop"
+import type {
+  DragstartEvent,
+  DragstartEventData,
+  SortEvent,
+  SortEventData,
+  TransferEvent,
+  TransferEventData,
+} from "@formkit/drag-and-drop"
 import Card from "./Card.vue"
 import type { Card as CardType } from "@/types"
 import { useBoard } from "@/composables/useBoard"
@@ -48,15 +55,15 @@ const initFormKit = () => {
     plugins: [animations()],
     draggingClass: "dragging-card",
     dragPlaceholderClass: "ghost-card",
-    onDragstart: (data: DragstartEventData<CardType>) => {
+    onDragstart: ((data: DragstartEventData<CardType>) => {
       isDragging.value = true
       dragPending = null
       const id = data.draggedNode.data.value.id
       requestAnimationFrame(() => {
         draggedCardId.value = id
       })
-    },
-    onSort: (data: SortEventData<CardType>) => {
+    }) as DragstartEvent,
+    onSort: ((data: SortEventData<CardType>) => {
       const draggedCard = data.draggedNodes[0].data.value
       const index = data.values.findIndex((c) => c.id === draggedCard.id)
       dragPending = {
@@ -64,8 +71,8 @@ const initFormKit = () => {
         statusId: props.id,
         pos: calcPosition(data.values, index),
       }
-    },
-    onTransfer: (data: TransferEventData<CardType>) => {
+    }) as SortEvent,
+    onTransfer: ((data: TransferEventData<CardType>) => {
       if (data.targetParent.el !== cardContainer.value) return
       const draggedCard = data.draggedNodes[0].data.value
       dragPending = {
@@ -73,7 +80,7 @@ const initFormKit = () => {
         statusId: props.id,
         pos: calcPosition(cardValues.value, data.targetIndex),
       }
-    },
+    }) as TransferEvent,
     onDragend: () => {
       isDragging.value = false
       draggedCardId.value = null
@@ -240,7 +247,6 @@ const formatName = (name: string) => name.replace(/-/g, " ").toUpperCase()
   border: 3px dashed #059669 !important;
   border-radius: var(--card-radius);
   box-shadow: none !important;
-  pointer-events: none;
 }
 
 :deep(.ghost-card) *,
@@ -251,5 +257,8 @@ const formatName = (name: string) => name.replace(/-/g, " ").toUpperCase()
 :deep(.dragging-card) {
   cursor: grabbing !important;
   user-select: none;
+  opacity: 1 !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.7) !important;
+  rotate: 1deg;
 }
 </style>

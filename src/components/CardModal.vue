@@ -8,6 +8,7 @@ import InputText from "primevue/inputtext"
 import Select from "primevue/select"
 import MultiSelect from "primevue/multiselect"
 import Tag from "primevue/tag"
+import Chip from "primevue/chip"
 import { useConfirm } from "primevue/useconfirm"
 import { MdEditor, MdPreview } from "md-editor-v3"
 import type { ToolbarNames } from "md-editor-v3"
@@ -66,8 +67,7 @@ const orphanedTags = computed(() =>
 )
 
 const isEpicOrphaned = computed(
-  () =>
-    card.value.epic && !config.value?.epics.some((e) => e.name === card.value.epic),
+  () => card.value.epic && !config.value?.epics.some((e) => e.name === card.value.epic),
 )
 
 const descriptionTab = ref<"view" | "edit">("view")
@@ -202,7 +202,9 @@ const removeTag = (name: string) => {
                   <span
                     v-if="value > 0"
                     class="priority-swatch"
-                    :style="{ backgroundColor: priorityOptions.find((o) => o.value === value)?.color }"
+                    :style="{
+                      backgroundColor: priorityOptions.find((o) => o.value === value)?.color,
+                    }"
                   ></span>
                   <span>{{ priorityOptions.find((o) => o.value === value)?.label }}</span>
                 </div>

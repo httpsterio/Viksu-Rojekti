@@ -1,5 +1,5 @@
-generated: 2026-03-22T03:00:43.257579900+02:00
-cardCount: 43
+generated: 2026-03-22T04:01:13.605165300+02:00
+cardCount: 45
 cards:
 - id: roj-009
   title: 'fix: Broken cards graceful failing'
@@ -183,7 +183,7 @@ cards:
   - Feature
   - UX
   priority: 5
-  position: 0.3736984096467495
+  position: 0.3172718845307827
   created: 2026-03-20
 - id: roj-028
   title: 'style: Improve sortable card visualisation'
@@ -193,7 +193,7 @@ cards:
   - UX
   - Polish
   priority: 5
-  position: 0.15675505809485912
+  position: 0.32103365287184715
   created: 2026-03-20
 - id: roj-029
   title: 'style: New card modal and edit modal inconsistency'
@@ -389,7 +389,7 @@ cards:
   created: 2026-03-21
 - id: roj-049
   title: 'refactor: Replace SortableJS with FormKit DnD'
-  status: in-progress
+  status: done
   epic: Board
   tags:
   - Refactor
@@ -417,3 +417,22 @@ cards:
   priority: 3
   position: 24.0
   created: 2026-03-21
+- id: roj-052
+  title: 'style: Custom cursors'
+  status: backlog
+  epic: Board
+  tags:
+  - Polish
+  priority: 5
+  position: 25.0
+  created: 2026-03-22
+- id: roj-053
+  title: 'refactor: setDragImage to dragged cards'
+  status: todo
+  epic: Card
+  tags:
+  - Refactor
+  - UX
+  priority: 4
+  position: 2.875
+  created: 2026-03-22
