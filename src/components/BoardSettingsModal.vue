@@ -10,6 +10,7 @@ import InputGroupAddon from "primevue/inputgroupaddon"
 import { useConfirm } from "primevue/useconfirm"
 import { useToast } from "primevue/usetoast"
 import { animations } from "@formkit/drag-and-drop"
+import type { SortEvent, SortEventData } from "@formkit/drag-and-drop"
 import { useDragAndDrop, dragAndDrop } from "@formkit/drag-and-drop/vue"
 
 const { config, cards, saveBoardConfig, updateCard } = useBoard()
@@ -35,27 +36,27 @@ watch(visible, async (isVisible) => {
       values: statusValues,
       dragHandle: ".drag-handle",
       plugins: [animations()],
-      onSort: ({ values }: any) => {
-        if (localConfig.value) localConfig.value.statuses = values
-      },
+      onSort: ((data: SortEventData<BoardConfig["statuses"][number]>) => {
+        if (localConfig.value) localConfig.value.statuses = data.values
+      }) as SortEvent,
     },
     {
       parent: epicsParent,
       values: epicValues,
       dragHandle: ".drag-handle",
       plugins: [animations()],
-      onSort: ({ values }: any) => {
-        if (localConfig.value) localConfig.value.epics = values
-      },
+      onSort: ((data: SortEventData<BoardConfig["epics"][number]>) => {
+        if (localConfig.value) localConfig.value.epics = data.values
+      }) as SortEvent,
     },
     {
       parent: tagsParent,
       values: tagValues,
       dragHandle: ".drag-handle",
       plugins: [animations()],
-      onSort: ({ values }: any) => {
-        if (localConfig.value) localConfig.value.tags = values
-      },
+      onSort: ((data: SortEventData<BoardConfig["tags"][number]>) => {
+        if (localConfig.value) localConfig.value.tags = data.values
+      }) as SortEvent,
     },
   ])
 })
@@ -81,6 +82,11 @@ const handleSave = async () => {
       toast.add({ severity: "error", summary: "Validation Error", detail: "Tag names must be unique.", life: 4000 })
       return
     }
+    const statusNames = localConfig.value.statuses.map((s) => s.name.trim())
+    if (new Set(statusNames).size !== statusNames.length) {
+      toast.add({ severity: "error", summary: "Validation Error", detail: "Status names must be unique.", life: 4000 })
+      return
+    }
 
     await saveBoardConfig(localConfig.value)
     visible.value = false
@@ -88,7 +94,7 @@ const handleSave = async () => {
 }
 
 const addStatus = () => {
-  const newStatus = { id: `status-${Date.now()}`, name: "New Status" }
+  const newStatus = { name: "New Status" }
   statusValues.value.push(newStatus)
   if (localConfig.value) localConfig.value.statuses = [...statusValues.value]
 }
@@ -96,7 +102,7 @@ const addStatus = () => {
 const removeStatus = (index: number) => {
   if (!localConfig.value) return
   const statusToRemove = statusValues.value[index]
-  const cardsInStatus = cards.value.filter((c) => c.status === statusToRemove.id)
+  const cardsInStatus = cards.value.filter((c) => c.status === statusToRemove.name)
 
   if (cardsInStatus.length === 0) {
     confirm.require({
@@ -119,9 +125,9 @@ const removeStatus = (index: number) => {
         statusValues.value.splice(index, 1)
         if (localConfig.value) localConfig.value.statuses = [...statusValues.value]
         if (localConfig.value && localConfig.value.statuses.length > 0) {
-          const firstStatusId = localConfig.value.statuses[0].id
+          const firstStatusName = localConfig.value.statuses[0].name
           for (const card of cardsInStatus) {
-            await updateCard({ ...card, status: firstStatusId })
+            await updateCard({ ...card, status: firstStatusName })
           }
         }
       },
@@ -189,7 +195,7 @@ const removeTag = (index: number) => {
             <label>Status</label>
           </div>
           <div ref="statusesParent" class="list-editor">
-            <div v-for="status in statusValues" :key="status.id" class="list-item">
+            <div v-for="(status, index) in statusValues" :key="index" class="list-item">
               <InputGroup>
                 <InputGroupAddon class="drag-handle">
                   <i class="pi pi-bars"></i>
@@ -201,7 +207,7 @@ const removeTag = (index: number) => {
                     text
                     severity="danger"
                     size="small"
-                    @click="removeStatus(statusValues.indexOf(status))"
+                    @click="removeStatus(index)"
                   />
                 </InputGroupAddon>
               </InputGroup>

@@ -64,10 +64,14 @@ pub fn run() {
             if config_path.exists() {
                 if let Ok(mut config) = storage::read_board_config(&config_path) {
                     let has_pending = config.epics.iter().any(|e| e.pending_rename.is_some())
-                        || config.tags.iter().any(|t| t.pending_rename.is_some());
+                        || config.tags.iter().any(|t| t.pending_rename.is_some())
+                        || config.statuses.iter().any(|s| s.pending_rename.is_some());
                     if has_pending {
                         if let Err(e) = storage::apply_pending_renames(&project_dir, &mut config, &config_path) {
-                            eprintln!("[warn] Failed to recover pending rename: {}", e);
+                            eprintln!("[warn] Failed to recover pending rename (epics/tags): {}", e);
+                        }
+                        if let Err(e) = storage::apply_pending_status_renames(&project_dir, &mut config, &config_path) {
+                            eprintln!("[warn] Failed to recover pending rename (statuses): {}", e);
                         }
                     }
                 }

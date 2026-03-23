@@ -177,6 +177,55 @@ pub fn apply_pending_renames(
     write_board_config(config_path, config)
 }
 
+pub fn rename_status(
+    dir: &Path,
+    config: &mut BoardConfig,
+    index: usize,
+    old_name: &str,
+    new_name: &str,
+    config_path: &Path,
+) -> Result<(), String> {
+    let entry = config.statuses.get_mut(index)
+        .ok_or_else(|| format!("Status at index {} not found", index))?;
+    entry.name = old_name.to_string();
+    entry.pending_rename = Some(new_name.to_string());
+    write_board_config(config_path, config)?;
+
+    apply_pending_status_renames(dir, config, config_path)
+}
+
+pub fn apply_pending_status_renames(
+    dir: &Path,
+    config: &mut BoardConfig,
+    config_path: &Path,
+) -> Result<(), String> {
+    let renames: Vec<(String, String)> = config.statuses.iter()
+        .filter_map(|s| s.pending_rename.as_ref().map(|new| (s.name.clone(), new.clone())))
+        .collect();
+
+    if renames.is_empty() {
+        return Ok(());
+    }
+
+    let (cards, _) = read_all_cards(dir)?;
+    for card in cards {
+        if let Some((_, new)) = renames.iter().find(|(old, _)| old == &card.meta.status) {
+            let mut updated = card.clone();
+            updated.meta.status = new.clone();
+            write_card(dir, &updated)?;
+        }
+    }
+
+    for status in config.statuses.iter_mut() {
+        if let Some(new_name) = status.pending_rename.take() {
+            status.name = new_name;
+        }
+    }
+    write_board_config(config_path, config)?;
+    crate::index::rebuild_index(dir)?;
+    Ok(())
+}
+
 pub fn read_all_cards(dir: &Path) -> Result<(Vec<Card>, Vec<String>), String> {
     let files = list_card_files(dir)?;
     let mut cards = Vec::new();

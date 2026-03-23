@@ -151,7 +151,7 @@ pub fn handle_cli(command: Commands, project_dir: PathBuf) {
                         let _ = storage::write_board_config(&project_dir.join("rojekti").join("rojekti.config.yaml"), &config);
                         
                         let status_val = status.unwrap_or_else(|| {
-                            config.statuses.first().map(|s| s.id.clone()).unwrap_or_else(|| "todo".to_string())
+                            config.statuses.first().map(|s| s.name.clone()).unwrap_or_else(|| "Backlog".to_string())
                         });
                         
                         let (cards, _) = storage::read_all_cards(&project_dir).unwrap_or_default();
@@ -195,11 +195,11 @@ pub fn handle_cli(command: Commands, project_dir: PathBuf) {
                     prefix: prefix.to_string(),
                     next_id: 1,
                     statuses: vec![
-                        Status { id: "backlog".into(), name: "Backlog".into() },
-                        Status { id: "todo".into(), name: "Todo".into() },
-                        Status { id: "in-progress".into(), name: "In Progress".into() },
-                        Status { id: "review".into(), name: "Review".into() },
-                        Status { id: "done".into(), name: "Done".into() },
+                        Status { name: "Backlog".into(), pending_rename: None },
+                        Status { name: "Todo".into(), pending_rename: None },
+                        Status { name: "In Progress".into(), pending_rename: None },
+                        Status { name: "Review".into(), pending_rename: None },
+                        Status { name: "Done".into(), pending_rename: None },
                     ],
                     epics: Vec::new(),
                     tags: Vec::new(),

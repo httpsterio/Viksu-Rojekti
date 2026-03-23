@@ -100,7 +100,7 @@ watch(visible, (val) => {
     } else {
       card.value = {
         ...getInitialCard(),
-        status: config.value?.statuses[0]?.id || "",
+        status: config.value?.statuses[0]?.name || "",
       }
       descriptionTab.value = "edit"
     }
@@ -182,7 +182,7 @@ const removeTag = (name: string) => {
               v-model="card.status"
               :options="config?.statuses"
               option-label="name"
-              option-value="id"
+              option-value="name"
               placeholder="Select Status"
               fluid
             />

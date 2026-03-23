@@ -2,16 +2,12 @@ name: Rojekti
 prefix: roj
 nextId: 60
 statuses:
-- id: backlog
-  name: BACKLOG
-- id: todo
-  name: TO DO
-- id: in-progress
-  name: DOING
-- id: done
-  name: DONE
-- id: status-1774045884765
-  name: ARCHIVE
+- name: BACKLOG
+- name: TO DO
+- name: DOING
+- name: DONE
+- name: ARCHIVE
+- name: BLOCKED
 epics:
 - name: Board
   color: '#19e1a5'

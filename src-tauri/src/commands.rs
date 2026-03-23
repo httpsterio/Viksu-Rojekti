@@ -32,12 +32,22 @@ pub fn save_board_config(mut config: BoardConfig, state: State<AppState>) -> Res
                 .map(|old| (i, old.name.clone(), new.name.clone()))
         })
         .collect();
+    let status_renames: Vec<(usize, String, String)> = config.statuses.iter().enumerate()
+        .filter_map(|(i, new)| {
+            old_config.statuses.get(i)
+                .filter(|old| old.name != new.name)
+                .map(|old| (i, old.name.clone(), new.name.clone()))
+        })
+        .collect();
 
     for (index, old_name, new_name) in epic_renames {
         storage::rename_epic_or_tag(&state.project_dir, &mut config, true, index, &old_name, &new_name, &config_path)?;
     }
     for (index, old_name, new_name) in tag_renames {
         storage::rename_epic_or_tag(&state.project_dir, &mut config, false, index, &old_name, &new_name, &config_path)?;
+    }
+    for (index, old_name, new_name) in status_renames {
+        storage::rename_status(&state.project_dir, &mut config, index, &old_name, &new_name, &config_path)?;
     }
 
     storage::write_board_config(&config_path, &config)
@@ -83,7 +93,7 @@ pub fn create_card(
     }
     storage::write_board_config(&state.project_dir.join("rojekti").join("rojekti.config.yaml"), &config)?;
     
-    let status = status.unwrap_or_else(|| config.statuses.first().map(|s| s.id.clone()).unwrap_or_default());
+    let status = status.unwrap_or_else(|| config.statuses.first().map(|s| s.name.clone()).unwrap_or_default());
     
     let (cards, _) = storage::read_all_cards(&state.project_dir)?;
     let max_pos = cards.iter()
@@ -188,11 +198,11 @@ pub fn init_project(
         prefix,
         next_id: 1,
         statuses: vec![
-            Status { id: "backlog".into(), name: "Backlog".into() },
-            Status { id: "todo".into(), name: "Todo".into() },
-            Status { id: "in-progress".into(), name: "In Progress".into() },
-            Status { id: "review".into(), name: "Review".into() },
-            Status { id: "done".into(), name: "Done".into() },
+            Status { name: "Backlog".into(), pending_rename: None },
+            Status { name: "Todo".into(), pending_rename: None },
+            Status { name: "In Progress".into(), pending_rename: None },
+            Status { name: "Review".into(), pending_rename: None },
+            Status { name: "Done".into(), pending_rename: None },
         ],
         epics: Vec::new(),
         tags: Vec::new(),

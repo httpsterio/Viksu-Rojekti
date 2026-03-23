@@ -172,8 +172,8 @@ export function useBoard() {
     if (!config.value) return grouped
     
     for (const status of config.value.statuses) {
-      grouped[status.id] = filteredCards.value
-        .filter(c => c.status === status.id)
+      grouped[status.name] = filteredCards.value
+        .filter(c => c.status === status.name)
         .sort((a, b) => a.position - b.position)
     }
     return grouped

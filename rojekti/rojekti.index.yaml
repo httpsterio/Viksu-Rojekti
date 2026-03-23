@@ -1,9 +1,9 @@
-generated: 2026-03-23T03:38:59.796486700+02:00
+generated: 2026-03-23T05:15:24.533334200+02:00
 cardCount: 51
 cards:
 - id: roj-009
   title: 'fix: Broken cards graceful failing'
-  status: status-1774045884765
+  status: ARCHIVE
   epic: Board
   tags:
   - Bug
@@ -13,7 +13,7 @@ cards:
   created: 2026-03-19
 - id: roj-010
   title: 'feat: Card attachment files'
-  status: todo
+  status: TO DO
   epic: Settings
   tags:
   - Feature
@@ -23,7 +23,7 @@ cards:
   created: 2026-03-19
 - id: roj-011
   title: 'feat: File Watcher (real time refresh)'
-  status: status-1774045884765
+  status: ARCHIVE
   epic: Board
   tags:
   - Backend
@@ -32,7 +32,7 @@ cards:
   created: 2026-03-19
 - id: roj-012
   title: 'fix: Atomic File Writes in storage.rs'
-  status: status-1774045884765
+  status: ARCHIVE
   epic: Board
   tags:
   - Backend
@@ -41,7 +41,7 @@ cards:
   created: 2026-03-19
 - id: roj-013
   title: 'feat: Sound effects for GUI'
-  status: backlog
+  status: BACKLOG
   epic: Theming
   tags:
   - Feature
@@ -51,7 +51,7 @@ cards:
   created: 2026-03-19
 - id: roj-014
   title: 'style: Priority highlight on cards'
-  status: status-1774045884765
+  status: ARCHIVE
   epic: Theming
   tags:
   - UX
@@ -61,7 +61,7 @@ cards:
   created: 2026-03-19
 - id: roj-015
   title: 'style: Automatic contrast colors utility'
-  status: status-1774045884765
+  status: ARCHIVE
   epic: Board
   tags:
   - Bug
@@ -72,7 +72,7 @@ cards:
   created: 2026-03-19
 - id: roj-016
   title: 'fix: CardModal silently dropping card fields on save'
-  status: status-1774045884765
+  status: ARCHIVE
   epic: Settings
   tags:
   - Bug
@@ -81,7 +81,7 @@ cards:
   created: 2026-03-20
 - id: roj-017
   title: 'fix: Clear Stale Filters on Epic/Tag Deletion'
-  status: status-1774045884765
+  status: ARCHIVE
   epic: Board
   tags:
   - Bug
@@ -90,7 +90,7 @@ cards:
   created: 2026-03-20
 - id: roj-018
   title: 'fix: loadBoard race condition dropping optimistic card push'
-  status: status-1774045884765
+  status: ARCHIVE
   epic: Board
   tags:
   - Bug
@@ -99,7 +99,7 @@ cards:
   created: 2026-03-20
 - id: roj-019
   title: 'fix: minimum distance to consider Moving a card vs. opening a card'
-  status: backlog
+  status: BACKLOG
   epic: Board
   tags:
   - Bug
@@ -109,7 +109,7 @@ cards:
   created: 2026-03-20
 - id: roj-020
   title: 'feat: Soft delete cards'
-  status: status-1774045884765
+  status: ARCHIVE
   epic: Board
   tags:
   - Feature
@@ -118,7 +118,7 @@ cards:
   created: 2026-03-20
 - id: roj-021
   title: 'feat: Show deleted cards in settings'
-  status: todo
+  status: TO DO
   epic: Card
   tags:
   - Feature
@@ -128,7 +128,7 @@ cards:
   created: 2026-03-20
 - id: roj-022
   title: 'chore: Name based epics and tags'
-  status: status-1774045884765
+  status: ARCHIVE
   epic: Board
   tags:
   - Backend
@@ -138,7 +138,7 @@ cards:
   created: 2026-03-20
 - id: roj-023
   title: 'style: cardmodal epics and tags dropdown coloring'
-  status: backlog
+  status: BACKLOG
   epic: Card
   tags:
   - UX
@@ -148,7 +148,7 @@ cards:
   created: 2026-03-20
 - id: roj-024
   title: 'feat: Archive and Deleted fixed statuses'
-  status: todo
+  status: TO DO
   epic: Board
   tags:
   - Feature
@@ -157,7 +157,7 @@ cards:
   created: 2026-03-20
 - id: roj-025
   title: 'fix: Silent overwrites of cards'
-  status: status-1774045884765
+  status: ARCHIVE
   epic: Board
   tags:
   - Bug
@@ -167,7 +167,7 @@ cards:
   created: 2026-03-20
 - id: roj-026
   title: 'fix: Silent background refresh for watcher-triggered reloads'
-  status: status-1774045884765
+  status: ARCHIVE
   epic: Board
   tags:
   - Bug
@@ -177,7 +177,7 @@ cards:
   created: 2026-03-20
 - id: roj-027
   title: 'feat: Link to another card from card'
-  status: todo
+  status: TO DO
   epic: Card
   tags:
   - Feature
@@ -187,7 +187,7 @@ cards:
   created: 2026-03-20
 - id: roj-028
   title: 'style: Improve sortable card visualisation'
-  status: done
+  status: DONE
   epic: Board
   tags:
   - UX
@@ -197,7 +197,7 @@ cards:
   created: 2026-03-20
 - id: roj-029
   title: 'style: New card modal and edit modal inconsistency'
-  status: backlog
+  status: BACKLOG
   epic: Settings
   tags:
   - UX
@@ -207,7 +207,7 @@ cards:
   created: 2026-03-20
 - id: roj-030
   title: 'feat: Checklists in Card modal'
-  status: backlog
+  status: BACKLOG
   epic: Settings
   tags:
   - Feature
@@ -217,7 +217,7 @@ cards:
   created: 2026-03-20
 - id: roj-031
   title: 'style: Store board status to a state json file'
-  status: todo
+  status: TO DO
   epic: Board
   tags:
   - UX
@@ -228,7 +228,7 @@ cards:
   created: 2026-03-20
 - id: roj-032
   title: 'chore: Priority system'
-  status: status-1774045884765
+  status: ARCHIVE
   epic: Card
   tags:
   - Refactor
@@ -238,7 +238,7 @@ cards:
   created: 2026-03-20
 - id: roj-033
   title: Validate against OS-reserved names
-  status: status-1774045884765
+  status: ARCHIVE
   epic: Board
   tags:
   - Backend
@@ -248,7 +248,7 @@ cards:
   created: 2026-03-20
 - id: roj-034
   title: Safe Epic/Tag Rename with Write-Ahead Log
-  status: status-1774045884765
+  status: ARCHIVE
   epic: Board
   tags:
   - Backend
@@ -258,7 +258,7 @@ cards:
   created: 2026-03-20
 - id: roj-035
   title: 'feat: Hotkeys'
-  status: backlog
+  status: BACKLOG
   epic: Board
   tags:
   - Feature
@@ -268,7 +268,7 @@ cards:
   created: 2026-03-20
 - id: roj-036
   title: 'feat: Internationalisation'
-  status: backlog
+  status: BACKLOG
   epic: Licensing
   tags:
   - Polish
@@ -278,7 +278,7 @@ cards:
   created: 2026-03-21
 - id: roj-037
   title: 'chore: Rename tickets to Cards'
-  status: status-1774045884765
+  status: ARCHIVE
   epic: Board
   tags:
   - Backend
@@ -288,7 +288,7 @@ cards:
   created: 2026-03-21
 - id: roj-038
   title: 'fix: Card edit modal is draggable'
-  status: status-1774045884765
+  status: ARCHIVE
   epic: Card
   tags:
   - Bug
@@ -297,7 +297,7 @@ cards:
   created: 2026-03-21
 - id: roj-039
   title: 'fix: Drag-and-drop reordering and lane switching'
-  status: status-1774045884765
+  status: ARCHIVE
   epic: Board
   tags:
   - Bug
@@ -306,7 +306,7 @@ cards:
   created: 2026-03-21
 - id: roj-040
   title: 'fix: settings saving (epics and tags) broken'
-  status: status-1774045884765
+  status: ARCHIVE
   epic: Card
   tags:
   - Bug
@@ -315,7 +315,7 @@ cards:
   created: 2026-03-21
 - id: roj-041
   title: 'feat: Status reordering in settings'
-  status: status-1774045884765
+  status: ARCHIVE
   epic: Card
   tags:
   - Feature
@@ -325,7 +325,7 @@ cards:
   created: 2026-03-21
 - id: roj-042
   title: 'fix: Tags not assignable from card modal'
-  status: status-1774045884765
+  status: ARCHIVE
   epic: Card
   tags: []
   priority: 5
@@ -333,7 +333,7 @@ cards:
   created: 2026-03-21
 - id: roj-043
   title: 'feat: Tags colors and reordering in settings'
-  status: status-1774045884765
+  status: ARCHIVE
   epic: Card
   tags:
   - Feature
@@ -343,7 +343,7 @@ cards:
   created: 2026-03-21
 - id: roj-044
   title: 'feat: ID for status/epics/tags'
-  status: status-1774045884765
+  status: ARCHIVE
   epic: Card
   tags:
   - Backend
@@ -354,7 +354,7 @@ cards:
   created: 2026-03-21
 - id: roj-045
   title: 'feat: Cleared cards in Epics?'
-  status: todo
+  status: TO DO
   epic: Board
   tags:
   - Bug
@@ -363,7 +363,7 @@ cards:
   created: 2026-03-21
 - id: roj-046
   title: 'feat: Search by ID'
-  status: status-1774045884765
+  status: ARCHIVE
   epic: Board
   tags:
   - Feature
@@ -372,7 +372,7 @@ cards:
   created: 2026-03-21
 - id: roj-047
   title: 'style: Update epic view group layout'
-  status: status-1774045884765
+  status: ARCHIVE
   epic: Board
   tags:
   - Polish
@@ -381,7 +381,7 @@ cards:
   created: 2026-03-21
 - id: roj-048
   title: 'chore: One-shot migration script for ID-to-name epic/tag data'
-  status: status-1774045884765
+  status: ARCHIVE
   epic: Board
   tags:
   - Backend
@@ -390,7 +390,7 @@ cards:
   created: 2026-03-21
 - id: roj-049
   title: 'refactor: Replace SortableJS with FormKit DnD'
-  status: status-1774045884765
+  status: ARCHIVE
   epic: Board
   tags:
   - Refactor
@@ -400,7 +400,7 @@ cards:
   created: 2026-03-21
 - id: roj-050
   title: 'feat: Improve settings page'
-  status: backlog
+  status: BACKLOG
   epic: Card
   tags:
   - Feature
@@ -411,7 +411,7 @@ cards:
   created: 2026-03-21
 - id: roj-051
   title: 'fix: DnD on Linux/Mac'
-  status: backlog
+  status: BACKLOG
   epic: Board
   tags:
   - Bug
@@ -420,7 +420,7 @@ cards:
   created: 2026-03-21
 - id: roj-052
   title: 'style: Custom cursors'
-  status: backlog
+  status: BACKLOG
   epic: Board
   tags:
   - Polish
@@ -429,7 +429,7 @@ cards:
   created: 2026-03-22
 - id: roj-053
   title: 'refactor: setDragImage to dragged cards'
-  status: blocked
+  status: BLOCKED
   epic: Card
   tags:
   - Refactor
@@ -439,7 +439,7 @@ cards:
   created: 2026-03-22
 - id: roj-054
   title: 'fix: Filter by Tag broken'
-  status: status-1774045884765
+  status: ARCHIVE
   epic: Board
   tags:
   - Bug
@@ -448,7 +448,7 @@ cards:
   created: 2026-03-22
 - id: roj-055
   title: 'feat: Done toggle for Statuses in settings'
-  status: todo
+  status: TO DO
   epic: Settings
   tags:
   - Feature
@@ -457,7 +457,7 @@ cards:
   created: 2026-03-22
 - id: roj-056
   title: 'test: Backend Rust testing'
-  status: in-progress
+  status: DOING
   epic: Testing
   tags:
   - Backend
@@ -466,7 +466,7 @@ cards:
   created: 2026-03-23
 - id: roj-057
   title: 'test: Testing strategy overview'
-  status: in-progress
+  status: DOING
   epic: Testing
   tags:
   - Backend
@@ -476,7 +476,7 @@ cards:
   created: 2026-03-23
 - id: roj-058
   title: 'fix: Typing in settings interrupted'
-  status: status-1774045884765
+  status: ARCHIVE
   epic: Settings
   tags:
   - Bug
@@ -485,11 +485,11 @@ cards:
   created: 2026-03-23
 - id: roj-059
   title: 'chore: Migrate Status to name-based instead of ID based'
-  status: in-progress
+  status: ARCHIVE
   epic: Settings
   tags:
   - Refactor
   - Backend
   priority: 3
-  position: 3.0
+  position: 0.00006103515625
   created: 2026-03-23
