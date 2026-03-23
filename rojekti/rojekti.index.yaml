@@ -1,5 +1,5 @@
-generated: 2026-03-23T07:07:19.117737500+02:00
-cardCount: 54
+generated: 2026-03-23T07:11:47.149167300+02:00
+cardCount: 55
 cards:
 - id: roj-009
   title: 'fix: Broken cards graceful failing'
@@ -520,4 +520,13 @@ cards:
   tags: []
   priority: 3
   position: 3.0
+  created: 2026-03-23
+- id: roj-063
+  title: 'feat: DueDate field'
+  status: BACKLOG
+  epic: Editor
+  tags:
+  - Feature
+  priority: 4
+  position: 26.0
   created: 2026-03-23

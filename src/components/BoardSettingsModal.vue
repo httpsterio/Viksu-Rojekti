@@ -2,6 +2,8 @@
 import { ref, watch, nextTick } from "vue"
 import { useBoard } from "@/composables/useBoard"
 import type { BoardConfig } from "@/types"
+
+type WithDragId<T> = T & { _dragId: string }
 import Dialog from "primevue/dialog"
 import Button from "primevue/button"
 import InputText from "primevue/inputtext"
@@ -9,9 +11,8 @@ import InputGroup from "primevue/inputgroup"
 import InputGroupAddon from "primevue/inputgroupaddon"
 import { useConfirm } from "primevue/useconfirm"
 import { useToast } from "primevue/usetoast"
-import { animations } from "@formkit/drag-and-drop"
-import type { SortEvent, SortEventData } from "@formkit/drag-and-drop"
-import { useDragAndDrop, dragAndDrop } from "@formkit/drag-and-drop/vue"
+import { animations, tearDown } from "@formkit/drag-and-drop"
+import { dragAndDrop } from "@formkit/drag-and-drop/vue"
 
 const { config, cards, saveBoardConfig, updateCard } = useBoard()
 const confirm = useConfirm()
@@ -20,45 +21,28 @@ const toast = useToast()
 const visible = ref(false)
 const localConfig = ref<BoardConfig | null>(null)
 
-const [statusesParent, statusValues] = useDragAndDrop<BoardConfig["statuses"][number]>([])
-const [epicsParent, epicValues] = useDragAndDrop<BoardConfig["epics"][number]>([])
-const [tagsParent, tagValues] = useDragAndDrop<BoardConfig["tags"][number]>([])
+const statusesParent = ref<HTMLElement | undefined>()
+const statusValues = ref<WithDragId<BoardConfig["statuses"][number]>[]>([])
+const epicsParent = ref<HTMLElement | undefined>()
+const epicValues = ref<WithDragId<BoardConfig["epics"][number]>[]>([])
+const tagsParent = ref<HTMLElement | undefined>()
+const tagValues = ref<WithDragId<BoardConfig["tags"][number]>[]>([])
 
 watch(visible, async (isVisible) => {
-  if (!isVisible || !localConfig.value) return
-  statusValues.value = [...localConfig.value.statuses]
-  epicValues.value = [...localConfig.value.epics]
-  tagValues.value = [...localConfig.value.tags]
-  await nextTick()
-  dragAndDrop([
-    {
-      parent: statusesParent,
-      values: statusValues,
-      dragHandle: ".drag-handle",
-      plugins: [animations()],
-      onSort: ((data: SortEventData<BoardConfig["statuses"][number]>) => {
-        if (localConfig.value) localConfig.value.statuses = data.values
-      }) as SortEvent,
-    },
-    {
-      parent: epicsParent,
-      values: epicValues,
-      dragHandle: ".drag-handle",
-      plugins: [animations()],
-      onSort: ((data: SortEventData<BoardConfig["epics"][number]>) => {
-        if (localConfig.value) localConfig.value.epics = data.values
-      }) as SortEvent,
-    },
-    {
-      parent: tagsParent,
-      values: tagValues,
-      dragHandle: ".drag-handle",
-      plugins: [animations()],
-      onSort: ((data: SortEventData<BoardConfig["tags"][number]>) => {
-        if (localConfig.value) localConfig.value.tags = data.values
-      }) as SortEvent,
-    },
-  ])
+  if (!localConfig.value) return
+  if (isVisible) {
+    statusValues.value = localConfig.value.statuses.map((s, i) => ({ ...s, _dragId: `s${i}` }))
+    epicValues.value = localConfig.value.epics.map((e, i) => ({ ...e, _dragId: `e${i}` }))
+    tagValues.value = localConfig.value.tags.map((t, i) => ({ ...t, _dragId: `t${i}` }))
+    await nextTick()
+    if (statusesParent.value) dragAndDrop({ parent: statusesParent.value, values: statusValues, dragHandle: ".drag-handle", plugins: [animations()] })
+    if (epicsParent.value) dragAndDrop({ parent: epicsParent.value, values: epicValues, dragHandle: ".drag-handle", plugins: [animations()] })
+    if (tagsParent.value) dragAndDrop({ parent: tagsParent.value, values: tagValues, dragHandle: ".drag-handle", plugins: [animations()] })
+  } else {
+    if (statusesParent.value) tearDown(statusesParent.value)
+    if (epicsParent.value) tearDown(epicsParent.value)
+    if (tagsParent.value) tearDown(tagsParent.value)
+  }
 })
 
 const open = () => {
@@ -72,31 +56,32 @@ defineExpose({ open })
 
 const handleSave = async () => {
   if (localConfig.value) {
-    const epicNames = localConfig.value.epics.map((e) => e.name.trim())
+    const epicNames = epicValues.value.map((e) => e.name.trim())
     if (new Set(epicNames).size !== epicNames.length) {
       toast.add({ severity: "error", summary: "Validation Error", detail: "Epic names must be unique.", life: 4000 })
       return
     }
-    const tagNames = localConfig.value.tags.map((t) => t.name.trim())
+    const tagNames = tagValues.value.map((t) => t.name.trim())
     if (new Set(tagNames).size !== tagNames.length) {
       toast.add({ severity: "error", summary: "Validation Error", detail: "Tag names must be unique.", life: 4000 })
       return
     }
-    const statusNames = localConfig.value.statuses.map((s) => s.name.trim())
+    const statusNames = statusValues.value.map((s) => s.name.trim())
     if (new Set(statusNames).size !== statusNames.length) {
       toast.add({ severity: "error", summary: "Validation Error", detail: "Status names must be unique.", life: 4000 })
       return
     }
 
+    localConfig.value.statuses = statusValues.value.map(({ _dragId: _, ...s }) => s)
+    localConfig.value.epics = epicValues.value.map(({ _dragId: _, ...e }) => e)
+    localConfig.value.tags = tagValues.value.map(({ _dragId: _, ...t }) => t)
     await saveBoardConfig(localConfig.value)
     visible.value = false
   }
 }
 
 const addStatus = () => {
-  const newStatus = { name: "New Status" }
-  statusValues.value.push(newStatus)
-  if (localConfig.value) localConfig.value.statuses = [...statusValues.value]
+  statusValues.value.push({ name: "New Status", _dragId: `s${Date.now()}` })
 }
 
 const removeStatus = (index: number) => {
@@ -112,7 +97,6 @@ const removeStatus = (index: number) => {
       acceptClass: "p-button-danger",
       accept: () => {
         statusValues.value.splice(index, 1)
-        if (localConfig.value) localConfig.value.statuses = [...statusValues.value]
       },
     })
   } else {
@@ -123,9 +107,8 @@ const removeStatus = (index: number) => {
       acceptClass: "p-button-danger",
       accept: async () => {
         statusValues.value.splice(index, 1)
-        if (localConfig.value) localConfig.value.statuses = [...statusValues.value]
-        if (localConfig.value && localConfig.value.statuses.length > 0) {
-          const firstStatusName = localConfig.value.statuses[0].name
+        if (statusValues.value.length > 0) {
+          const firstStatusName = statusValues.value[0].name
           for (const card of cardsInStatus) {
             await updateCard({ ...card, status: firstStatusName })
           }
@@ -136,9 +119,7 @@ const removeStatus = (index: number) => {
 }
 
 const addEpic = () => {
-  const newEpic = { name: "New Epic", color: "#3b82f6" }
-  epicValues.value.push(newEpic)
-  if (localConfig.value) localConfig.value.epics = [...epicValues.value]
+  epicValues.value.push({ name: "New Epic", color: "#3b82f6", _dragId: `e${Date.now()}` })
 }
 
 const removeEpic = (index: number) => {
@@ -149,15 +130,12 @@ const removeEpic = (index: number) => {
     acceptClass: "p-button-danger",
     accept: () => {
       epicValues.value.splice(index, 1)
-      if (localConfig.value) localConfig.value.epics = [...epicValues.value]
     },
   })
 }
 
 const addTag = () => {
-  const newTag = { name: "New Tag", color: "#10b981" }
-  tagValues.value.push(newTag)
-  if (localConfig.value) localConfig.value.tags = [...tagValues.value]
+  tagValues.value.push({ name: "New Tag", color: "#10b981", _dragId: `t${Date.now()}` })
 }
 
 const removeTag = (index: number) => {
@@ -168,7 +146,6 @@ const removeTag = (index: number) => {
     acceptClass: "p-button-danger",
     accept: () => {
       tagValues.value.splice(index, 1)
-      if (localConfig.value) localConfig.value.tags = [...tagValues.value]
     },
   })
 }
@@ -195,7 +172,7 @@ const removeTag = (index: number) => {
             <label>Status</label>
           </div>
           <div ref="statusesParent" class="list-editor">
-            <div v-for="(status, index) in statusValues" :key="index" class="list-item">
+            <div v-for="(status, index) in statusValues" :key="status._dragId" class="list-item">
               <InputGroup>
                 <InputGroupAddon class="drag-handle">
                   <i class="pi pi-bars"></i>
@@ -251,7 +228,7 @@ const removeTag = (index: number) => {
             <label>Epics</label>
           </div>
           <div ref="epicsParent" class="list-editor">
-            <div v-for="(epic, index) in epicValues" :key="index" class="list-item">
+            <div v-for="(epic, index) in epicValues" :key="epic._dragId" class="list-item">
               <InputGroup>
                 <InputGroupAddon class="drag-handle">
                   <i class="pi pi-bars"></i>
@@ -286,7 +263,7 @@ const removeTag = (index: number) => {
             <label>Tags</label>
           </div>
           <div ref="tagsParent" class="list-editor">
-            <div v-for="(tag, index) in tagValues" :key="index" class="list-item">
+            <div v-for="(tag, index) in tagValues" :key="tag._dragId" class="list-item">
               <InputGroup>
                 <InputGroupAddon class="drag-handle">
                   <i class="pi pi-bars"></i>

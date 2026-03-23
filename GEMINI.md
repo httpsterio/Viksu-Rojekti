@@ -1,58 +1,64 @@
-# Rojekti - Development Guide
+# Rojekti — Development Guide
 
-Rojekti is a local-first kanban board built with Tauri 2. Cards are stored as Markdown files with YAML frontmatter. The app provides a GUI and a CLI. See `docs/PROJECT_PLAN.md` for the full specification.
+Rojekti is a local-first kanban board built with Tauri 2. Cards are stored as Markdown files with YAML frontmatter. The app has a GUI and a CLI.
 
 ---
 
-## 1. Command Delegation (CRITICAL)
+## Behaviour
 
-The dev environment is WSL2 (Ubuntu). The agent edits files from WSL2. All build and runtime commands are executed by the user on the Windows side manually.
+**Wait to be asked.** A session starting with context, a summary, or prior work is not an instruction to act. Wait for an explicit request.
 
-Rules:
+**Ask before implementing.** For anything beyond a trivial, isolated fix, state what you plan to do and wait for confirmation before touching files. This applies especially to multi-file changes.
 
-- Never run `cmd.exe`, `npm`, `cargo`, or `npx` from the agent shell. These do not work from WSL2 for this project.
-- When a build or install step is needed, provide the exact command and state what output or confirmation is needed before proceeding.
-- Do not manage `node_modules`. If deps are missing, ask the user to run the install command.
+**Ask when something is unclear.** If the intent behind a request is ambiguous, or if there are meaningful design choices to make, stop and ask. Do not assume and proceed.
 
-## 2. Environment
+**Check git status before editing.** Run `git status` before making any changes. If there are uncommitted changes, understand what they are. Do not write on top of in-progress work without flagging it first.
 
+**Trace the full user journey when verifying.** Do not read functions in isolation. Follow a user action from the UI through the frontend state, into the Tauri command, through storage, and to the final state on disk. Assumptions made early in a call chain often break at handoff boundaries — this is only visible by tracing the full flow.
+
+**Never commit without being asked.** Do not stage or commit files unless explicitly instructed.
+
+---
+
+## Dev environment
+
+- WSL2 is used for editing and git
+- All build and run commands (`npm run dev`, `npm run build`, `cargo build`) must be run by the user on the Windows side — do not attempt to run them from the agent shell
+- Do not manage `node_modules`. If deps are missing, tell the user what to run.
 - Project path: `/mnt/d/MISC/PROJECTS/Rojekti/`
-- The project lives on the Windows filesystem. Do not move files to the WSL2 home directory.
-- Editing: use WSL2 unix tools (rg, fd, jq, tree).
-- Building: user runs `npm run dev` or `npm run build` on Windows side.
-- Rust, Node, npm, and Tauri CLI are installed on Windows.
 
-## 3. Data folder structure
+---
 
-All Rojekti data lives in a `rojekti/` subfolder relative to the executable. Not in the project root.
+## Data folder structure
+
+All Rojekti data lives in a `rojekti/` subfolder relative to the project directory.
 
 ```
 my-project/
 ├── Rojekti.exe
 └── rojekti/
-    ├── rojekti.config.yaml       # Board config (lanes, epics, tags, priorities)
-    ├── rojekti.index.yaml       # Auto-generated card summary (never edit manually)
-    └── cards/           # One .md file per card
-        ├── ROJ-001.md
-        ├── ROJ-002.md
+    ├── rojekti.config.yaml    # Board config (statuses, epics, tags, priorities)
+    ├── rojekti.index.yaml     # Auto-generated card index (never edit manually)
+    ├── rojekti.state.yaml     # Ephemeral user preferences (theme, collapsed lanes, etc.)
+    └── cards/
+        ├── roj-001.md
+        ├── roj-002.md
         └── ...
 ```
 
-The exe looks for `rojekti/board.yaml` relative to the working directory, then relative to the exe location. If not found, the GUI shows an init dialog.
+---
 
-## 4. Card file format
-
-Cards use YAML frontmatter + Markdown body:
+## Card file format
 
 ```markdown
 ---
-id: ROJ-001
+id: roj-001
 title: Add receipt OCR pipeline
-status: backlog
-epic: receipt-handling
+status: TO DO
+epic: Board
 tags:
-  - feature
-priority: 4
+  - Feature
+priority: 3
 position: 1.0
 created: 2026-03-10
 ---
@@ -60,104 +66,74 @@ created: 2026-03-10
 Description content here. Full markdown supported.
 ```
 
-The frontmatter is the structured data. The body below `---` is the description. When writing card files, always preserve the body when updating frontmatter fields.
+- `status` stores the status **name** directly (not an ID)
+- `epic` and `tags` store names directly
+- `priority` is a number 1–5 (0 = unset)
+- `position` is a float used for ordering within a status lane
+- Always preserve the body when updating frontmatter fields
+- Blank line required between closing `---` and body
 
-## 5. CLI architecture
+---
 
-The CLI is handled in `main.rs` BEFORE Tauri initializes. This is critical.
+## Code structure
 
-```rust
-fn main() {
-    let args: Vec<String> = std::env::args().collect();
+### Rust (`src-tauri/src/`)
 
-    if args.len() > 1 {
-        // CLI mode: handle command, flush stdout, exit
-        // Tauri is never initialized
-        cli::handle(&args);
-        std::io::stdout().flush().unwrap();
-        std::process::exit(0);
-    }
+| File | Purpose |
+|------|---------|
+| `models.rs` | All structs. Every struct sent to the frontend has `#[serde(rename_all = "camelCase")]` |
+| `storage.rs` | All file I/O. Commands never touch the filesystem directly. |
+| `commands.rs` | Tauri command handlers. Call storage functions, never `std::fs` directly. |
+| `index.rs` | Index rebuild logic |
+| `cli.rs` | CLI command handlers |
+| `watcher.rs` | File watcher |
+| `lib.rs` | App startup, watcher init, WAL recovery on startup |
 
-    // GUI mode: no CLI args, launch Tauri
-    rojekti_lib::run();
-}
-```
+Rules:
+- Return `Result<T, String>` from all command handlers. No `unwrap()` or `expect()`.
+- Use `.map_err(|e| format!("context: {}", e))` for error conversion.
+- Use `PathBuf` and `.join()` for all paths. No string concatenation.
+- `#[serde(skip_serializing_if = "Option::is_none")]` on optional fields.
+- `#[serde(default, skip_serializing_if = "Vec::is_empty")]` on optional vec fields.
 
-Do NOT put CLI dispatch inside Tauri's `.setup()` hook. That causes:
-
-- Shell prompt returning before output finishes (Windows treats it as GUI app)
-- Console window flash/ghost errors from WebView2 cleanup
-- 500ms+ startup delay from unnecessary Tauri initialization
-
-The binary uses console subsystem. In GUI mode, the console is hidden programmatically via `FreeConsole()` after checking `GetConsoleProcessList`. This causes a brief console flash on double-click which is acceptable.
-
-## 6. Coding conventions
-
-### Rust
-
-- All structs in `models.rs`. Add `#[serde(rename_all = "camelCase")]` to every struct sent to the frontend.
-- All file I/O in `storage.rs`. Commands in `commands.rs` call storage functions. They never touch the filesystem directly.
-- Index logic in `index.rs`. CLI handlers in `cli.rs`.
-- Error handling: always return `Result<T, String>`. No `unwrap()` or `expect()` in command handlers. Convert errors with `.map_err(|e| format!("context: {}", e))`.
-- Use `PathBuf` and `.join()` for paths. Never string concatenation.
-- Frontmatter parsing: split on `---` with `splitn(3, "---")`. First element is empty, second is YAML, third is markdown body.
-
-### TypeScript / Vue
+### TypeScript / Vue (`src/`)
 
 - `<script setup lang="ts">` in all SFCs. Composition API only.
-- All state in `composables/useBoard.ts`. Components never call `invoke()` directly.
+- All board state in `src/composables/useBoard.ts`. Components never call `invoke()` directly.
+- Types in `src/types/index.ts` matching Rust structs (camelCase).
+- No `any` in TypeScript.
 - No Pinia, no Vuex, no Vue Router.
-- Types in `src/types/index.ts` matching the Rust structs (camelCase field names).
-- Use `ref()` and `computed()`. No `reactive()` for top-level state.
 
 ### UI
 
-- PrimeVue (Aura theme) for form components: Button, Select, Dialog, InputText, Tag, Toast, Textarea.
-- PrimeIcons via class names: `<i class="pi pi-plus"></i>`.
-- md-editor-v3 for the description field. Two modes:
-  - View (default): `previewOnly` mode, rendered markdown.
-  - Edit: full editor with toolbar.
-- SortableJS for drag-and-drop in lanes.
-- Custom CSS for board layout. No Tailwind.
-- CSS variables for theming. Dark/light via `prefers-color-scheme`.
+- PrimeVue (Aura theme) for components: Button, Select, Dialog, InputText, Tag, Toast, etc.
+- PrimeIcons via class names: `<i class="pi pi-plus"></i>`
+- `md-editor-v3` for card description (view mode: `previewOnly`, edit mode: full editor)
+- `@formkit/drag-and-drop` for drag-and-drop in lanes and settings
+- Custom CSS for board layout. No Tailwind. CSS variables for theming.
 
-### What not to do
+### Comments
 
-- Do not add dependencies without asking first.
-- Do not use the Tauri filesystem plugin. All file I/O goes through custom commands backed by `std::fs`.
-- Do not add `tauri-plugin-opener`. It has caused build failures.
-- Do not put CLI handling in the Tauri setup hook.
-- Do not use `any` in TypeScript.
-- Do not write comments explaining what code does. Only comment the "why" when non-obvious.
+No comments explaining what code does. Only comment the *why*, and only when it's genuinely non-obvious.
 
-## 7. Known issues and pitfalls
+---
 
-- `@/` path alias is configured in both `vite.config.ts` and `tsconfig.json`. If imports break, check both.
-- SortableJS manipulates the DOM directly which conflicts with Vue's virtual DOM. After a drag, update Vue state and let Vue re-render. Do not trust SortableJS DOM state.
-- Position values are floats. After many reorderings, values can get very close together. Trigger renormalization (reassign 1.0, 2.0, 3.0...) when `Math.abs(a - b) < 0.001`.
-- `serde_yaml` serializes `None` as `null`. Use `#[serde(skip_serializing_if = "Option::is_none")]` on optional fields.
-- `serde_yaml` serializes empty `Vec` as `[]`. Use `#[serde(default, skip_serializing_if = "Vec::is_empty")]` to omit empty lists.
-- When writing card files, ensure a blank line between closing `---` and the body: `format!("---\n{}---\n\n{}\n", yaml, body)`.
+## What not to do
 
-## 8. Reference
+- Do not add dependencies without asking first
+- Do not use the Tauri filesystem plugin — all I/O goes through custom commands backed by `std::fs`
+- Do not add `tauri-plugin-opener` — has caused build failures
+- Do not put CLI handling in the Tauri setup hook
+- Do not use `any` in TypeScript
+- Do not run build commands from WSL
 
-- Full project specification: `docs/PROJECT_PLAN.md`
-- Board config schema: see section 3.1 in PROJECT_PLAN.md
-- Card file schema: see section 3.2 in PROJECT_PLAN.md
-- Tauri command signatures: see section 4.4 in PROJECT_PLAN.md
-- Component tree and UI details: see section 7 in PROJECT_PLAN.md
+---
 
-## 9. Task Execution Protocol
+## Known pitfalls
 
-- **Directives vs. Inquiries**: Distinguish between explicit commands ("Fix this bug") and observations/inquiries ("There is a bug").
-- **Implied Tasks**:
-  - **Research OK**: You may read files and analyze code to investigate implied tasks or user hints.
-  - **No Implementation**: Do NOT edit files or modify system state for implied tasks without an explicit confirmation or directive from the user.
-- **Confirmation**: If a user hint implies a fix (e.g., "Lane.vue has a CSS issue"), ask for permission to proceed with the fix after your research.
-
-### 9.1. Anti-Regression Guardrails (CRITICAL)
-
-- **Inquiry Hard-Stop**: Any prompt containing the words "Investigate," "How," "Check," "Is it possible," or "Analyze" is a strict **Inquiry**. You are forbidden from calling `write_file`, `replace`, or `run_shell_command` (for filesystem modification) during an Inquiry. You must provide a research report and STOP.
-- **Explicit Directive Required**: You may only move to the Execution phase if the user issues a clear, imperative command (e.g., "Implement the fix," "Update the file," "Proceed with the code").
-- **Breach & Freeze**: If you realize you have performed an unauthorized action, you MUST NOT attempt to "fix" or "revert" it autonomously. You must immediately notify the user of the breach, provide a summary of the unauthorized changes, and FREEZE all file operations until a specific command is given.
-- **Verbal Verification**: Before the first `write_file` or `replace` call of any session, you must internally confirm: "Is this a Directive or an Inquiry?" If the answer is not 100% "Directive," you must ask for confirmation.
+- **`@/` path alias** is configured in both `vite.config.ts` and `tsconfig.json`. If imports break, check both.
+- **Drag-and-drop and Vue reactivity**: `@formkit/drag-and-drop` manipulates state directly. Use its `values` ref as the source of truth during drag, sync back to `localConfig` via `onSort`.
+- **Position float precision**: after many reorderings, position values can get very close together. Trigger renormalization (1.0, 2.0, 3.0...) when `Math.abs(a - b) < 0.001`.
+- **`serde_yaml` and None**: serializes `None` as `null` unless `skip_serializing_if = "Option::is_none"` is set.
+- **Status names are the identifier**: statuses no longer have an `id` field. Cards store the status name directly. Renaming a status requires updating all card files via the WAL pattern in `storage.rs`.
+- **Rename safety**: epic, tag, and status renames use a write-ahead log (`pending_rename` field on the struct). On startup, `lib.rs` checks for and completes any interrupted renames. Do not bypass this pattern.
