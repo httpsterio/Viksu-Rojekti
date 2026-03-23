@@ -1,5 +1,5 @@
-generated: 2026-03-23T05:15:24.533334200+02:00
-cardCount: 51
+generated: 2026-03-23T06:42:23.862815900+02:00
+cardCount: 53
 cards:
 - id: roj-009
   title: 'fix: Broken cards graceful failing'
@@ -105,7 +105,7 @@ cards:
   - Bug
   - UX
   priority: 5
-  position: 11.7578125
+  position: 9.689453125
   created: 2026-03-20
 - id: roj-020
   title: 'feat: Soft delete cards'
@@ -176,7 +176,7 @@ cards:
   position: 2.0
   created: 2026-03-20
 - id: roj-027
-  title: 'feat: Link to another card from card'
+  title: 'feat: Card-to-card linking'
   status: TO DO
   epic: Card
   tags:
@@ -187,13 +187,13 @@ cards:
   created: 2026-03-20
 - id: roj-028
   title: 'style: Improve sortable card visualisation'
-  status: DONE
+  status: BLOCKED
   epic: Board
   tags:
   - UX
   - Polish
   priority: 5
-  position: 1.0
+  position: 3.875
   created: 2026-03-20
 - id: roj-029
   title: 'style: New card modal and edit modal inconsistency'
@@ -216,7 +216,7 @@ cards:
   position: 18.5
   created: 2026-03-20
 - id: roj-031
-  title: 'style: Store board status to a state json file'
+  title: 'style: Store board status to a state yaml file'
   status: TO DO
   epic: Board
   tags:
@@ -353,7 +353,7 @@ cards:
   position: 0.0625
   created: 2026-03-21
 - id: roj-045
-  title: 'feat: Cleared cards in Epics?'
+  title: 'feat: Done cards in Epic view'
   status: TO DO
   epic: Board
   tags:
@@ -492,4 +492,24 @@ cards:
   - Backend
   priority: 3
   position: 0.00006103515625
+  created: 2026-03-23
+- id: roj-060
+  title: 'fix: Autoincrement card number when manually creating card?'
+  status: TO DO
+  epic: Editor
+  tags:
+  - Bug
+  - Backend
+  priority: 1
+  position: 0.017371446650940925
+  created: 2026-03-23
+- id: roj-061
+  title: 'chore: Increase card ID padding to support 4+ digit IDs'
+  status: TO DO
+  epic: Board
+  tags:
+  - Backend
+  - Refactor
+  priority: 2
+  position: 0.026057169976411387
   created: 2026-03-23
