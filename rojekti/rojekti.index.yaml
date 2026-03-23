@@ -1,5 +1,5 @@
-generated: 2026-03-23T03:17:32.038724900+02:00
-cardCount: 50
+generated: 2026-03-23T03:38:59.796486700+02:00
+cardCount: 51
 cards:
 - id: roj-009
   title: 'fix: Broken cards graceful failing'
@@ -482,4 +482,14 @@ cards:
   - Bug
   priority: 3
   position: 0.0001220703125
+  created: 2026-03-23
+- id: roj-059
+  title: 'chore: Migrate Status to name-based instead of ID based'
+  status: in-progress
+  epic: Settings
+  tags:
+  - Refactor
+  - Backend
+  priority: 3
+  position: 3.0
   created: 2026-03-23
