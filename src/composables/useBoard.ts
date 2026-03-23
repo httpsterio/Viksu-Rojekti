@@ -157,7 +157,12 @@ export function useBoard() {
       if (activeFilters.value.epic && c.epic !== activeFilters.value.epic) return false
       if (activeFilters.value.tag && !c.tags?.includes(activeFilters.value.tag)) return false
       if (activeFilters.value.priority && c.priority !== activeFilters.value.priority) return false
-      if (activeFilters.value.search && !c.title.toLowerCase().includes(activeFilters.value.search.toLowerCase())) return false
+      if (activeFilters.value.search) {
+        const query = activeFilters.value.search.toLowerCase()
+        const matchesTitle = c.title.toLowerCase().includes(query)
+        const matchesId = c.id.toLowerCase().includes(query)
+        if (!matchesTitle && !matchesId) return false
+      }
       return true
     })
   })

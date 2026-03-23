@@ -1,5 +1,5 @@
-generated: 2026-03-22T05:07:48.113213600+02:00
-cardCount: 46
+generated: 2026-03-23T02:51:03.700162800+02:00
+cardCount: 50
 cards:
 - id: roj-009
   title: 'fix: Broken cards graceful failing'
@@ -187,7 +187,7 @@ cards:
   created: 2026-03-20
 - id: roj-028
   title: 'style: Improve sortable card visualisation'
-  status: in-progress
+  status: done
   epic: Board
   tags:
   - UX
@@ -269,7 +269,7 @@ cards:
 - id: roj-036
   title: 'feat: Internationalisation'
   status: backlog
-  epic: Translations
+  epic: Licensing
   tags:
   - Polish
   - Feature
@@ -363,12 +363,12 @@ cards:
   created: 2026-03-21
 - id: roj-046
   title: 'feat: Search by ID'
-  status: backlog
+  status: status-1774045884765
   epic: Board
   tags:
   - Feature
   priority: 5
-  position: 22.0
+  position: 0.000244140625
   created: 2026-03-21
 - id: roj-047
   title: 'style: Update epic view group layout'
@@ -446,3 +446,39 @@ cards:
   priority: 3
   position: 0.00048828125
   created: 2026-03-22
+- id: roj-055
+  title: 'feat: Done toggle for Statuses in settings'
+  status: backlog
+  epic: Settings
+  tags:
+  - Feature
+  priority: 3
+  position: 26.0
+  created: 2026-03-22
+- id: roj-056
+  title: 'test: Backend Rust testing'
+  status: in-progress
+  epic: Testing
+  tags:
+  - Backend
+  priority: 3
+  position: 1.0
+  created: 2026-03-23
+- id: roj-057
+  title: 'test: Testing plan'
+  status: todo
+  epic: Testing
+  tags:
+  - Backend
+  priority: 3
+  position: 2.875
+  created: 2026-03-23
+- id: roj-058
+  title: 'fix: Typing in settings interrupted'
+  status: in-progress
+  epic: Settings
+  tags:
+  - Bug
+  priority: 3
+  position: 2.0
+  created: 2026-03-23

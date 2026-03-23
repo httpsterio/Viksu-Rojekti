@@ -1,6 +1,6 @@
 name: Rojekti
 prefix: roj
-nextId: 55
+nextId: 59
 statuses:
 - id: backlog
   name: BACKLOG
@@ -23,6 +23,8 @@ epics:
   color: '#019d6e'
 - name: Theming
   color: '#cfe90c'
+- name: Testing
+  color: '#eaed07'
 - name: Publishing
   color: '#fad000'
 - name: Licensing
