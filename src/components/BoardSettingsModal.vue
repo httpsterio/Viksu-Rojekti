@@ -195,7 +195,7 @@ const removeTag = (index: number) => {
           <div class="section-header">
             <label>Status</label>
           </div>
-          <div ref="statusesParent" class="list-editor" @dragover.capture.prevent>
+          <div ref="statusesParent" class="list-editor" @dragover.capture.prevent @dragenter.capture.prevent>
             <div v-for="(status, index) in statusValues" :key="status._dragId" class="list-item">
               <InputGroup>
                 <InputGroupAddon class="drag-handle">
@@ -251,7 +251,7 @@ const removeTag = (index: number) => {
           <div class="section-header">
             <label>Epics</label>
           </div>
-          <div ref="epicsParent" class="list-editor" @dragover.capture.prevent>
+          <div ref="epicsParent" class="list-editor" @dragover.capture.prevent @dragenter.capture.prevent>
             <div v-for="(epic, index) in epicValues" :key="epic._dragId" class="list-item">
               <InputGroup>
                 <InputGroupAddon class="drag-handle">
@@ -281,7 +281,7 @@ const removeTag = (index: number) => {
           <div class="section-header">
             <label>Tags</label>
           </div>
-          <div ref="tagsParent" class="list-editor" @dragover.capture.prevent>
+          <div ref="tagsParent" class="list-editor" @dragover.capture.prevent @dragenter.capture.prevent>
             <div v-for="(tag, index) in tagValues" :key="tag._dragId" class="list-item">
               <InputGroup>
                 <InputGroupAddon class="drag-handle">
