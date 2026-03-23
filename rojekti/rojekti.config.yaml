@@ -5,7 +5,7 @@ statuses:
 - id: backlog
   name: BACKLOG
 - id: todo
-  name: TODO
+  name: TO DO
 - id: in-progress
   name: DOING
 - id: done

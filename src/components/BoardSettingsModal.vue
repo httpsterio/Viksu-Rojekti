@@ -245,7 +245,7 @@ const removeTag = (index: number) => {
             <label>Epics</label>
           </div>
           <div ref="epicsParent" class="list-editor">
-            <div v-for="epic in epicValues" :key="epic.name" class="list-item">
+            <div v-for="(epic, index) in epicValues" :key="index" class="list-item">
               <InputGroup>
                 <InputGroupAddon class="drag-handle">
                   <i class="pi pi-bars"></i>
@@ -259,7 +259,7 @@ const removeTag = (index: number) => {
                     icon="pi pi-times"
                     text
                     severity="secondary"
-                    @click="removeEpic(epicValues.indexOf(epic))"
+                    @click="removeEpic(index)"
                   />
                 </InputGroupAddon>
               </InputGroup>
@@ -280,7 +280,7 @@ const removeTag = (index: number) => {
             <label>Tags</label>
           </div>
           <div ref="tagsParent" class="list-editor">
-            <div v-for="tag in tagValues" :key="tag.name" class="list-item">
+            <div v-for="(tag, index) in tagValues" :key="index" class="list-item">
               <InputGroup>
                 <InputGroupAddon class="drag-handle">
                   <i class="pi pi-bars"></i>
@@ -294,7 +294,7 @@ const removeTag = (index: number) => {
                     icon="pi pi-times"
                     text
                     severity="secondary"
-                    @click="removeTag(tagValues.indexOf(tag))"
+                    @click="removeTag(index)"
                   />
                 </InputGroupAddon>
               </InputGroup>
