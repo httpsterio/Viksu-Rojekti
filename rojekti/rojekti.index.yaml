@@ -1,4 +1,4 @@
-generated: 2026-03-23T07:11:47.149167300+02:00
+generated: 2026-03-23T08:30:41.760986900+02:00
 cardCount: 55
 cards:
 - id: roj-009
@@ -501,7 +501,7 @@ cards:
   - Bug
   - Backend
   priority: 1
-  position: 0.017371446650940925
+  position: 0.013028584988205694
   created: 2026-03-23
 - id: roj-061
   title: 'chore: Increase card ID padding to support 4+ digit IDs'

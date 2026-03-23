@@ -33,6 +33,8 @@ epics:
   color: '#fcdba1'
 - name: Licensing
   color: '#f7a93b'
+- name: New Epic
+  color: '#3b82f6'
 tags:
 - name: Feature
   color: '#10b981'

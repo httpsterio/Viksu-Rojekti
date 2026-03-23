@@ -35,9 +35,18 @@ watch(visible, async (isVisible) => {
     epicValues.value = localConfig.value.epics.map((e, i) => ({ ...e, _dragId: `e${i}` }))
     tagValues.value = localConfig.value.tags.map((t, i) => ({ ...t, _dragId: `t${i}` }))
     await nextTick()
-    if (statusesParent.value) dragAndDrop({ parent: statusesParent.value, values: statusValues, dragHandle: ".drag-handle", plugins: [animations()] })
-    if (epicsParent.value) dragAndDrop({ parent: epicsParent.value, values: epicValues, dragHandle: ".drag-handle", plugins: [animations()] })
-    if (tagsParent.value) dragAndDrop({ parent: tagsParent.value, values: tagValues, dragHandle: ".drag-handle", plugins: [animations()] })
+    const dndConfig = {
+      dragHandle: ".drag-handle",
+      nativeDrag: true,
+      draggingClass: "dragging-setting",
+      dragPlaceholderClass: "ghost-setting",
+      plugins: [animations()],
+    }
+    if (statusesParent.value)
+      dragAndDrop({ parent: statusesParent.value, values: statusValues, ...dndConfig })
+    if (epicsParent.value)
+      dragAndDrop({ parent: epicsParent.value, values: epicValues, ...dndConfig })
+    if (tagsParent.value) dragAndDrop({ parent: tagsParent.value, values: tagValues, ...dndConfig })
   } else {
     if (statusesParent.value) tearDown(statusesParent.value)
     if (epicsParent.value) tearDown(epicsParent.value)
@@ -58,17 +67,32 @@ const handleSave = async () => {
   if (localConfig.value) {
     const epicNames = epicValues.value.map((e) => e.name.trim())
     if (new Set(epicNames).size !== epicNames.length) {
-      toast.add({ severity: "error", summary: "Validation Error", detail: "Epic names must be unique.", life: 4000 })
+      toast.add({
+        severity: "error",
+        summary: "Validation Error",
+        detail: "Epic names must be unique.",
+        life: 4000,
+      })
       return
     }
     const tagNames = tagValues.value.map((t) => t.name.trim())
     if (new Set(tagNames).size !== tagNames.length) {
-      toast.add({ severity: "error", summary: "Validation Error", detail: "Tag names must be unique.", life: 4000 })
+      toast.add({
+        severity: "error",
+        summary: "Validation Error",
+        detail: "Tag names must be unique.",
+        life: 4000,
+      })
       return
     }
     const statusNames = statusValues.value.map((s) => s.name.trim())
     if (new Set(statusNames).size !== statusNames.length) {
-      toast.add({ severity: "error", summary: "Validation Error", detail: "Status names must be unique.", life: 4000 })
+      toast.add({
+        severity: "error",
+        summary: "Validation Error",
+        detail: "Status names must be unique.",
+        life: 4000,
+      })
       return
     }
 
@@ -171,7 +195,7 @@ const removeTag = (index: number) => {
           <div class="section-header">
             <label>Status</label>
           </div>
-          <div ref="statusesParent" class="list-editor">
+          <div ref="statusesParent" class="list-editor" @dragover.capture.prevent>
             <div v-for="(status, index) in statusValues" :key="status._dragId" class="list-item">
               <InputGroup>
                 <InputGroupAddon class="drag-handle">
@@ -227,7 +251,7 @@ const removeTag = (index: number) => {
           <div class="section-header">
             <label>Epics</label>
           </div>
-          <div ref="epicsParent" class="list-editor">
+          <div ref="epicsParent" class="list-editor" @dragover.capture.prevent>
             <div v-for="(epic, index) in epicValues" :key="epic._dragId" class="list-item">
               <InputGroup>
                 <InputGroupAddon class="drag-handle">
@@ -238,12 +262,7 @@ const removeTag = (index: number) => {
                 </InputGroupAddon>
                 <InputText v-model="epic.name" placeholder="Epic name" />
                 <InputGroupAddon>
-                  <Button
-                    icon="pi pi-times"
-                    text
-                    severity="secondary"
-                    @click="removeEpic(index)"
-                  />
+                  <Button icon="pi pi-times" text severity="secondary" @click="removeEpic(index)" />
                 </InputGroupAddon>
               </InputGroup>
             </div>
@@ -262,7 +281,7 @@ const removeTag = (index: number) => {
           <div class="section-header">
             <label>Tags</label>
           </div>
-          <div ref="tagsParent" class="list-editor">
+          <div ref="tagsParent" class="list-editor" @dragover.capture.prevent>
             <div v-for="(tag, index) in tagValues" :key="tag._dragId" class="list-item">
               <InputGroup>
                 <InputGroupAddon class="drag-handle">
@@ -273,12 +292,7 @@ const removeTag = (index: number) => {
                 </InputGroupAddon>
                 <InputText v-model="tag.name" placeholder="Tag name" />
                 <InputGroupAddon>
-                  <Button
-                    icon="pi pi-times"
-                    text
-                    severity="secondary"
-                    @click="removeTag(index)"
-                  />
+                  <Button icon="pi pi-times" text severity="secondary" @click="removeTag(index)" />
                 </InputGroupAddon>
               </InputGroup>
             </div>
@@ -342,13 +356,14 @@ section label {
 .list-editor {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
   overflow-y: auto;
   padding-right: 0.5rem;
 }
 
 .list-item {
   display: block;
+  padding-bottom: 0rem;
+  padding-inline: 0.5rem;
 }
 
 .drag-handle {
@@ -396,5 +411,23 @@ section label {
   max-width: 8rem;
   align-self: center;
   margin-top: 0.25rem;
+}
+
+:deep(.ghost-setting) {
+  background: transparent !important;
+  border: 2px dashed var(--border-color) !important;
+  border-radius: 6px;
+  box-shadow: none !important;
+}
+
+:deep(.ghost-setting) * {
+  visibility: hidden;
+}
+
+:deep(.dragging-setting) {
+  cursor: grabbing !important;
+  user-select: none;
+  opacity: 0.8;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 </style>
