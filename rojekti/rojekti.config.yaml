@@ -1,6 +1,6 @@
 name: Rojekti
 prefix: roj
-nextId: 62
+nextId: 63
 statuses:
 - name: BACKLOG
 - name: TO DO
@@ -21,16 +21,18 @@ epics:
   color: '#cfe90c'
 - name: Testing
   color: '#eaed07'
-- name: Publishing
-  color: '#fad000'
-- name: Licensing
-  color: '#f7a93b'
-- name: Translations
-  color: '#ff811a'
-- name: LINUX / MAC
-  color: '#5c5c5c'
 - name: Command Line
   color: '#121212'
+- name: Translations
+  color: '#ff811a'
+- name: Publishing
+  color: '#fad000'
+- name: LINUX / MAC
+  color: '#5c5c5c'
+- name: Documentation
+  color: '#fcdba1'
+- name: Licensing
+  color: '#f7a93b'
 tags:
 - name: Feature
   color: '#10b981'

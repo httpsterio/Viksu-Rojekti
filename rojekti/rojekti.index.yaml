@@ -1,5 +1,5 @@
-generated: 2026-03-23T06:42:23.862815900+02:00
-cardCount: 53
+generated: 2026-03-23T07:07:19.117737500+02:00
+cardCount: 54
 cards:
 - id: roj-009
   title: 'fix: Broken cards graceful failing'
@@ -269,7 +269,7 @@ cards:
 - id: roj-036
   title: 'feat: Internationalisation'
   status: BACKLOG
-  epic: Licensing
+  epic: Publishing
   tags:
   - Polish
   - Feature
@@ -512,4 +512,12 @@ cards:
   - Refactor
   priority: 2
   position: 0.026057169976411387
+  created: 2026-03-23
+- id: roj-062
+  title: 'fix: DnD in settings is broken'
+  status: DOING
+  epic: Settings
+  tags: []
+  priority: 3
+  position: 3.0
   created: 2026-03-23

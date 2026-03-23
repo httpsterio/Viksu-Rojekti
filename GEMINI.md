@@ -154,3 +154,10 @@ The binary uses console subsystem. In GUI mode, the console is hidden programmat
   - **Research OK**: You may read files and analyze code to investigate implied tasks or user hints.
   - **No Implementation**: Do NOT edit files or modify system state for implied tasks without an explicit confirmation or directive from the user.
 - **Confirmation**: If a user hint implies a fix (e.g., "Lane.vue has a CSS issue"), ask for permission to proceed with the fix after your research.
+
+### 9.1. Anti-Regression Guardrails (CRITICAL)
+
+- **Inquiry Hard-Stop**: Any prompt containing the words "Investigate," "How," "Check," "Is it possible," or "Analyze" is a strict **Inquiry**. You are forbidden from calling `write_file`, `replace`, or `run_shell_command` (for filesystem modification) during an Inquiry. You must provide a research report and STOP.
+- **Explicit Directive Required**: You may only move to the Execution phase if the user issues a clear, imperative command (e.g., "Implement the fix," "Update the file," "Proceed with the code").
+- **Breach & Freeze**: If you realize you have performed an unauthorized action, you MUST NOT attempt to "fix" or "revert" it autonomously. You must immediately notify the user of the breach, provide a summary of the unauthorized changes, and FREEZE all file operations until a specific command is given.
+- **Verbal Verification**: Before the first `write_file` or `replace` call of any session, you must internally confirm: "Is this a Directive or an Inquiry?" If the answer is not 100% "Directive," you must ask for confirmation.
