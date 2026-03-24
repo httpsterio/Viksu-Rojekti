@@ -1,8 +1,5 @@
-theme: dark
-collapsedStatuses:
-- BLOCKED
-- DONE
-- ARCHIVE
+theme: light
+collapsedStatuses: []
 activeFilters:
   epic: null
   tag: null

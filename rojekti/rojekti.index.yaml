@@ -1,5 +1,5 @@
-generated: 2026-03-24T03:14:45.208153700+02:00
-cardCount: 56
+generated: 2026-03-24T04:59:50.753937900+02:00
+cardCount: 57
 cards:
 - id: roj-009
   title: 'fix: Broken cards graceful failing'
@@ -187,7 +187,7 @@ cards:
   created: 2026-03-20
 - id: roj-028
   title: 'style: Improve sortable card visualisation'
-  status: BLOCKED
+  status: BLOCKED / WONTFIX
   epic: Board
   tags:
   - UX
@@ -217,14 +217,14 @@ cards:
   created: 2026-03-20
 - id: roj-031
   title: 'style: Store board status to a state yaml file'
-  status: DOING
+  status: DONE
   epic: Board
   tags:
   - UX
   - Feature
   - Backend
   priority: 5
-  position: 3.0
+  position: 1.0
   created: 2026-03-20
 - id: roj-032
   title: 'chore: Priority system'
@@ -429,7 +429,7 @@ cards:
   created: 2026-03-22
 - id: roj-053
   title: 'refactor: setDragImage to dragged cards'
-  status: BLOCKED
+  status: BLOCKED / WONTFIX
   epic: Card
   tags:
   - Refactor
@@ -515,7 +515,7 @@ cards:
   created: 2026-03-23
 - id: roj-062
   title: 'fix: DnD in settings is broken'
-  status: BLOCKED
+  status: BLOCKED / WONTFIX
   epic: Settings
   tags: []
   priority: 3
@@ -532,11 +532,21 @@ cards:
   created: 2026-03-23
 - id: roj-065
   title: 'style: Migrate to Tailwind + PrimeVue unstyled mode'
-  status: BACKLOG
+  status: BLOCKED / WONTFIX
   epic: Theming
   tags:
   - Feature
   - Refactor
   priority: 4
-  position: 27.0
+  position: 4.875
   created: 2026-03-23
+- id: roj-066
+  title: 'style: Theme architecture'
+  status: DOING
+  epic: Theming
+  tags:
+  - Feature
+  - Polish
+  priority: 3
+  position: 3.0
+  created: 2026-03-24

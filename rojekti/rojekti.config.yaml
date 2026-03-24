@@ -1,13 +1,13 @@
 name: Rojekti
 prefix: roj
-nextId: 66
+nextId: 67
 statuses:
 - name: BACKLOG
 - name: TO DO
 - name: DOING
 - name: DONE
 - name: ARCHIVE
-- name: BLOCKED
+- name: BLOCKED / WONTFIX
 epics:
 - name: Board
   color: '#19e1a5'
