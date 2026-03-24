@@ -9,6 +9,7 @@ import Select from "primevue/select"
 import MultiSelect from "primevue/multiselect"
 import Tag from "primevue/tag"
 import Chip from "primevue/chip"
+import ButtonGroup from "primevue/buttongroup"
 import { useConfirm } from "primevue/useconfirm"
 import { MdEditor, MdPreview } from "md-editor-v3"
 import type { ToolbarNames } from "md-editor-v3"
@@ -76,12 +77,12 @@ const confirm = useConfirm()
 const editorToolbars: ToolbarNames[] = [
   "bold",
   "italic",
-  "strikeThrough",
+  // "strikeThrough",
   "-",
   "title",
   "unorderedList",
   "orderedList",
-  "task",
+  // "task",
   "-",
   "code",
   "codeRow",
@@ -326,18 +327,22 @@ const removeTag = (name: string) => {
         <div class="description-header">
           <label>Description</label>
           <div class="tabs">
-            <Button
-              label="View"
-              size="small"
-              :text="descriptionTab !== 'view'"
-              @click="descriptionTab = 'view'"
-            />
-            <Button
-              label="Edit"
-              size="small"
-              :text="descriptionTab !== 'edit'"
-              @click="descriptionTab = 'edit'"
-            />
+            <ButtonGroup>
+              <Button
+                label="View"
+                size="small"
+                icon="pi pi-eye"
+                :text="descriptionTab !== 'view'"
+                @click="descriptionTab = 'view'"
+              />
+              <Button
+                label="Edit"
+                size="small"
+                icon="pi pi-pen-to-square"
+                :text="descriptionTab !== 'edit'"
+                @click="descriptionTab = 'edit'"
+              />
+            </ButtonGroup>
           </div>
         </div>
 
@@ -376,7 +381,7 @@ const removeTag = (name: string) => {
 <style scoped>
 .card-modal {
   width: 90vw;
-  max-width: 800px;
+  max-width: 20rem;
 }
 
 .modal-grid {
@@ -435,6 +440,9 @@ const removeTag = (name: string) => {
   border-radius: var(--card-radius);
   overflow: hidden;
   background: var(--bg-card);
+  padding: 1rem;
+  min-width: 10rem;
+  max-width: 52rem;
 }
 
 .footer-buttons {

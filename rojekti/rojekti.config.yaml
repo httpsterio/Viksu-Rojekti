@@ -1,6 +1,6 @@
 name: Rojekti
 prefix: roj
-nextId: 64
+nextId: 66
 statuses:
 - name: BACKLOG
 - name: TO DO

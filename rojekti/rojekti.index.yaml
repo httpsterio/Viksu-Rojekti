@@ -1,5 +1,5 @@
-generated: 2026-03-23T08:30:41.760986900+02:00
-cardCount: 55
+generated: 2026-03-24T03:14:45.208153700+02:00
+cardCount: 56
 cards:
 - id: roj-009
   title: 'fix: Broken cards graceful failing'
@@ -144,7 +144,7 @@ cards:
   - UX
   - Polish
   priority: 4
-  position: 5.87890625
+  position: 4.8447265625
   created: 2026-03-20
 - id: roj-024
   title: 'feat: Archive and Deleted fixed statuses'
@@ -217,14 +217,14 @@ cards:
   created: 2026-03-20
 - id: roj-031
   title: 'style: Store board status to a state yaml file'
-  status: TO DO
+  status: DOING
   epic: Board
   tags:
   - UX
   - Feature
   - Backend
   priority: 5
-  position: 0.48099058493971825
+  position: 3.0
   created: 2026-03-20
 - id: roj-032
   title: 'chore: Priority system'
@@ -495,31 +495,31 @@ cards:
   created: 2026-03-23
 - id: roj-060
   title: 'fix: Autoincrement card number when manually creating card?'
-  status: TO DO
+  status: ARCHIVE
   epic: Editor
   tags:
   - Bug
   - Backend
   priority: 1
-  position: 0.013028584988205694
+  position: 0.000030517578125
   created: 2026-03-23
 - id: roj-061
   title: 'chore: Increase card ID padding to support 4+ digit IDs'
-  status: TO DO
+  status: ARCHIVE
   epic: Board
   tags:
   - Backend
   - Refactor
   priority: 2
-  position: 0.026057169976411387
+  position: 0.0000152587890625
   created: 2026-03-23
 - id: roj-062
   title: 'fix: DnD in settings is broken'
-  status: DOING
+  status: BLOCKED
   epic: Settings
   tags: []
   priority: 3
-  position: 3.0
+  position: 1.4375
   created: 2026-03-23
 - id: roj-063
   title: 'feat: DueDate field'
@@ -529,4 +529,14 @@ cards:
   - Feature
   priority: 4
   position: 26.0
+  created: 2026-03-23
+- id: roj-065
+  title: 'style: Migrate to Tailwind + PrimeVue unstyled mode'
+  status: BACKLOG
+  epic: Theming
+  tags:
+  - Feature
+  - Refactor
+  priority: 4
+  position: 27.0
   created: 2026-03-23
