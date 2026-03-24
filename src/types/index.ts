@@ -50,6 +50,19 @@ export interface AllCardsResult {
   errors: string[]
 }
 
+export interface ActiveFilters {
+  epic: string | null
+  tag: string | null
+  priority: number | null
+}
+
+export interface BoardState {
+  theme: string
+  collapsedStatuses: string[]
+  activeFilters: ActiveFilters
+  view: string
+}
+
 export interface Index {
   generated: string
   cardCount: number

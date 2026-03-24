@@ -1,6 +1,6 @@
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { invoke } from '@tauri-apps/api/core'
-import type { BoardConfig, Card, AllCardsResult } from '@/types'
+import type { BoardConfig, BoardState, Card, AllCardsResult } from '@/types'
 import { useToast } from 'primevue/usetoast'
 
 const config = ref<BoardConfig | null>(null)
@@ -20,19 +20,66 @@ const isLoading = ref(true)
 const needsInit = ref(false)
 const draggedCardId = ref<string | null>(null)
 let loadGeneration = 0
+let stateLoaded = false
+let watchersInitialized = false
 
 export function useBoard() {
   const toast = useToast()
+  const saveState = async () => {
+    if (!stateLoaded) return
+    try {
+      await invoke('save_board_state', {
+        boardState: {
+          theme: isDarkMode.value ? 'dark' : 'light',
+          collapsedStatuses: [...collapsedStatuses.value],
+          activeFilters: {
+            epic: activeFilters.value.epic,
+            tag: activeFilters.value.tag,
+            priority: activeFilters.value.priority,
+          },
+          view: currentView.value,
+        } satisfies BoardState,
+      })
+    } catch (e) {
+      console.error('Failed to save board state:', e)
+    }
+  }
+
   const loadBoard = async (silent = false) => {
     const generation = ++loadGeneration
     if (!silent) isLoading.value = true
     try {
-      const newConfig = await invoke<BoardConfig>('get_board_config')
-      const result = await invoke<AllCardsResult>('get_all_cards')
+      const [newConfig, result, boardState] = await Promise.all([
+        invoke<BoardConfig>('get_board_config'),
+        invoke<AllCardsResult>('get_all_cards'),
+        invoke<BoardState>('get_board_state'),
+      ])
       if (generation === loadGeneration) {
         config.value = newConfig
         cards.value = result.cards
-        
+
+        if (!stateLoaded) {
+          isDarkMode.value = boardState.theme === 'dark'
+          document.documentElement.classList.toggle('dark-mode', isDarkMode.value)
+          collapsedStatuses.value = new Set(boardState.collapsedStatuses)
+          activeFilters.value.epic = boardState.activeFilters.epic
+          activeFilters.value.tag = boardState.activeFilters.tag
+          activeFilters.value.priority = boardState.activeFilters.priority
+          currentView.value = boardState.view as 'board' | 'epics'
+          stateLoaded = true
+
+          if (!watchersInitialized) {
+            watchersInitialized = true
+            watch(() => isDarkMode.value, saveState)
+            watch(() => currentView.value, saveState)
+            watch(() => [...collapsedStatuses.value], saveState, { deep: true })
+            watch(
+              () => [activeFilters.value.epic, activeFilters.value.tag, activeFilters.value.priority],
+              saveState
+            )
+          }
+        }
+
         for (const error of result.errors) {
           toast.add({ severity: 'warn', summary: 'Could not load card', detail: error, life: 6000 })
         }

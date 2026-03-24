@@ -1,7 +1,7 @@
 use tauri::State;
 use chrono::Local;
 use std::fs;
-use crate::models::{AppState, BoardConfig, Card, CardMeta, Index, Status, AllCardsResult, Priority};
+use crate::models::{AppState, BoardConfig, BoardState, Card, CardMeta, Index, Status, AllCardsResult, Priority};
 use crate::{storage, index};
 
 #[tauri::command]
@@ -51,6 +51,19 @@ pub fn save_board_config(mut config: BoardConfig, state: State<AppState>) -> Res
     }
 
     storage::write_board_config(&config_path, &config)
+}
+
+#[tauri::command]
+pub fn get_board_state(state: State<AppState>) -> BoardState {
+    storage::read_board_state(&state.project_dir.join("rojekti").join("rojekti.state.yaml"))
+}
+
+#[tauri::command]
+pub fn save_board_state(board_state: BoardState, state: State<AppState>) -> Result<(), String> {
+    storage::write_board_state(
+        &state.project_dir.join("rojekti").join("rojekti.state.yaml"),
+        &board_state,
+    )
 }
 
 #[tauri::command]

@@ -101,6 +101,41 @@ pub struct Index {
     pub cards: Vec<CardMeta>,
 }
 
+#[derive(Serialize, Deserialize, Clone, Debug, Default)]
+#[serde(rename_all = "camelCase")]
+pub struct ActiveFilters {
+    pub epic: Option<String>,
+    pub tag: Option<String>,
+    pub priority: Option<u8>,
+}
+
+#[derive(Serialize, Deserialize, Clone, Debug)]
+#[serde(rename_all = "camelCase")]
+pub struct BoardState {
+    #[serde(default = "default_theme")]
+    pub theme: String,
+    #[serde(default)]
+    pub collapsed_statuses: Vec<String>,
+    #[serde(default)]
+    pub active_filters: ActiveFilters,
+    #[serde(default = "default_view")]
+    pub view: String,
+}
+
+fn default_theme() -> String { "light".to_string() }
+fn default_view() -> String { "board".to_string() }
+
+impl Default for BoardState {
+    fn default() -> Self {
+        Self {
+            theme: default_theme(),
+            collapsed_statuses: Vec::new(),
+            active_filters: ActiveFilters::default(),
+            view: default_view(),
+        }
+    }
+}
+
 use std::sync::{Arc, Mutex};
 use std::time::Instant;
 

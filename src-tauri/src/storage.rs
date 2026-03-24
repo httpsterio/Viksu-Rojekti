@@ -1,6 +1,6 @@
 use std::fs;
 use std::path::{Path, PathBuf};
-use crate::models::{BoardConfig, Card, CardMeta};
+use crate::models::{BoardConfig, BoardState, Card, CardMeta};
 
 pub fn parse_card_file(content: &str) -> Result<(CardMeta, String), String> {
     let parts: Vec<&str> = content.splitn(3, "---").collect();
@@ -36,6 +36,24 @@ pub fn write_board_config(path: &Path, config: &BoardConfig) -> Result<(), Strin
         .map_err(|e| format!("Could not write config tmp file: {}", e))?;
     fs::rename(&tmp, path)
         .map_err(|e| format!("Could not finalize config file: {}", e))
+}
+
+pub fn read_board_state(path: &Path) -> BoardState {
+    let content = match fs::read_to_string(path) {
+        Ok(c) => c,
+        Err(_) => return BoardState::default(),
+    };
+    serde_yaml::from_str(&content).unwrap_or_default()
+}
+
+pub fn write_board_state(path: &Path, state: &BoardState) -> Result<(), String> {
+    let yaml = serde_yaml::to_string(state)
+        .map_err(|e| format!("YAML serialization error: {}", e))?;
+    let tmp = path.with_extension("yaml.tmp");
+    fs::write(&tmp, yaml)
+        .map_err(|e| format!("Could not write state tmp file: {}", e))?;
+    fs::rename(&tmp, path)
+        .map_err(|e| format!("Could not finalize state file: {}", e))
 }
 
 pub fn read_card(path: &Path) -> Result<Card, String> {

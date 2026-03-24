@@ -1,0 +1,10 @@
+theme: dark
+collapsedStatuses:
+- BLOCKED
+- DONE
+- ARCHIVE
+activeFilters:
+  epic: null
+  tag: null
+  priority: null
+view: board

@@ -76,12 +76,21 @@ fn should_ignore(event: &Result<Event, notify::Error>) -> bool {
         _ => return true,
     }
 
-    // Ignore only if every path in the event is ignorable (guards against batched events)
-    event.paths.iter().all(|path| {
-        let name = path.file_name().and_then(|n| n.to_str()).unwrap_or("");
-        name == "rojekti.index.yaml"
-            || name.ends_with(".tmp")
-            || name.ends_with(".swp")
-            || name.starts_with('.')
-    })
+    // Only react to paths we explicitly care about
+    !event.paths.iter().any(|p| is_watched(p))
+}
+
+fn is_watched(path: &std::path::Path) -> bool {
+    let name = path.file_name().and_then(|n| n.to_str()).unwrap_or("");
+
+    if name == "rojekti.config.yaml" {
+        return true;
+    }
+
+    if name.ends_with(".md") {
+        let parent = path.parent().and_then(|p| p.file_name()).and_then(|n| n.to_str()).unwrap_or("");
+        return parent == "cards" || parent == "deleted";
+    }
+
+    false
 }

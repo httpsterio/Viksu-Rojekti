@@ -94,6 +94,8 @@ pub fn run() {
         .invoke_handler(tauri::generate_handler![
             commands::get_board_config,
             commands::save_board_config,
+            commands::get_board_state,
+            commands::save_board_state,
             commands::get_all_cards,
             commands::get_card,
             commands::create_card,
