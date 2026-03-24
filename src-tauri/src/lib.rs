@@ -63,6 +63,13 @@ pub fn run() {
             let config_path = project_dir.join("rojekti").join("rojekti.config.yaml");
             if config_path.exists() {
                 if let Ok(mut config) = storage::read_board_config(&config_path) {
+                    // One-time ID migration: assign UUIDs to any entry missing one
+                    if storage::ensure_ids(&mut config) {
+                        if let Err(e) = storage::write_board_config(&config_path, &config) {
+                            eprintln!("[warn] Failed to save config after ID migration: {}", e);
+                        }
+                    }
+
                     let has_pending = config.epics.iter().any(|e| e.pending_rename.is_some())
                         || config.tags.iter().any(|t| t.pending_rename.is_some())
                         || config.statuses.iter().any(|s| s.pending_rename.is_some());

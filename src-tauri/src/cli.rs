@@ -190,16 +190,16 @@ pub fn handle_cli(command: Commands, project_dir: PathBuf) {
             if name.is_empty() || prefix.is_empty() {
                 eprintln!("Error: name and prefix are required.");
             } else {
-                let config = BoardConfig {
+                let mut config = BoardConfig {
                     name: name.to_string(),
                     prefix: prefix.to_string(),
                     next_id: 1,
                     statuses: vec![
-                        Status { name: "Backlog".into(), pending_rename: None },
-                        Status { name: "Todo".into(), pending_rename: None },
-                        Status { name: "In Progress".into(), pending_rename: None },
-                        Status { name: "Review".into(), pending_rename: None },
-                        Status { name: "Done".into(), pending_rename: None },
+                        Status { id: uuid::Uuid::new_v4().to_string(), name: "Backlog".into(), pending_rename: None },
+                        Status { id: uuid::Uuid::new_v4().to_string(), name: "Todo".into(), pending_rename: None },
+                        Status { id: uuid::Uuid::new_v4().to_string(), name: "In Progress".into(), pending_rename: None },
+                        Status { id: uuid::Uuid::new_v4().to_string(), name: "Review".into(), pending_rename: None },
+                        Status { id: uuid::Uuid::new_v4().to_string(), name: "Done".into(), pending_rename: None },
                     ],
                     epics: Vec::new(),
                     tags: Vec::new(),
@@ -211,6 +211,8 @@ pub fn handle_cli(command: Commands, project_dir: PathBuf) {
                         Priority { name: "Low".into(),         color: "#a0aec0".into() },
                     ],
                 };
+                
+                storage::ensure_ids(&mut config);
                 
                 let rojekti_dir = project_dir.join("rojekti");
                 if !rojekti_dir.exists() {

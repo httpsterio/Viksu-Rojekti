@@ -1,54 +1,80 @@
 name: Rojekti
 prefix: roj
-nextId: 67
+nextId: 69
 statuses:
-- name: BACKLOG
-- name: TO DO
-- name: DOING
-- name: DONE
-- name: ARCHIVE
-- name: BLOCKED / WONTFIX
+- id: 8f09fa0b-200a-4495-84e7-de1a80983b67
+  name: BACKLOG
+- id: 19598204-923b-469f-a7d5-3f22851a5bbf
+  name: TO DO
+- id: f2d7fc66-f104-4bed-83b8-9c79a4232273
+  name: DOING
+- id: de256714-8e0d-4240-a7e5-e474992ec833
+  name: DONE
+- id: e08541a6-a806-4c5a-b5ac-76fcfa02f1e8
+  name: ARCHIVE
+- id: 1411a664-8d6e-4174-b193-15d10a58d590
+  name: BLOCKED / WONTFIX
 epics:
-- name: Board
+- id: 5fcd0afd-54c8-40e4-be9e-2126d449b759
+  name: Board
   color: '#19e1a5'
-- name: Editor
+- id: b1a2831c-02df-450f-94cf-d13bc93c11bc
+  name: Editor
   color: '#137155'
-- name: Settings
+- id: d627614f-6244-499c-83a6-8bcd608ee1bb
+  name: Settings
   color: '#00c288'
-- name: Card
+- id: 4d0be743-6ba7-42e1-b14f-deece5be4061
+  name: Card
   color: '#019d6e'
-- name: Theming
+- id: 858496be-a783-4ecd-9842-5366c92d3a34
+  name: Theming
   color: '#cfe90c'
-- name: Testing
+- id: bbf88a20-6894-4878-b1ba-06684c0ff468
+  name: Testing
   color: '#eaed07'
-- name: Command Line
+- id: 6590ebeb-ee51-4437-b9cb-d6c6298d3140
+  name: Command Line
   color: '#121212'
-- name: Translations
+- id: 93205c2a-de2f-4bb7-96c6-9b301429d4e8
+  name: Translations
   color: '#ff811a'
-- name: Publishing
+- id: 78173945-f42c-4082-8b3a-a855e4d6e27b
+  name: Publishing
   color: '#fad000'
-- name: LINUX / MAC
+- id: 7a568cbf-488c-4720-8132-fb684eb971f2
+  name: LINUX / MAC
   color: '#5c5c5c'
-- name: Documentation
+- id: 9e77edda-deea-4fec-a38f-5d1d81abf127
+  name: Documentation
   color: '#fcdba1'
-- name: Licensing
+- id: 6b72a891-ef14-490b-ba32-6fb5e329acf5
+  name: Licensing
   color: '#f7a93b'
-- name: New Epic
+- id: 536857f3-9f56-4146-b69d-d0c951b6a51b
+  name: New Epic
   color: '#3b82f6'
 tags:
-- name: Feature
+- id: c8375628-7856-40a6-82a6-774d0b87ba48
+  name: Feature
   color: '#10b981'
-- name: Bug
+- id: 7788f93a-3f8e-4d40-86a9-aa08d5b77c90
+  name: Bug
   color: '#ff4d00'
-- name: UX
+- id: bff0407f-1b44-4533-a1b6-c89176ce9ce6
+  name: UX
   color: '#faab00'
-- name: Backend
+- id: 9af4ec73-4b2a-4199-ad2d-12286d89423a
+  name: Backend
   color: '#5510bc'
-- name: Polish
+- id: fb50a285-5425-42f3-a34d-59e299b48f58
+  name: Polish
   color: '#f5e324'
-- name: Refactor
+- id: c37b0458-f8a3-4c4a-baa7-791d492e0ae2
+  name: Refactor
   color: '#ff14a9'
-- name: CLI API
+- id: 1775061a-a709-4ef9-b0d0-69078b58123a
+  name: CLI API
   color: '#3d3d3d'
 priorities:
 - name: Critical

@@ -2,6 +2,35 @@ use std::fs;
 use std::path::{Path, PathBuf};
 use crate::models::{BoardConfig, BoardState, Card, CardMeta};
 
+use uuid::Uuid;
+
+pub fn ensure_ids(config: &mut BoardConfig) -> bool {
+    let mut changed = false;
+
+    for epic in config.epics.iter_mut() {
+        if epic.id.is_empty() {
+            epic.id = Uuid::new_v4().to_string();
+            changed = true;
+        }
+    }
+
+    for tag in config.tags.iter_mut() {
+        if tag.id.is_empty() {
+            tag.id = Uuid::new_v4().to_string();
+            changed = true;
+        }
+    }
+
+    for status in config.statuses.iter_mut() {
+        if status.id.is_empty() {
+            status.id = Uuid::new_v4().to_string();
+            changed = true;
+        }
+    }
+
+    changed
+}
+
 pub fn parse_card_file(content: &str) -> Result<(CardMeta, String), String> {
     let parts: Vec<&str> = content.splitn(3, "---").collect();
     if parts.len() < 3 {

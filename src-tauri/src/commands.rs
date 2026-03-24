@@ -15,41 +15,55 @@ pub fn save_board_config(mut config: BoardConfig, state: State<AppState>) -> Res
     *state.last_gui_write.lock().map_err(|e| format!("Lock error: {}", e))? = std::time::Instant::now();
     let config_path = state.project_dir.join("rojekti").join("rojekti.config.yaml");
 
-    let old_config = storage::read_board_config(&config_path)?;
+    let mut old_config = storage::read_board_config(&config_path)?;
 
-    // Collect renames before mutating config (position-stable: same index = same entry)
-    let epic_renames: Vec<(usize, String, String)> = config.epics.iter().enumerate()
-        .filter_map(|(i, new)| {
-            old_config.epics.get(i)
-                .filter(|old| old.name != new.name)
-                .map(|old| (i, old.name.clone(), new.name.clone()))
-        })
-        .collect();
-    let tag_renames: Vec<(usize, String, String)> = config.tags.iter().enumerate()
-        .filter_map(|(i, new)| {
-            old_config.tags.get(i)
-                .filter(|old| old.name != new.name)
-                .map(|old| (i, old.name.clone(), new.name.clone()))
-        })
-        .collect();
-    let status_renames: Vec<(usize, String, String)> = config.statuses.iter().enumerate()
-        .filter_map(|(i, new)| {
-            old_config.statuses.get(i)
-                .filter(|old| old.name != new.name)
-                .map(|old| (i, old.name.clone(), new.name.clone()))
-        })
-        .collect();
+    // 1. Assign IDs to any new entries added by the frontend
+    storage::ensure_ids(&mut config);
 
-    for (index, old_name, new_name) in epic_renames {
-        storage::rename_epic_or_tag(&state.project_dir, &mut config, true, index, &old_name, &new_name, &config_path)?;
-    }
-    for (index, old_name, new_name) in tag_renames {
-        storage::rename_epic_or_tag(&state.project_dir, &mut config, false, index, &old_name, &new_name, &config_path)?;
-    }
-    for (index, old_name, new_name) in status_renames {
-        storage::rename_status(&state.project_dir, &mut config, index, &old_name, &new_name, &config_path)?;
+    // 2. Identify and mark renames (ID-based matching)
+    // We update 'old_config' in memory with the pending renames to act as our WAL template
+    let mut has_epic_tag_renames = false;
+    let mut has_status_renames = false;
+
+    for new_epic in &config.epics {
+        if let Some(old_epic) = old_config.epics.iter_mut().find(|e| e.id == new_epic.id) {
+            if old_epic.name != new_epic.name {
+                old_epic.pending_rename = Some(new_epic.name.clone());
+                has_epic_tag_renames = true;
+            }
+        }
     }
 
+    for new_tag in &config.tags {
+        if let Some(old_tag) = old_config.tags.iter_mut().find(|t| t.id == new_tag.id) {
+            if old_tag.name != new_tag.name {
+                old_tag.pending_rename = Some(new_tag.name.clone());
+                has_epic_tag_renames = true;
+            }
+        }
+    }
+
+    for new_status in &config.statuses {
+        if let Some(old_status) = old_config.statuses.iter_mut().find(|s| s.id == new_status.id) {
+            if old_status.name != new_status.name {
+                old_status.pending_rename = Some(new_status.name.clone());
+                has_status_renames = true;
+            }
+        }
+    }
+
+    // 3. If renames detected, write WAL and propagate
+    if has_epic_tag_renames {
+        storage::write_board_config(&config_path, &old_config)?;
+        storage::apply_pending_renames(&state.project_dir, &mut old_config, &config_path)?;
+    }
+
+    if has_status_renames {
+        storage::write_board_config(&config_path, &old_config)?;
+        storage::apply_pending_status_renames(&state.project_dir, &mut old_config, &config_path)?;
+    }
+
+    // 4. Finally write the full new config (preserving IDs, colors, and order)
     storage::write_board_config(&config_path, &config)
 }
 
@@ -206,16 +220,16 @@ pub fn init_project(
     let _lock = state.write_lock.lock().map_err(|e| format!("Lock error: {}", e))?;
     *state.last_gui_write.lock().map_err(|e| format!("Lock error: {}", e))? = std::time::Instant::now();
     
-    let config = BoardConfig {
+    let mut config = BoardConfig {
         name,
         prefix,
         next_id: 1,
         statuses: vec![
-            Status { name: "Backlog".into(), pending_rename: None },
-            Status { name: "Todo".into(), pending_rename: None },
-            Status { name: "In Progress".into(), pending_rename: None },
-            Status { name: "Review".into(), pending_rename: None },
-            Status { name: "Done".into(), pending_rename: None },
+            Status { id: uuid::Uuid::new_v4().to_string(), name: "Backlog".into(), pending_rename: None },
+            Status { id: uuid::Uuid::new_v4().to_string(), name: "Todo".into(), pending_rename: None },
+            Status { id: uuid::Uuid::new_v4().to_string(), name: "In Progress".into(), pending_rename: None },
+            Status { id: uuid::Uuid::new_v4().to_string(), name: "Review".into(), pending_rename: None },
+            Status { id: uuid::Uuid::new_v4().to_string(), name: "Done".into(), pending_rename: None },
         ],
         epics: Vec::new(),
         tags: Vec::new(),
@@ -227,6 +241,8 @@ pub fn init_project(
             Priority { name: "Low".into(),         color: "#a0aec0".into() },
         ],
     };
+    
+    storage::ensure_ids(&mut config);
     
     let rojekti_dir = state.project_dir.join("rojekti");
     if !rojekti_dir.exists() {

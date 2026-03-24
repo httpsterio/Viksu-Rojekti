@@ -9,6 +9,7 @@ export interface BoardConfig {
 }
 
 export interface Status {
+  id?: string
   name: string
   pendingRename?: string // read-only, set by backend during rename
 }
@@ -19,12 +20,14 @@ export interface Priority {
 }
 
 export interface Epic {
+  id?: string
   name: string
   color: string
   pendingRename?: string
 }
 
 export interface Tag {
+  id?: string
   name: string
   color: string
   pendingRename?: string

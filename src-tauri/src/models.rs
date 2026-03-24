@@ -3,6 +3,8 @@ use serde::{Deserialize, Serialize};
 #[derive(Serialize, Deserialize, Clone, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct Tag {
+    #[serde(default)]
+    pub id: String,
     pub name: String,
     pub color: String,
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -12,6 +14,8 @@ pub struct Tag {
 #[derive(Serialize, Deserialize, Clone, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct Status {
+    #[serde(default)]
+    pub id: String,
     pub name: String,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub pending_rename: Option<String>,
@@ -39,6 +43,8 @@ pub struct BoardConfig {
 #[derive(Serialize, Deserialize, Clone, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct Epic {
+    #[serde(default)]
+    pub id: String,
     pub name: String,
     pub color: String,
     #[serde(skip_serializing_if = "Option::is_none")]
