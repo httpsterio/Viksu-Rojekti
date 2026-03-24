@@ -9,7 +9,7 @@ import InputGroup from "primevue/inputgroup"
 import InputGroupAddon from "primevue/inputgroupaddon"
 import Popover from "primevue/popover"
 
-const { config, activeFilters, currentView, isCreating, toggleDarkMode } = useBoard()
+const { config, activeFilters, currentView, isCreating, themeIcon, cycleTheme } = useBoard()
 
 defineEmits(["open-settings"])
 
@@ -61,6 +61,13 @@ const clearAllFilters = () => {
           :class="{ 'p-button-secondary': currentView !== view.value }"
           size="small"
           @click="currentView = view.value as 'board' | 'epics'"
+        />
+        <Button
+          icon="pi pi-eye-slash"
+          label="Hidden"
+          severity="secondary"
+          size="small"
+          @click="activeFilters.search = ''"
         />
       </ButtonGroup>
     </div>
@@ -154,7 +161,7 @@ const clearAllFilters = () => {
 
     <div class="right">
       <ButtonGroup>
-        <Button icon="pi pi-moon" text @click="toggleDarkMode" />
+        <Button :icon="themeIcon" text @click="cycleTheme" />
         <Button icon="pi pi-cog" text @click="$emit('open-settings')" />
       </ButtonGroup>
       <Button label="New Card" size="small" icon="pi pi-plus" @click="isCreating = true" />

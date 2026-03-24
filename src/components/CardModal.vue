@@ -15,7 +15,7 @@ import { MdEditor, MdPreview } from "md-editor-v3"
 import type { ToolbarNames } from "md-editor-v3"
 import { useColorContrast } from "@/composables/useColorContrast"
 
-const { config, isCreating, editingCard, createCard, updateCard, deleteCard, isDarkMode } =
+const { config, isCreating, editingCard, createCard, updateCard, deleteCard, isDark } =
   useBoard()
 
 const { contrastColor } = useColorContrast()
@@ -352,7 +352,7 @@ const removeTag = (name: string) => {
             v-model="card.body"
             preview-theme="github"
             language="en-US"
-            :theme="isDarkMode ? 'dark' : 'light'"
+            :theme="isDark ? 'dark' : 'light'"
           />
           <MdEditor
             v-else
@@ -360,7 +360,7 @@ const removeTag = (name: string) => {
             :toolbars="editorToolbars"
             :preview="false"
             language="en-US"
-            :theme="isDarkMode ? 'dark' : 'light'"
+            :theme="isDark ? 'dark' : 'light'"
           />
         </div>
       </div>

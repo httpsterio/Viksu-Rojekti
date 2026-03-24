@@ -2,6 +2,7 @@ import { ref, computed, watch } from 'vue'
 import { invoke } from '@tauri-apps/api/core'
 import type { BoardConfig, BoardState, Card, AllCardsResult } from '@/types'
 import { useToast } from 'primevue/usetoast'
+import { themes, applyTheme, nextTheme, THEME_CYCLE, type ThemeName } from '@/themes'
 
 const config = ref<BoardConfig | null>(null)
 const cards = ref<Card[]>([])
@@ -15,7 +16,9 @@ const activeFilters = ref({
 const currentView = ref<'board' | 'epics'>('board')
 const editingCard = ref<Card | null>(null)
 const isCreating = ref(false)
-const isDarkMode = ref(false)
+const currentTheme = ref<ThemeName>('sane')
+const isDark = computed(() => themes[currentTheme.value]?.isDark ?? false)
+const themeIcon = computed(() => themes[currentTheme.value]?.icon ?? 'pi pi-chevron-up')
 const isLoading = ref(true)
 const needsInit = ref(false)
 const draggedCardId = ref<string | null>(null)
@@ -30,7 +33,7 @@ export function useBoard() {
     try {
       await invoke('save_board_state', {
         boardState: {
-          theme: isDarkMode.value ? 'dark' : 'light',
+          theme: currentTheme.value,
           collapsedStatuses: [...collapsedStatuses.value],
           activeFilters: {
             epic: activeFilters.value.epic,
@@ -59,8 +62,9 @@ export function useBoard() {
         cards.value = result.cards
 
         if (!stateLoaded) {
-          isDarkMode.value = boardState.theme === 'dark'
-          document.documentElement.classList.toggle('dark-mode', isDarkMode.value)
+          const savedTheme = THEME_CYCLE.includes(boardState.theme as ThemeName) ? boardState.theme as ThemeName : 'sane'
+          currentTheme.value = savedTheme
+          applyTheme(savedTheme)
           collapsedStatuses.value = new Set(boardState.collapsedStatuses)
           activeFilters.value.epic = boardState.activeFilters.epic
           activeFilters.value.tag = boardState.activeFilters.tag
@@ -70,7 +74,7 @@ export function useBoard() {
 
           if (!watchersInitialized) {
             watchersInitialized = true
-            watch(() => isDarkMode.value, saveState)
+            watch(() => currentTheme.value, saveState)
             watch(() => currentView.value, saveState)
             watch(() => [...collapsedStatuses.value], saveState, { deep: true })
             watch(
@@ -190,13 +194,10 @@ export function useBoard() {
     }
   }
 
-  const toggleDarkMode = () => {
-    isDarkMode.value = !isDarkMode.value
-    if (isDarkMode.value) {
-      document.documentElement.classList.add('dark-mode')
-    } else {
-      document.documentElement.classList.remove('dark-mode')
-    }
+  const cycleTheme = () => {
+    const next = nextTheme(currentTheme.value)
+    currentTheme.value = next
+    applyTheme(next)
   }
 
   const filteredCards = computed(() => {
@@ -253,7 +254,9 @@ export function useBoard() {
     currentView,
     editingCard,
     isCreating,
-    isDarkMode,
+    currentTheme,
+    isDark,
+    themeIcon,
     draggedCardId,
     isLoading,
     needsInit,
@@ -265,7 +268,7 @@ export function useBoard() {
     deleteCard,
     moveCard,
     toggleStatusCollapse,
-    toggleDarkMode,
+    cycleTheme,
     cardsByStatus,
     cardsByEpic
   }
