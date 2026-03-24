@@ -1,0 +1,12 @@
+[data-theme="whimsical"] {
+  /* Define your palette here */
+  --whim-primary: #ff0000;
+  --whim-secondary: #00ffcc;
+  --whim-surface: #fff0f5;
+  --whim-border: #000000;
+  --whim-shadow: #000000;
+  /* Update global Rojekti variables for this theme */
+  --bg-primary: var(--whim-surface);
+  --bg-lane: #ffe4e1;
+  --card-radius: 0px;
+}

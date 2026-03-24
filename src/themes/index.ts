@@ -1,17 +1,18 @@
 import { updatePreset } from "@primevue/themes"
 import sane from "./sane"
-import saneDark from "./sane-dark"
+// import saneDark from "./sane-dark"
 import whimsical from "./whimsical"
-import whimsicalDark from "./whimsical-dark"
+// import whimsicalDark from "./whimsical-dark"
 
-export const THEME_CYCLE = ["sane", "sane-dark", "whimsical", "whimsical-dark"] as const
+export const THEME_CYCLE = ["sane", "whimsical"] as const
 export type ThemeName = (typeof THEME_CYCLE)[number]
 
-export const themes: Record<ThemeName, { preset: Record<string, unknown>; isDark: boolean; icon: string }> = {
+export const themes: Record<
+  ThemeName,
+  { preset: Record<string, unknown>; isDark: boolean; icon: string }
+> = {
   sane: { preset: sane, isDark: false, icon: "pi pi-chevron-left" },
-  "sane-dark": { preset: saneDark, isDark: true, icon: "pi pi-chevron-up" },
   whimsical: { preset: whimsical, isDark: false, icon: "pi pi-chevron-right" },
-  "whimsical-dark": { preset: whimsicalDark, isDark: true, icon: "pi pi-chevron-down" },
 }
 
 export function getPreset(name: string): Record<string, unknown> {
