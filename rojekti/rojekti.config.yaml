@@ -51,9 +51,6 @@ epics:
 - id: 6b72a891-ef14-490b-ba32-6fb5e329acf5
   name: Licensing
   color: '#f7a93b'
-- id: 536857f3-9f56-4146-b69d-d0c951b6a51b
-  name: New Epic
-  color: '#3b82f6'
 tags:
 - id: c8375628-7856-40a6-82a6-774d0b87ba48
   name: Feature

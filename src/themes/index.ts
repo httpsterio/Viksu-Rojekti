@@ -1,4 +1,3 @@
-// TODO: replace with actual preset imports once aura-base.ts is populated from GitHub (primeuix/themes tag 4.5.4)
 import sane from './sane'
 import saneDark from './sane-dark'
 import whimsical from './whimsical'

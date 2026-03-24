@@ -1,4 +1,4 @@
-generated: 2026-03-24T04:59:50.753937900+02:00
+generated: 2026-03-24T18:39:31.046776300+02:00
 cardCount: 59
 cards:
 - id: roj-009
@@ -217,14 +217,14 @@ cards:
   created: 2026-03-20
 - id: roj-031
   title: 'style: Store board status to a state yaml file'
-  status: DONE
+  status: ARCHIVE
   epic: Board
   tags:
   - UX
   - Feature
   - Backend
   priority: 5
-  position: 1.0
+  position: 7.62939453125e-6
   created: 2026-03-20
 - id: roj-032
   title: 'chore: Priority system'
@@ -561,11 +561,11 @@ cards:
   created: 2026-03-24
 - id: roj-068
   title: 'fix: Stable IDs for epics, tags and statuses'
-  status: TO DO
+  status: ARCHIVE
   epic: Board
   tags:
   - Bug
   - Backend
   priority: 2
-  position: 1.0
+  position: 3.814697265625e-6
   created: 2026-03-25

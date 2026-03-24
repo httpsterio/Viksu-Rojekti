@@ -1,5 +1,7 @@
 theme: light
-collapsedStatuses: []
+collapsedStatuses:
+- BLOCKED / WONTFIX
+- ARCHIVE
 activeFilters:
   epic: null
   tag: null

@@ -14,6 +14,7 @@ dist
 dist-ssr
 *.local
 DOCS/formkit*/
+DOCS/primevue*
 
 # Editor directories and files
 .vscode/*
