@@ -31,6 +31,40 @@ pub fn ensure_ids(config: &mut BoardConfig) -> bool {
     changed
 }
 
+pub fn detect_renames(old_config: &mut BoardConfig, new_config: &BoardConfig) -> (bool, bool) {
+    let mut has_epic_tag_renames = false;
+    let mut has_status_renames = false;
+
+    for new_epic in &new_config.epics {
+        if let Some(old_epic) = old_config.epics.iter_mut().find(|e| e.id == new_epic.id) {
+            if old_epic.name != new_epic.name {
+                old_epic.pending_rename = Some(new_epic.name.clone());
+                has_epic_tag_renames = true;
+            }
+        }
+    }
+
+    for new_tag in &new_config.tags {
+        if let Some(old_tag) = old_config.tags.iter_mut().find(|t| t.id == new_tag.id) {
+            if old_tag.name != new_tag.name {
+                old_tag.pending_rename = Some(new_tag.name.clone());
+                has_epic_tag_renames = true;
+            }
+        }
+    }
+
+    for new_status in &new_config.statuses {
+        if let Some(old_status) = old_config.statuses.iter_mut().find(|s| s.id == new_status.id) {
+            if old_status.name != new_status.name {
+                old_status.pending_rename = Some(new_status.name.clone());
+                has_status_renames = true;
+            }
+        }
+    }
+
+    (has_epic_tag_renames, has_status_renames)
+}
+
 pub fn parse_card_file(content: &str) -> Result<(CardMeta, String), String> {
     let parts: Vec<&str> = content.splitn(3, "---").collect();
     if parts.len() < 3 {

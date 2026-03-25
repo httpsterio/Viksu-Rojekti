@@ -1,4 +1,4 @@
-generated: 2026-03-24T21:02:30.641867700+02:00
+generated: 2026-03-25T04:35:35.406701700+02:00
 cardCount: 59
 cards:
 - id: roj-009
@@ -448,31 +448,31 @@ cards:
   created: 2026-03-22
 - id: roj-055
   title: 'feat: Done toggle for Statuses in settings'
-  status: TO DO
+  status: DOING
   epic: Settings
   tags:
   - Feature
   priority: 3
-  position: 0.0694857866037637
+  position: 1.0
   created: 2026-03-22
 - id: roj-056
   title: 'test: Backend Rust testing'
-  status: DOING
+  status: DONE
   epic: Testing
   tags:
   - Backend
   priority: 3
-  position: 1.0
+  position: 0.5
   created: 2026-03-23
 - id: roj-057
   title: 'test: Testing strategy overview'
-  status: DOING
+  status: TO DO
   epic: Testing
   tags:
   - Backend
   - Documentation
   priority: 3
-  position: 2.0
+  position: 0.017371446650940925
   created: 2026-03-23
 - id: roj-058
   title: 'fix: Typing in settings interrupted'

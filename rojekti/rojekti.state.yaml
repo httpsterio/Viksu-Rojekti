@@ -1,6 +1,5 @@
 theme: sane
 collapsedStatuses:
-- BLOCKED / WONTFIX
 - ARCHIVE
 activeFilters:
   epic: null

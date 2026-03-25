@@ -21,36 +21,7 @@ pub fn save_board_config(mut config: BoardConfig, state: State<AppState>) -> Res
     storage::ensure_ids(&mut config);
 
     // 2. Identify and mark renames (ID-based matching)
-    // We update 'old_config' in memory with the pending renames to act as our WAL template
-    let mut has_epic_tag_renames = false;
-    let mut has_status_renames = false;
-
-    for new_epic in &config.epics {
-        if let Some(old_epic) = old_config.epics.iter_mut().find(|e| e.id == new_epic.id) {
-            if old_epic.name != new_epic.name {
-                old_epic.pending_rename = Some(new_epic.name.clone());
-                has_epic_tag_renames = true;
-            }
-        }
-    }
-
-    for new_tag in &config.tags {
-        if let Some(old_tag) = old_config.tags.iter_mut().find(|t| t.id == new_tag.id) {
-            if old_tag.name != new_tag.name {
-                old_tag.pending_rename = Some(new_tag.name.clone());
-                has_epic_tag_renames = true;
-            }
-        }
-    }
-
-    for new_status in &config.statuses {
-        if let Some(old_status) = old_config.statuses.iter_mut().find(|s| s.id == new_status.id) {
-            if old_status.name != new_status.name {
-                old_status.pending_rename = Some(new_status.name.clone());
-                has_status_renames = true;
-            }
-        }
-    }
+    let (has_epic_tag_renames, has_status_renames) = storage::detect_renames(&mut old_config, &config);
 
     // 3. If renames detected, write WAL and propagate
     if has_epic_tag_renames {
