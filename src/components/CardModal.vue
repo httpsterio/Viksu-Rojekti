@@ -15,8 +15,7 @@ import { MdEditor, MdPreview } from "md-editor-v3"
 import type { ToolbarNames } from "md-editor-v3"
 import { useColorContrast } from "@/composables/useColorContrast"
 
-const { config, isCreating, editingCard, createCard, updateCard, deleteCard, isDark } =
-  useBoard()
+const { config, isCreating, editingCard, createCard, updateCard, deleteCard, isDark } = useBoard()
 
 const { contrastColor } = useColorContrast()
 
@@ -332,14 +331,14 @@ const removeTag = (name: string) => {
                 label="View"
                 size="small"
                 icon="pi pi-eye"
-                :text="descriptionTab !== 'view'"
+                :outlined="descriptionTab !== 'view'"
                 @click="descriptionTab = 'view'"
               />
               <Button
                 label="Edit"
                 size="small"
                 icon="pi pi-pen-to-square"
-                :text="descriptionTab !== 'edit'"
+                :outlined="descriptionTab !== 'edit'"
                 @click="descriptionTab = 'edit'"
               />
             </ButtonGroup>

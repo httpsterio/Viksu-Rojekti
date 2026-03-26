@@ -6,7 +6,7 @@ activeFilters:
   epic: null
   tag: null
   priority: null
-view: epics
+view: board
 windowWidth: 0
 windowHeight: 0
 windowX: 0

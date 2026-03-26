@@ -1,14 +1,25 @@
 <script setup lang="ts">
+import { computed } from "vue"
 import { useBoard } from "@/composables/useBoard"
 import EpicGroup from "./EpicGroup.vue"
 
-const { config, cardsByEpic } = useBoard()
+const { config, cardsByEpic, activeFilters } = useBoard()
+
+const isFiltering = computed(() =>
+  !!(activeFilters.value.epic || activeFilters.value.tag || activeFilters.value.priority || activeFilters.value.search)
+)
+
+const visibleEpics = computed(() => {
+  if (!config.value) return []
+  if (!isFiltering.value) return config.value.epics
+  return config.value.epics.filter((epic) => (cardsByEpic.value[epic.name]?.length ?? 0) > 0)
+})
 </script>
 
 <template>
   <div v-if="config" class="epic-view">
     <EpicGroup
-      v-for="epic in config.epics"
+      v-for="epic in visibleEpics"
       :key="epic.name"
       :epic="epic"
       :cards="cardsByEpic[epic.name] || []"

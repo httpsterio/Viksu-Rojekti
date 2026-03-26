@@ -15,15 +15,21 @@ statuses:
 - id: 1411a664-8d6e-4174-b193-15d10a58d590
   name: BLOCKED / WONTFIX
 epics:
+- id: 3563c731-7fbd-460e-8696-680be8416674
+  name: General
+  color: '#0565ff'
 - id: 5fcd0afd-54c8-40e4-be9e-2126d449b759
   name: Board
   color: '#19e1a5'
 - id: b1a2831c-02df-450f-94cf-d13bc93c11bc
   name: Editor
   color: '#137155'
+- id: 926ace19-2880-4254-84ee-226a0734cb82
+  name: Epic
+  color: '#3ec2cc'
 - id: d627614f-6244-499c-83a6-8bcd608ee1bb
   name: Settings
-  color: '#00c288'
+  color: '#0acd5e'
 - id: 4d0be743-6ba7-42e1-b14f-deece5be4061
   name: Card
   color: '#019d6e'

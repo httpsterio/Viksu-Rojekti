@@ -278,6 +278,12 @@ export function useBoard() {
         grouped.unassigned.push(card)
       }
     }
+
+    const statusOrder = config.value.statuses.map((s) => s.name)
+    for (const key of Object.keys(grouped)) {
+      grouped[key].sort((a, b) => statusOrder.indexOf(a.status) - statusOrder.indexOf(b.status))
+    }
+
     return grouped
   })
 

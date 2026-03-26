@@ -1,5 +1,5 @@
-generated: 2026-03-26T16:57:51.740127400+02:00
-cardCount: 61
+generated: 2026-03-26T22:16:28.868417900+02:00
+cardCount: 62
 cards:
 - id: roj-009
   title: 'fix: Broken cards graceful failing'
@@ -588,4 +588,13 @@ cards:
   - Backend
   priority: 3
   position: 2.0
+  created: 2026-03-26
+- id: roj-071
+  title: 'feat: Sort cards in Epic'
+  status: DONE
+  epic: Board
+  tags:
+  - Polish
+  priority: 0
+  position: 0.0625
   created: 2026-03-26
