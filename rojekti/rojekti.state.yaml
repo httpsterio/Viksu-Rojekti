@@ -7,7 +7,7 @@ activeFilters:
   tag: null
   priority: null
 view: board
-windowWidth: 0
-windowHeight: 0
-windowX: 0
-windowY: 0
+windowWidth: 1200
+windowHeight: 800
+windowX: 283
+windowY: 132

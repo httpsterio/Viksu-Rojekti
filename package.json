@@ -5,12 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "cmd.exe /c npm run tauri -- dev",
-    "vite:dev": "vite",
-    "prod": "cmd.exe /c rojekti.exe",
+    "build": "cmd.exe /c npm run tauri -- build",
     "vite:build": "vite build",
     "tauri": "tauri",
-    "build": "cmd.exe /c npm run tauri -- build",
-    "preview": "vite preview",
     "lint": "eslint src",
     "lint:fix": "eslint src --fix"
   },
