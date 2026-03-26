@@ -9,7 +9,7 @@ import InputGroup from "primevue/inputgroup"
 import InputGroupAddon from "primevue/inputgroupaddon"
 import Popover from "primevue/popover"
 
-const { config, activeFilters, currentView, isCreating, themeIcon, cycleTheme } = useBoard()
+const { config, activeFilters, currentView, isCreating, themeIcon, cycleTheme, showHiddenLanes } = useBoard()
 
 defineEmits(["open-settings"])
 
@@ -63,11 +63,12 @@ const clearAllFilters = () => {
           @click="currentView = view.value as 'board' | 'epics'"
         />
         <Button
+          v-if="config.hiddenStatusesEnabled"
           icon="pi pi-eye-slash"
           label="Hidden"
-          severity="secondary"
+          :severity="showHiddenLanes ? undefined : 'secondary'"
           size="small"
-          @click="activeFilters.search = ''"
+          @click="showHiddenLanes = !showHiddenLanes"
         />
       </ButtonGroup>
     </div>

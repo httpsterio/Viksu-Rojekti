@@ -2,13 +2,13 @@
 import { useBoard } from "@/composables/useBoard"
 import Lane from "./Lane.vue"
 
-const { config, cardsByStatus, collapsedStatuses } = useBoard()
+const { config, cardsByStatus, collapsedStatuses, visibleStatuses } = useBoard()
 </script>
 
 <template>
   <div v-if="config" class="board-view">
     <Lane
-      v-for="status in config.statuses"
+      v-for="status in visibleStatuses"
       :id="status.name"
       :key="status.name"
       :name="status.name"

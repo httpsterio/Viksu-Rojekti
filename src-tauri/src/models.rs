@@ -40,6 +40,10 @@ pub struct BoardConfig {
     pub priorities: Vec<Priority>,
     #[serde(default)]
     pub done_statuses: Vec<String>,
+    #[serde(default)]
+    pub hidden_statuses: Vec<String>,
+    #[serde(default)]
+    pub hidden_statuses_enabled: bool,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug)]

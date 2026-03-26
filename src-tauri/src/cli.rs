@@ -212,6 +212,8 @@ pub fn handle_cli(command: Commands, project_dir: PathBuf) {
                         Priority { name: "Low".into(),         color: "#a0aec0".into() },
                     ],
                     done_statuses: vec![done_id],
+                    hidden_statuses: Vec::new(),
+                    hidden_statuses_enabled: false,
                 };
                 
                 storage::ensure_ids(&mut config);

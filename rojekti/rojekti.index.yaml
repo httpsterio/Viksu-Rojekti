@@ -1,4 +1,4 @@
-generated: 2026-03-26T22:44:07.757482800+02:00
+generated: 2026-03-26T23:41:58.527548800+02:00
 cardCount: 62
 cards:
 - id: roj-009
@@ -116,16 +116,6 @@ cards:
   priority: 4
   position: 0.5625
   created: 2026-03-20
-- id: roj-021
-  title: 'feat: Show deleted cards in settings'
-  status: TO DO
-  epic: Card
-  tags:
-  - Feature
-  - Backend
-  priority: 4
-  position: 0.875
-  created: 2026-03-20
 - id: roj-022
   title: 'chore: Name based epics and tags'
   status: ARCHIVE
@@ -147,8 +137,8 @@ cards:
   position: 4.8447265625
   created: 2026-03-20
 - id: roj-024
-  title: 'feat: Hidden Statuses and Deleted Cards'
-  status: TO DO
+  title: 'feat: Hidden Statuses'
+  status: DONE
   epic: Board
   tags:
   - Feature
@@ -354,7 +344,7 @@ cards:
   created: 2026-03-21
 - id: roj-045
   title: 'feat: Done cards in Epic view'
-  status: DONE
+  status: ARCHIVE
   epic: Board
   tags:
   - Bug
@@ -597,4 +587,14 @@ cards:
   - Polish
   priority: 0
   position: 0.0625
+  created: 2026-03-26
+- id: roj-072
+  title: 'feat: Deleted cards view in settings'
+  status: TO DO
+  epic: Card
+  tags:
+  - Feature
+  - Backend
+  priority: 4
+  position: 1.0
   created: 2026-03-26

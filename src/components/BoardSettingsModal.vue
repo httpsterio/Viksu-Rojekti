@@ -10,6 +10,7 @@ import InputText from "primevue/inputtext"
 import InputGroup from "primevue/inputgroup"
 import InputGroupAddon from "primevue/inputgroupaddon"
 import MultiSelect from "primevue/multiselect"
+import ToggleSwitch from "primevue/toggleswitch"
 import { useConfirm } from "primevue/useconfirm"
 import { useToast } from "primevue/usetoast"
 import { animations, tearDown } from "@formkit/drag-and-drop"
@@ -106,7 +107,11 @@ const handleSave = async () => {
 }
 
 const addStatus = () => {
-  statusValues.value.push({ id: crypto.randomUUID(), name: "New Status", _dragId: `s${Date.now()}` })
+  statusValues.value.push({
+    id: crypto.randomUUID(),
+    name: "New Status",
+    _dragId: `s${Date.now()}`,
+  })
 }
 
 const removeStatus = (index: number) => {
@@ -218,10 +223,35 @@ const removeTag = (index: number) => {
         </section>
 
         <section>
+          <label>Hidden Statuses</label>
+          <div class="toggle-row">
+            <span>Enable hidden statuses</span>
+            <ToggleSwitch v-model="localConfig.hiddenStatusesEnabled" />
+          </div>
+          <MultiSelect
+            v-if="localConfig.hiddenStatusesEnabled"
+            v-model="localConfig.hiddenStatuses"
+            :options="statusValues"
+            option-label="name"
+            option-value="id"
+            placeholder="Select Hidden statuses"
+            :max-selected-labels="3"
+            class="w-full"
+            fluid
+          />
+          <p class="section-help">Hidden statuses don't appear as lanes on the board.</p>
+        </section>
+
+        <section>
           <div class="section-header">
             <label>Status</label>
           </div>
-          <div ref="statusesParent" class="list-editor" @dragover.capture.prevent @dragenter.capture.prevent>
+          <div
+            ref="statusesParent"
+            class="list-editor"
+            @dragover.capture.prevent
+            @dragenter.capture.prevent
+          >
             <div v-for="(status, index) in statusValues" :key="status._dragId" class="list-item">
               <InputGroup>
                 <InputGroupAddon class="drag-handle">
@@ -277,7 +307,12 @@ const removeTag = (index: number) => {
           <div class="section-header">
             <label>Epics</label>
           </div>
-          <div ref="epicsParent" class="list-editor" @dragover.capture.prevent @dragenter.capture.prevent>
+          <div
+            ref="epicsParent"
+            class="list-editor"
+            @dragover.capture.prevent
+            @dragenter.capture.prevent
+          >
             <div v-for="(epic, index) in epicValues" :key="epic._dragId" class="list-item">
               <InputGroup>
                 <InputGroupAddon class="drag-handle">
@@ -307,7 +342,12 @@ const removeTag = (index: number) => {
           <div class="section-header">
             <label>Tags</label>
           </div>
-          <div ref="tagsParent" class="list-editor" @dragover.capture.prevent @dragenter.capture.prevent>
+          <div
+            ref="tagsParent"
+            class="list-editor"
+            @dragover.capture.prevent
+            @dragenter.capture.prevent
+          >
             <div v-for="(tag, index) in tagValues" :key="tag._dragId" class="list-item">
               <InputGroup>
                 <InputGroupAddon class="drag-handle">
@@ -378,6 +418,15 @@ section label {
   color: var(--text-muted);
   margin-top: 0.25rem;
   margin-bottom: 0;
+}
+
+.toggle-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
 }
 
 .section-header {

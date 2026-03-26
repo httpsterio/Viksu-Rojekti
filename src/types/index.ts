@@ -7,6 +7,8 @@ export interface BoardConfig {
   tags: Tag[]
   priorities: Priority[]
   doneStatuses: string[]
+  hiddenStatuses: string[]
+  hiddenStatusesEnabled: boolean
 }
 
 export interface Status {

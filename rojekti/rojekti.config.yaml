@@ -94,3 +94,7 @@ doneStatuses:
 - de256714-8e0d-4240-a7e5-e474992ec833
 - e08541a6-a806-4c5a-b5ac-76fcfa02f1e8
 - 1411a664-8d6e-4174-b193-15d10a58d590
+hiddenStatuses:
+- 1411a664-8d6e-4174-b193-15d10a58d590
+- e08541a6-a806-4c5a-b5ac-76fcfa02f1e8
+hiddenStatusesEnabled: true

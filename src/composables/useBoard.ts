@@ -29,6 +29,17 @@ const doneStatusNames = computed(() => {
   )
 })
 
+const showHiddenLanes = ref(false)
+
+const visibleStatuses = computed(() => {
+  if (!config.value) return []
+  if (!config.value.hiddenStatusesEnabled) return config.value.statuses
+  if (showHiddenLanes.value) return config.value.statuses
+  return config.value.statuses.filter(
+    (s) => !config.value!.hiddenStatuses.includes(s.id ?? '')
+  )
+})
+
 const isLoading = ref(true)
 const needsInit = ref(false)
 const draggedCardId = ref<string | null>(null)
@@ -70,6 +81,7 @@ export function useBoard() {
       if (generation === loadGeneration) {
         config.value = newConfig
         cards.value = result.cards
+        showHiddenLanes.value = false
 
         if (!stateLoaded) {
           const savedTheme = THEME_CYCLE.includes(boardState.theme as ThemeName)
@@ -161,6 +173,11 @@ export function useBoard() {
 
       // Cleanup doneStatuses
       newConfig.doneStatuses = newConfig.doneStatuses.filter((id) =>
+        newConfig.statuses.some((s) => s.id === id),
+      )
+
+      // Cleanup hiddenStatuses
+      newConfig.hiddenStatuses = newConfig.hiddenStatuses.filter((id) =>
         newConfig.statuses.some((s) => s.id === id),
       )
 
@@ -311,6 +328,8 @@ export function useBoard() {
     toggleStatusCollapse,
     cycleTheme,
     doneStatusNames,
+    showHiddenLanes,
+    visibleStatuses,
     cardsByStatus,
     cardsByEpic,
   }
