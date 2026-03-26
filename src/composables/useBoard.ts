@@ -16,9 +16,19 @@ const activeFilters = ref({
 const currentView = ref<"board" | "epics">("board")
 const editingCard = ref<Card | null>(null)
 const isCreating = ref(false)
-const currentTheme = ref<ThemeName>("sane")
+const currentTheme = ref<ThemeName>('sane')
 const isDark = computed(() => themes[currentTheme.value]?.isDark ?? false)
-const themeIcon = computed(() => themes[currentTheme.value]?.icon ?? "pi pi-chevron-up")
+const themeIcon = computed(() => themes[currentTheme.value]?.icon ?? 'pi pi-chevron-up')
+
+const doneStatusNames = computed(() => {
+  if (!config.value) return new Set<string>()
+  return new Set(
+    config.value.statuses
+      .filter((s) => s.id && config.value?.doneStatuses.includes(s.id))
+      .map((s) => s.name)
+  )
+})
+
 const isLoading = ref(true)
 const needsInit = ref(false)
 const draggedCardId = ref<string | null>(null)
@@ -294,6 +304,7 @@ export function useBoard() {
     moveCard,
     toggleStatusCollapse,
     cycleTheme,
+    doneStatusNames,
     cardsByStatus,
     cardsByEpic,
   }

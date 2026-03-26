@@ -8,8 +8,10 @@ const props = defineProps<{
   card: Card
 }>()
 
-const { config, editingCard } = useBoard()
+const { config, doneStatusNames, editingCard } = useBoard()
 const { contrastColor } = useColorContrast()
+
+const isDone = computed(() => doneStatusNames.value.has(props.card.status))
 
 const epic = computed(() => config.value?.epics.find((e) => e.name === props.card.epic))
 
@@ -31,7 +33,7 @@ const getTagStyle = (name: string) => {
 <template>
   <div
     class="card"
-    :class="card.priority === 0 ? 'priority-0' : ''"
+    :class="{ 'card-done': isDone, 'priority-0': card.priority === 0 }"
     :style="
       card.priority > 0 && config
         ? { borderLeftColor: config.priorities[card.priority - 1]?.color }
@@ -81,6 +83,19 @@ const getTagStyle = (name: string) => {
 .card:hover {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   transform: translateY(-1px);
+}
+
+.card-done {
+  opacity: 0.6;
+  filter: grayscale(0.8);
+  transition:
+    opacity 0.2s,
+    filter 0.2s;
+}
+
+.card-done:hover {
+  opacity: 1;
+  filter: grayscale(0);
 }
 
 .card-header {

@@ -1,18 +1,25 @@
-[data-theme="whimsical"] .p-button {
-  background: var(--whim-secondary);
-  border: 3px solid var(--whim-border);
-  box-shadow: 4px 4px 0 var(--whim-shadow);
-  transition:
-    transform 0.1s,
-    box-shadow 0.1s;
-}
+[data-theme="whimsical"] {
+  .p-button {
+    background: var(--whim-secondary);
+    border: 3px solid var(--whim-border);
+    box-shadow: 4px 4px 0 var(--whim-shadow);
+    transition:
+      transform 0.1s,
+      box-shadow 0.1s;
+  }
 
-[data-theme="whimsical"] .p-button:hover {
-  transform: translate(-2px, -2px);
-  box-shadow: 6px 6px 0 #000;
-}
+  .p-button:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0 #000;
+  }
 
-[data-theme="whimsical"] .p-button:active {
-  transform: translate(0, 0);
-  box-shadow: 2px 2px 0 #000;
+  .p-button:active {
+    transform: translate(0, 0);
+    box-shadow: 2px 2px 0 #000;
+  }
+
+  .p-button:active {
+    transform: translate(0, 0);
+    box-shadow: 2px 2px 0 #000;
+  }
 }

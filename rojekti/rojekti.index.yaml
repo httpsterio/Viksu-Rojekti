@@ -1,4 +1,4 @@
-generated: 2026-03-26T04:34:52.517368200+02:00
+generated: 2026-03-26T04:53:54.924982+02:00
 cardCount: 60
 cards:
 - id: roj-009
@@ -571,11 +571,11 @@ cards:
   created: 2026-03-25
 - id: roj-069
   title: 'feat: Done card visual treatment'
-  status: TO DO
+  status: DONE
   epic: Board
   tags:
   - Feature
   - UX
   priority: 3
-  position: 0.008685723325470462
+  position: 0.125
   created: 2026-03-25
