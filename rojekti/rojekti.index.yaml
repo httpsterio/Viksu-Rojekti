@@ -1,5 +1,5 @@
-generated: 2026-03-26T23:41:58.527548800+02:00
-cardCount: 62
+generated: 2026-03-27T01:02:41.349817900+02:00
+cardCount: 63
 cards:
 - id: roj-009
   title: 'fix: Broken cards graceful failing'
@@ -138,12 +138,12 @@ cards:
   created: 2026-03-20
 - id: roj-024
   title: 'feat: Hidden Statuses'
-  status: DONE
+  status: ARCHIVE
   epic: Board
   tags:
   - Feature
   priority: 4
-  position: 0.1389715732075274
+  position: 4.76837158203125e-7
   created: 2026-03-20
 - id: roj-025
   title: 'fix: Silent overwrites of cards'
@@ -438,21 +438,21 @@ cards:
   created: 2026-03-22
 - id: roj-055
   title: 'feat: Done toggle for Statuses in settings'
-  status: DONE
+  status: ARCHIVE
   epic: Settings
   tags:
   - Feature
   priority: 3
-  position: 0.25
+  position: 2.384185791015625e-7
   created: 2026-03-22
 - id: roj-056
   title: 'test: Backend Rust testing'
-  status: DONE
+  status: ARCHIVE
   epic: Testing
   tags:
   - Backend
   priority: 3
-  position: 0.5
+  position: 1.1920928955078125e-7
   created: 2026-03-23
 - id: roj-057
   title: 'test: Testing strategy overview'
@@ -532,13 +532,13 @@ cards:
   created: 2026-03-23
 - id: roj-066
   title: 'style: Theme architecture'
-  status: DONE
+  status: ARCHIVE
   epic: Theming
   tags:
   - Feature
   - Polish
   priority: 3
-  position: 1.0
+  position: 5.960464477539064e-8
   created: 2026-03-24
 - id: roj-067
   title: 'style: Toast location'
@@ -561,32 +561,32 @@ cards:
   created: 2026-03-25
 - id: roj-069
   title: 'feat: Done card visual treatment'
-  status: DONE
+  status: ARCHIVE
   epic: Board
   tags:
   - Feature
   - UX
   priority: 3
-  position: 0.125
+  position: 9.5367431640625e-7
   created: 2026-03-25
 - id: roj-070
   title: 'feat: Get/Set Windows size to state'
-  status: DONE
+  status: ARCHIVE
   epic: Board
   tags:
   - Feature
   - Backend
   priority: 3
-  position: 2.0
+  position: 2.9802322387695326e-8
   created: 2026-03-26
 - id: roj-071
   title: 'feat: Sort cards in Epic'
-  status: DONE
+  status: ARCHIVE
   epic: Board
   tags:
   - Polish
   priority: 0
-  position: 0.0625
+  position: 1.9073486328125e-6
   created: 2026-03-26
 - id: roj-072
   title: 'feat: Deleted cards view in settings'
@@ -598,3 +598,12 @@ cards:
   priority: 4
   position: 1.0
   created: 2026-03-26
+- id: roj-073
+  title: 'feat: Board name as Window title'
+  status: TO DO
+  epic: General
+  tags:
+  - Feature
+  priority: 4
+  position: 5.875
+  created: 2026-03-27
