@@ -6,6 +6,7 @@ export interface BoardConfig {
   epics: Epic[]
   tags: Tag[]
   priorities: Priority[]
+  doneStatuses: string[]
 }
 
 export interface Status {

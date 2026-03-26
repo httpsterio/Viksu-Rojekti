@@ -9,6 +9,7 @@ import Button from "primevue/button"
 import InputText from "primevue/inputtext"
 import InputGroup from "primevue/inputgroup"
 import InputGroupAddon from "primevue/inputgroupaddon"
+import MultiSelect from "primevue/multiselect"
 import { useConfirm } from "primevue/useconfirm"
 import { useToast } from "primevue/usetoast"
 import { animations, tearDown } from "@formkit/drag-and-drop"
@@ -105,7 +106,7 @@ const handleSave = async () => {
 }
 
 const addStatus = () => {
-  statusValues.value.push({ name: "New Status", _dragId: `s${Date.now()}` })
+  statusValues.value.push({ id: crypto.randomUUID(), name: "New Status", _dragId: `s${Date.now()}` })
 }
 
 const removeStatus = (index: number) => {
@@ -143,7 +144,12 @@ const removeStatus = (index: number) => {
 }
 
 const addEpic = () => {
-  epicValues.value.push({ name: "New Epic", color: "#3b82f6", _dragId: `e${Date.now()}` })
+  epicValues.value.push({
+    id: crypto.randomUUID(),
+    name: "New Epic",
+    color: "#3b82f6",
+    _dragId: `e${Date.now()}`,
+  })
 }
 
 const removeEpic = (index: number) => {
@@ -159,7 +165,12 @@ const removeEpic = (index: number) => {
 }
 
 const addTag = () => {
-  tagValues.value.push({ name: "New Tag", color: "#10b981", _dragId: `t${Date.now()}` })
+  tagValues.value.push({
+    id: crypto.randomUUID(),
+    name: "New Tag",
+    color: "#10b981",
+    _dragId: `t${Date.now()}`,
+  })
 }
 
 const removeTag = (index: number) => {
@@ -189,6 +200,21 @@ const removeTag = (index: number) => {
         <section>
           <label>Board Name</label>
           <InputText v-model="localConfig.name" fluid />
+        </section>
+
+        <section>
+          <label>Done Statuses</label>
+          <MultiSelect
+            v-model="localConfig.doneStatuses"
+            :options="statusValues"
+            option-label="name"
+            option-value="id"
+            placeholder="Select Done statuses"
+            :max-selected-labels="3"
+            class="w-full"
+            fluid
+          />
+          <p class="section-help">Cards in these statuses are considered finished.</p>
         </section>
 
         <section>
@@ -345,6 +371,13 @@ section label {
   font-size: 0.85rem;
   color: var(--text-secondary);
   margin-bottom: 0.5rem;
+}
+
+.section-help {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: 0.25rem;
+  margin-bottom: 0;
 }
 
 .section-header {

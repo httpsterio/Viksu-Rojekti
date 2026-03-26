@@ -190,6 +190,7 @@ pub fn handle_cli(command: Commands, project_dir: PathBuf) {
             if name.is_empty() || prefix.is_empty() {
                 eprintln!("Error: name and prefix are required.");
             } else {
+                let done_id = uuid::Uuid::new_v4().to_string();
                 let mut config = BoardConfig {
                     name: name.to_string(),
                     prefix: prefix.to_string(),
@@ -199,7 +200,7 @@ pub fn handle_cli(command: Commands, project_dir: PathBuf) {
                         Status { id: uuid::Uuid::new_v4().to_string(), name: "Todo".into(), pending_rename: None },
                         Status { id: uuid::Uuid::new_v4().to_string(), name: "In Progress".into(), pending_rename: None },
                         Status { id: uuid::Uuid::new_v4().to_string(), name: "Review".into(), pending_rename: None },
-                        Status { id: uuid::Uuid::new_v4().to_string(), name: "Done".into(), pending_rename: None },
+                        Status { id: done_id.clone(), name: "Done".into(), pending_rename: None },
                     ],
                     epics: Vec::new(),
                     tags: Vec::new(),
@@ -210,6 +211,7 @@ pub fn handle_cli(command: Commands, project_dir: PathBuf) {
                         Priority { name: "Moderate".into(),    color: "#68d391".into() },
                         Priority { name: "Low".into(),         color: "#a0aec0".into() },
                     ],
+                    done_statuses: vec![done_id],
                 };
                 
                 storage::ensure_ids(&mut config);

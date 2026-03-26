@@ -14,8 +14,12 @@ import type { BoardState } from "@/types"
 
 mdConfig({})
 
-const boardState = await invoke<BoardState>("get_board_state").catch(() => ({ theme: "sane" } as BoardState))
-const initialTheme: ThemeName = THEME_CYCLE.includes(boardState.theme as ThemeName) ? boardState.theme as ThemeName : "sane"
+const boardState = await invoke<BoardState>("get_board_state").catch(
+  () => ({ theme: "sane" }) as BoardState,
+)
+const initialTheme: ThemeName = THEME_CYCLE.includes(boardState.theme as ThemeName)
+  ? (boardState.theme as ThemeName)
+  : "sane"
 document.documentElement.setAttribute("data-theme", initialTheme)
 
 const app = createApp(App)

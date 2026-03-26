@@ -38,6 +38,8 @@ pub struct BoardConfig {
     pub epics: Vec<Epic>,
     pub tags: Vec<Tag>,
     pub priorities: Vec<Priority>,
+    #[serde(default)]
+    pub done_statuses: Vec<String>,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug)]

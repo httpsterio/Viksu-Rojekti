@@ -1,4 +1,4 @@
-generated: 2026-03-25T04:35:35.406701700+02:00
+generated: 2026-03-26T03:17:10.964041900+02:00
 cardCount: 59
 cards:
 - id: roj-009
@@ -448,12 +448,12 @@ cards:
   created: 2026-03-22
 - id: roj-055
   title: 'feat: Done toggle for Statuses in settings'
-  status: DOING
+  status: DONE
   epic: Settings
   tags:
   - Feature
   priority: 3
-  position: 1.0
+  position: 0.25
   created: 2026-03-22
 - id: roj-056
   title: 'test: Backend Rust testing'
