@@ -1,4 +1,4 @@
-generated: 2026-03-26T22:16:28.868417900+02:00
+generated: 2026-03-26T22:44:07.757482800+02:00
 cardCount: 62
 cards:
 - id: roj-009
@@ -198,7 +198,7 @@ cards:
 - id: roj-029
   title: 'style: New card modal and edit modal inconsistency'
   status: BACKLOG
-  epic: Settings
+  epic: General
   tags:
   - UX
   - Polish
@@ -259,7 +259,7 @@ cards:
 - id: roj-035
   title: 'feat: Hotkeys'
   status: BACKLOG
-  epic: Board
+  epic: General
   tags:
   - Feature
   - Polish
@@ -269,7 +269,7 @@ cards:
 - id: roj-036
   title: 'feat: Internationalisation'
   status: BACKLOG
-  epic: Publishing
+  epic: General
   tags:
   - Polish
   - Feature
@@ -354,12 +354,12 @@ cards:
   created: 2026-03-21
 - id: roj-045
   title: 'feat: Done cards in Epic view'
-  status: TO DO
+  status: DONE
   epic: Board
   tags:
   - Bug
   priority: 4
-  position: 0.03474289330188185
+  position: 0.03125
   created: 2026-03-21
 - id: roj-046
   title: 'feat: Search by ID'
@@ -412,7 +412,7 @@ cards:
 - id: roj-051
   title: 'fix: DnD on Linux/Mac'
   status: BACKLOG
-  epic: Board
+  epic: General
   tags:
   - Bug
   priority: 3

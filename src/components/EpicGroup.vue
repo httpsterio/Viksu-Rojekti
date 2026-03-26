@@ -1,21 +1,37 @@
 <script setup lang="ts">
+import { ref, computed } from "vue"
 import type { Card, Epic } from "@/types"
 import CardComponent from "./Card.vue"
+import { useBoard } from "@/composables/useBoard"
 
-defineProps<{
+const props = defineProps<{
   epic?: Epic
   cards: Card[]
 }>()
+
+const { doneStatusNames } = useBoard()
+
+const activeCards = computed(() => props.cards.filter((c) => !doneStatusNames.value.has(c.status)))
+const doneCards = computed(() => props.cards.filter((c) => doneStatusNames.value.has(c.status)))
+
+const doneExpanded = ref(false)
 </script>
 
 <template>
   <div class="epic-group" :style="{ borderLeftColor: epic?.color || 'var(--text-muted)' }">
     <div class="epic-header">
       <h3>{{ epic?.name || "Unassigned" }}</h3>
-      <span class="count">{{ cards.length }}</span>
+      <span class="count">{{ activeCards.length }}</span>
     </div>
     <div class="epic-cards">
-      <CardComponent v-for="card in cards" :key="card.id" :card="card" />
+      <CardComponent v-for="card in activeCards" :key="card.id" :card="card" />
+    </div>
+    <button v-if="doneCards.length > 0" class="done-toggle" @click="doneExpanded = !doneExpanded">
+      <i :class="doneExpanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'" />
+      {{ doneExpanded ? "Hide" : "Show" }} {{ doneCards.length }} done {{ doneCards.length === 1 ? "item" : "items" }}
+    </button>
+    <div v-if="doneExpanded" class="epic-cards done-cards">
+      <CardComponent v-for="card in doneCards" :key="card.id" :card="card" />
     </div>
   </div>
 </template>
@@ -57,6 +73,27 @@ defineProps<{
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 1rem;
+}
+
+.done-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 1rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  padding: 0;
+}
+
+.done-toggle:hover {
+  color: var(--text-secondary);
+}
+
+.done-cards {
+  margin-top: 0.75rem;
 }
 
 @media (max-width: 600px) {
