@@ -1,6 +1,6 @@
 theme: sane
 collapsedStatuses:
-- ARCHIVE
+- DONE
 activeFilters:
   epic: null
   tag: null
