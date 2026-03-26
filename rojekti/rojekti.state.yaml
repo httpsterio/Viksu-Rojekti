@@ -6,3 +6,7 @@ activeFilters:
   tag: null
   priority: null
 view: board
+windowWidth: 696
+windowHeight: 800
+windowX: -992
+windowY: 706

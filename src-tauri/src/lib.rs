@@ -55,7 +55,38 @@ pub fn run() {
             watcher: std::sync::Mutex::new(None),
         })
         .setup(move |app| {
+            let state_path = project_dir.join("rojekti").join("rojekti.state.yaml");
+            let board_state = storage::read_board_state(&state_path);
+
             if let Some(window) = app.get_webview_window("main") {
+                if board_state.window_width > 0 && board_state.window_height > 0 {
+                    let _ = window.set_size(tauri::Size::Physical(tauri::PhysicalSize::new(
+                        board_state.window_width,
+                        board_state.window_height,
+                    )));
+                }
+                if board_state.window_x != 0 || board_state.window_y != 0 {
+                    let _ = window.set_position(tauri::Position::Physical(tauri::PhysicalPosition::new(
+                        board_state.window_x,
+                        board_state.window_y,
+                    )));
+                }
+
+                let state_path_close = state_path.clone();
+                let window_close = window.clone();
+                window.on_window_event(move |event| {
+                    if let tauri::WindowEvent::CloseRequested { .. } = event {
+                        let size = window_close.inner_size().unwrap_or_default();
+                        let pos = window_close.outer_position().unwrap_or_default();
+                        let mut state = storage::read_board_state(&state_path_close);
+                        state.window_width = size.width;
+                        state.window_height = size.height;
+                        state.window_x = pos.x;
+                        state.window_y = pos.y;
+                        let _ = storage::write_board_state(&state_path_close, &state);
+                    }
+                });
+
                 let _ = window.show();
             }
 

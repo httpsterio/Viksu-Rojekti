@@ -128,6 +128,14 @@ pub struct BoardState {
     pub active_filters: ActiveFilters,
     #[serde(default = "default_view")]
     pub view: String,
+    #[serde(default)]
+    pub window_width: u32,
+    #[serde(default)]
+    pub window_height: u32,
+    #[serde(default)]
+    pub window_x: i32,
+    #[serde(default)]
+    pub window_y: i32,
 }
 
 fn default_theme() -> String { "light".to_string() }
@@ -140,6 +148,10 @@ impl Default for BoardState {
             collapsed_statuses: Vec::new(),
             active_filters: ActiveFilters::default(),
             view: default_view(),
+            window_width: 0,
+            window_height: 0,
+            window_x: 0,
+            window_y: 0,
         }
     }
 }

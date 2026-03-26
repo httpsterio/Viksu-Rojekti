@@ -1,5 +1,5 @@
-generated: 2026-03-26T04:53:54.924982+02:00
-cardCount: 60
+generated: 2026-03-26T16:14:07.912241400+02:00
+cardCount: 61
 cards:
 - id: roj-009
   title: 'fix: Broken cards graceful failing'
@@ -579,3 +579,13 @@ cards:
   priority: 3
   position: 0.125
   created: 2026-03-25
+- id: roj-070
+  title: 'feat: Get/Set Windows size to state'
+  status: DOING
+  epic: Board
+  tags:
+  - Feature
+  - Backend
+  priority: 3
+  position: 1.0
+  created: 2026-03-26
