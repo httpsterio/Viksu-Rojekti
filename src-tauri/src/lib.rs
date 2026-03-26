@@ -66,10 +66,21 @@ pub fn run() {
                     )));
                 }
                 if board_state.window_x != 0 || board_state.window_y != 0 {
-                    let _ = window.set_position(tauri::Position::Physical(tauri::PhysicalPosition::new(
-                        board_state.window_x,
-                        board_state.window_y,
-                    )));
+                    let monitors = window.available_monitors().unwrap_or_default();
+                    let on_screen = monitors.iter().any(|m| {
+                        let pos = m.position();
+                        let size = m.size();
+                        board_state.window_x >= pos.x
+                            && board_state.window_y >= pos.y
+                            && board_state.window_x < pos.x + size.width as i32
+                            && board_state.window_y < pos.y + size.height as i32
+                    });
+                    if on_screen {
+                        let _ = window.set_position(tauri::Position::Physical(tauri::PhysicalPosition::new(
+                            board_state.window_x,
+                            board_state.window_y,
+                        )));
+                    }
                 }
 
                 let state_path_close = state_path.clone();
