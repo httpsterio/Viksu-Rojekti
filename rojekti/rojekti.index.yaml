@@ -1,5 +1,5 @@
-generated: 2026-03-26T03:45:32.418083900+02:00
-cardCount: 59
+generated: 2026-03-26T04:34:52.517368200+02:00
+cardCount: 60
 cards:
 - id: roj-009
   title: 'fix: Broken cards graceful failing'
@@ -147,7 +147,7 @@ cards:
   position: 4.8447265625
   created: 2026-03-20
 - id: roj-024
-  title: 'feat: Archive and Deleted fixed statuses'
+  title: 'feat: Hidden Statuses and Deleted Cards'
   status: TO DO
   epic: Board
   tags:
@@ -207,13 +207,13 @@ cards:
   created: 2026-03-20
 - id: roj-030
   title: 'feat: Checklists in Card modal'
-  status: BACKLOG
+  status: TO DO
   epic: Settings
   tags:
   - Feature
   - UX
   priority: 4
-  position: 18.5
+  position: 2.875
   created: 2026-03-20
 - id: roj-031
   title: 'style: Store board status to a state yaml file'
@@ -400,14 +400,14 @@ cards:
   created: 2026-03-21
 - id: roj-050
   title: 'feat: Improve settings page'
-  status: BACKLOG
+  status: TO DO
   epic: Card
   tags:
   - Feature
   - UX
   - Polish
   priority: 4
-  position: 23.0
+  position: 3.875
   created: 2026-03-21
 - id: roj-051
   title: 'fix: DnD on Linux/Mac'
@@ -523,12 +523,12 @@ cards:
   created: 2026-03-23
 - id: roj-063
   title: 'feat: DueDate field'
-  status: BACKLOG
+  status: TO DO
   epic: Editor
   tags:
   - Feature
   priority: 4
-  position: 26.0
+  position: 4.875
   created: 2026-03-23
 - id: roj-065
   title: 'style: Migrate to Tailwind + PrimeVue unstyled mode'
@@ -568,4 +568,14 @@ cards:
   - Backend
   priority: 2
   position: 3.814697265625e-6
+  created: 2026-03-25
+- id: roj-069
+  title: 'feat: Done card visual treatment'
+  status: TO DO
+  epic: Board
+  tags:
+  - Feature
+  - UX
+  priority: 3
+  position: 0.008685723325470462
   created: 2026-03-25
