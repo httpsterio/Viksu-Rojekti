@@ -1,4 +1,4 @@
-generated: 2026-03-27T01:02:41.349817900+02:00
+generated: 2026-03-27T09:17:09.159650800+02:00
 cardCount: 63
 cards:
 - id: roj-009
@@ -138,12 +138,12 @@ cards:
   created: 2026-03-20
 - id: roj-024
   title: 'feat: Hidden Statuses'
-  status: ARCHIVE
+  status: DOING
   epic: Board
   tags:
   - Feature
   priority: 4
-  position: 4.76837158203125e-7
+  position: 1.0
   created: 2026-03-20
 - id: roj-025
   title: 'fix: Silent overwrites of cards'

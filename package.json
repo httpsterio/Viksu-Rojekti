@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "cmd.exe /c npm run tauri -- dev",
     "build": "cmd.exe /c npm run tauri -- build",
+    "vite:dev": "vite",
     "vite:build": "vite build",
     "tauri": "tauri",
     "lint": "eslint src",

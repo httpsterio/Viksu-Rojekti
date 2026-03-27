@@ -62,6 +62,7 @@ export function useBoard() {
             priority: activeFilters.value.priority,
           },
           view: currentView.value,
+          showHiddenLanes: showHiddenLanes.value,
         } satisfies BoardState,
       })
     } catch (e) {
@@ -94,12 +95,14 @@ export function useBoard() {
           activeFilters.value.tag = boardState.activeFilters.tag
           activeFilters.value.priority = boardState.activeFilters.priority
           currentView.value = boardState.view as "board" | "epics"
+          showHiddenLanes.value = boardState.showHiddenLanes
           stateLoaded = true
 
           if (!watchersInitialized) {
             watchersInitialized = true
             watch(() => currentTheme.value, saveState)
             watch(() => currentView.value, saveState)
+            watch(() => showHiddenLanes.value, saveState)
             watch(() => [...collapsedStatuses.value], saveState, { deep: true })
             watch(
               () => [

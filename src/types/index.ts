@@ -67,6 +67,7 @@ export interface BoardState {
   collapsedStatuses: string[]
   activeFilters: ActiveFilters
   view: string
+  showHiddenLanes: boolean
 }
 
 export interface Index {

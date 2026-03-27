@@ -140,6 +140,8 @@ pub struct BoardState {
     pub window_x: i32,
     #[serde(default)]
     pub window_y: i32,
+    #[serde(default)]
+    pub show_hidden_lanes: bool,
 }
 
 fn default_theme() -> String { "light".to_string() }
@@ -156,6 +158,7 @@ impl Default for BoardState {
             window_height: 0,
             window_x: 0,
             window_y: 0,
+            show_hidden_lanes: false,
         }
     }
 }

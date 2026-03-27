@@ -9,7 +9,8 @@ import InputGroup from "primevue/inputgroup"
 import InputGroupAddon from "primevue/inputgroupaddon"
 import Popover from "primevue/popover"
 
-const { config, activeFilters, currentView, isCreating, themeIcon, cycleTheme, showHiddenLanes } = useBoard()
+const { config, activeFilters, currentView, isCreating, themeIcon, cycleTheme, showHiddenLanes } =
+  useBoard()
 
 defineEmits(["open-settings"])
 
@@ -61,14 +62,6 @@ const clearAllFilters = () => {
           :class="{ 'p-button-secondary': currentView !== view.value }"
           size="small"
           @click="currentView = view.value as 'board' | 'epics'"
-        />
-        <Button
-          v-if="config.hiddenStatusesEnabled"
-          icon="pi pi-eye-slash"
-          label="Hidden"
-          :severity="showHiddenLanes ? undefined : 'secondary'"
-          size="small"
-          @click="showHiddenLanes = !showHiddenLanes"
         />
       </ButtonGroup>
     </div>
@@ -162,7 +155,15 @@ const clearAllFilters = () => {
 
     <div class="right">
       <ButtonGroup>
-        <Button :icon="themeIcon" text @click="cycleTheme" />
+        <!-- <Button :icon="themeIcon" text @click="cycleTheme" /> -->
+        <Button
+          v-if="config.hiddenStatusesEnabled"
+          icon="pi pi-eye"
+          text
+          :severity="showHiddenLanes ? undefined : 'secondary'"
+          size="small"
+          @click="showHiddenLanes = !showHiddenLanes"
+        />
         <Button icon="pi pi-cog" text @click="$emit('open-settings')" />
       </ButtonGroup>
       <Button label="New Card" size="small" icon="pi pi-plus" @click="isCreating = true" />
