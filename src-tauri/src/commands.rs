@@ -45,6 +45,7 @@ pub fn get_board_state(state: State<AppState>) -> BoardState {
 
 #[tauri::command]
 pub fn save_board_state(board_state: BoardState, state: State<AppState>) -> Result<(), String> {
+    *state.last_gui_write.lock().map_err(|e| format!("Lock error: {}", e))? = std::time::Instant::now();
     storage::write_board_state(
         &state.project_dir.join("rojekti").join("rojekti.state.yaml"),
         &board_state,
