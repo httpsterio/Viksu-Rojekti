@@ -1,4 +1,4 @@
-generated: 2026-03-27T11:52:14.313287700+02:00
+generated: 2026-03-27T15:09:42.593264400+02:00
 cardCount: 63
 cards:
 - id: roj-009
@@ -138,12 +138,12 @@ cards:
   created: 2026-03-20
 - id: roj-024
   title: 'feat: Hidden Statuses'
-  status: DONE
+  status: ARCHIVE
   epic: Board
   tags:
   - Feature
   priority: 4
-  position: 0.125
+  position: 7.450580596923831e-9
   created: 2026-03-20
 - id: roj-025
   title: 'fix: Silent overwrites of cards'
@@ -207,14 +207,14 @@ cards:
   created: 2026-03-20
 - id: roj-031
   title: 'style: Store board status to a state yaml file'
-  status: DONE
+  status: ARCHIVE
   epic: Board
   tags:
   - UX
   - Feature
   - Backend
   priority: 5
-  position: 2.5
+  position: 4.656612873077395e-10
   created: 2026-03-20
 - id: roj-032
   title: 'chore: Priority system'
@@ -438,12 +438,12 @@ cards:
   created: 2026-03-22
 - id: roj-055
   title: 'feat: Done toggle for Statuses in settings'
-  status: DONE
+  status: ARCHIVE
   epic: Settings
   tags:
   - Feature
   priority: 3
-  position: 0.25
+  position: 3.725290298461916e-9
   created: 2026-03-22
 - id: roj-056
   title: 'test: Backend Rust testing'
@@ -571,22 +571,22 @@ cards:
   created: 2026-03-25
 - id: roj-070
   title: 'feat: Get/Set Windows size to state'
-  status: DONE
+  status: ARCHIVE
   epic: Board
   tags:
   - Feature
   - Backend
   priority: 3
-  position: 0.5
+  position: 1.862645149230958e-9
   created: 2026-03-26
 - id: roj-071
   title: 'feat: Sort cards in Epic'
-  status: DONE
+  status: ARCHIVE
   epic: Board
   tags:
   - Polish
   priority: 0
-  position: 1.5
+  position: 9.31322574615479e-10
   created: 2026-03-26
 - id: roj-072
   title: 'feat: Deleted cards view in settings'
