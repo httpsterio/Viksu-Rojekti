@@ -54,6 +54,14 @@ const getTagStyle = (name: string) => {
   >
     <div class="card-header">
       <span class="card-id">{{ card.id }}</span>
+      <div
+        v-if="checklistInfo"
+        class="checklist-progress"
+        :class="{ 'checklist-complete': checklistInfo.isComplete }"
+      >
+        <i class="pi pi-check-square"></i>
+        <span>{{ checklistInfo.text }}</span>
+      </div>
     </div>
     <h4 class="card-title">{{ card.title }}</h4>
     <div class="card-meta">
@@ -64,14 +72,6 @@ const getTagStyle = (name: string) => {
       >
         {{ epic.name }}
       </span>
-      <div
-        v-if="checklistInfo"
-        class="checklist-progress"
-        :class="{ 'checklist-complete': checklistInfo.isComplete }"
-      >
-        <i class="pi pi-check-square"></i>
-        <span>{{ checklistInfo.text }}</span>
-      </div>
       <span
         v-for="tagName in card.tags"
         :key="tagName"
@@ -81,8 +81,8 @@ const getTagStyle = (name: string) => {
         {{ getTag(tagName)?.name || tagName }}
       </span>
     </div>
-    </div>
-    </template>
+  </div>
+</template>
 <style scoped>
 .card {
   background: var(--bg-card);
@@ -116,6 +116,9 @@ const getTagStyle = (name: string) => {
 }
 
 .card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 0.25rem;
 }
 
