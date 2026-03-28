@@ -1,5 +1,6 @@
 import { ref, computed, watch } from "vue"
 import { invoke } from "@tauri-apps/api/core"
+import { getCurrentWindow } from "@tauri-apps/api/window"
 import type { BoardConfig, BoardState, Card, AllCardsResult } from "@/types"
 import { useToast } from "primevue/usetoast"
 import { themes, applyTheme, nextTheme, THEME_CYCLE, type ThemeName } from "@/themes"
@@ -81,6 +82,7 @@ export function useBoard() {
       ])
       if (generation === loadGeneration) {
         config.value = newConfig
+        getCurrentWindow().setTitle(newConfig.name || "Rojekti")
         cards.value = result.cards
         showHiddenLanes.value = false
 

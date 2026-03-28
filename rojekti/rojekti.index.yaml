@@ -1,4 +1,4 @@
-generated: 2026-03-27T15:09:42.593264400+02:00
+generated: 2026-03-28T16:28:53.399549200+02:00
 cardCount: 63
 cards:
 - id: roj-009
@@ -600,10 +600,10 @@ cards:
   created: 2026-03-26
 - id: roj-073
   title: 'feat: Board name as Window title'
-  status: TO DO
+  status: DONE
   epic: General
   tags:
   - Feature
   priority: 4
-  position: 5.875
+  position: 1.0
   created: 2026-03-27
