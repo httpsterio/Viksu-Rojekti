@@ -104,17 +104,16 @@ const formatName = (name: string) => name.replace(/-/g, " ").toUpperCase()
 
     <template v-else>
       <div class="lane-header">
-        <div class="header-left">
-          <h3>{{ formatName(name) }}</h3>
-          <span class="lane-count">{{ cards.length }}</span>
-        </div>
         <Button
           icon="pi pi-angle-left"
           text
           rounded
           size="small"
+          class="lane-collapse-btn"
           @click="toggleStatusCollapse(id)"
         />
+        <h3>{{ formatName(name) }}</h3>
+        <span class="lane-count">{{ cards.length }}</span>
       </div>
       <div ref="cardContainer" class="lane-body" :data-status-id="id">
         <Card
@@ -156,16 +155,15 @@ const formatName = (name: string) => name.replace(/-/g, " ").toUpperCase()
 }
 
 .lane-header {
-  padding: 0.75rem 1rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.header-left {
+  padding: 0.5rem 0.75rem;
   display: flex;
   align-items: center;
   gap: 0.5rem;
+}
+
+.lane-collapse-btn {
+  width: 2rem !important;
+  height: 2rem !important;
 }
 
 .lane-header h3 {
@@ -174,6 +172,8 @@ const formatName = (name: string) => name.replace(/-/g, " ").toUpperCase()
   font-weight: 700;
   letter-spacing: 0.05em;
   color: var(--text-secondary);
+  flex: 1;
+  text-align: center;
 }
 
 .lane-count {
