@@ -18,6 +18,8 @@ Rojekti is a local-first kanban board built with Tauri 2. Cards are stored as Ma
 
 **Never commit without being asked.** Do not stage or commit files unless explicitly instructed.
 
+**REPLACE TOOL BOUNDARY RULE.** When using the `replace` tool, the `old_string` and `new_string` MUST share the exact same starting and ending characters (e.g., both must start and end at the same line or brace). Always include the closing brace (`}`) or closing tag (`</div>`, `</style>`) of the block being modified to ensure a clean boundary and prevent trailing garbage.
+
 ---
 
 ## Dev environment

@@ -171,6 +171,7 @@ pub fn handle_cli(command: Commands, project_dir: PathBuf) {
                                 position: max_pos + 1.0,
                                 created: Local::now().format("%Y-%m-%d").to_string(),
                                 checklist: Vec::new(),
+                                due_date: None,
                             },
                             body: "".to_string(),
                         };
@@ -215,6 +216,7 @@ pub fn handle_cli(command: Commands, project_dir: PathBuf) {
                     done_statuses: vec![done_id],
                     hidden_statuses: Vec::new(),
                     hidden_statuses_enabled: false,
+                    due_date_threshold: 7,
                 };
                 
                 storage::ensure_ids(&mut config);

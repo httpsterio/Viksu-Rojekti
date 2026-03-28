@@ -9,6 +9,7 @@ export interface BoardConfig {
   doneStatuses: string[]
   hiddenStatuses: string[]
   hiddenStatusesEnabled: boolean
+  dueDateThreshold: number
 }
 
 export interface Status {
@@ -52,6 +53,7 @@ export interface CardMeta {
   position: number
   created: string
   checklist: ChecklistItem[]
+  dueDate?: string
 }
 
 export interface Card extends CardMeta {

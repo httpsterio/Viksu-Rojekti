@@ -15,6 +15,18 @@ const isDone = computed(() => doneStatusNames.value.has(props.card.status))
 
 const epic = computed(() => config.value?.epics.find((e) => e.name === props.card.epic))
 
+const dueDateBorderColor = computed(() => {
+  if (!props.card.dueDate || isDone.value) return "transparent"
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
+  const due = new Date(props.card.dueDate)
+  const diffDays = Math.ceil((due.getTime() - today.getTime()) / (1000 * 60 * 60 * 24))
+  const threshold = config.value?.dueDateThreshold ?? 7
+  if (diffDays < 0) return "#E53E3E" // overdue — red
+  if (diffDays <= threshold) return "#ECC94B" // due soon — yellow
+  return "transparent"
+})
+
 const checklistInfo = computed(() => {
   if (!props.card.checklist || props.card.checklist.length === 0) return null
   const total = props.card.checklist.length
@@ -44,11 +56,12 @@ const getTagStyle = (name: string) => {
   <div
     class="card"
     :class="{ 'card-done': isDone, 'priority-0': card.priority === 0 }"
-    :style="
+    :style="[
       card.priority > 0 && config
         ? { borderLeftColor: config.priorities[card.priority - 1]?.color }
-        : {}
-    "
+        : {},
+      { borderRightColor: dueDateBorderColor },
+    ]"
     :data-card-id="card.id"
     @click="editingCard = card"
   >
@@ -83,10 +96,12 @@ const getTagStyle = (name: string) => {
     </div>
   </div>
 </template>
+
 <style scoped>
 .card {
   background: var(--bg-card);
   border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
   border-radius: var(--card-radius);
   padding: 0.75rem;
   margin-bottom: 0.75rem;

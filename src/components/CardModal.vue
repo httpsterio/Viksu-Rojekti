@@ -8,6 +8,7 @@ import InputText from "primevue/inputtext"
 import Select from "primevue/select"
 import MultiSelect from "primevue/multiselect"
 import Checkbox from "primevue/checkbox"
+import DatePicker from "primevue/datepicker"
 import Tag from "primevue/tag"
 import Chip from "primevue/chip"
 import ButtonGroup from "primevue/buttongroup"
@@ -43,6 +44,7 @@ const getInitialCard = (): Card => ({
   created: "",
   body: "",
   checklist: [],
+  dueDate: undefined,
 })
 
 const card = ref<Card>(getInitialCard())
@@ -67,6 +69,13 @@ const knownTags = computed({
 const orphanedTags = computed(() =>
   card.value.tags.filter((name) => !config.value?.tags.some((t) => t.name === name)),
 )
+
+const dueDateObj = computed({
+  get: () => (card.value.dueDate ? new Date(card.value.dueDate) : null),
+  set: (val: Date | null) => {
+    card.value.dueDate = val ? val.toISOString().split("T")[0] : undefined
+  },
+})
 
 const isEpicOrphaned = computed(
   () => card.value.epic && !config.value?.epics.some((e) => e.name === card.value.epic),
@@ -350,6 +359,17 @@ const removeTag = (name: string) => {
               @click="removeTag(tagName)"
             />
           </div>
+        </div>
+
+        <div class="field">
+          <label>Due Date</label>
+          <DatePicker
+            v-model="dueDateObj"
+            date-format="yy-mm-dd"
+            placeholder="No due date"
+            show-clear
+            fluid
+          />
         </div>
 
         <div class="field checklist-field">

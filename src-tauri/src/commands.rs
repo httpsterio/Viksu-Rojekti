@@ -75,6 +75,7 @@ pub fn create_card(
     priority: u8,
     body: String,
     checklist: Vec<ChecklistItem>,
+    due_date: Option<String>,
     state: State<AppState>,
 ) -> Result<Card, String> {
     let _lock = state.write_lock.lock().map_err(|e| format!("Lock error: {}", e))?;
@@ -115,6 +116,7 @@ pub fn create_card(
             position: max_pos + 1.0,
             created: Local::now().format("%Y-%m-%d").to_string(),
             checklist,
+            due_date,
         },
         body,
     };
@@ -221,6 +223,7 @@ pub fn init_project(
         done_statuses: vec![done_id],
         hidden_statuses: Vec::new(),
         hidden_statuses_enabled: false,
+        due_date_threshold: 7,
     };
     
     storage::ensure_ids(&mut config);

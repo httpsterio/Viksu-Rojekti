@@ -7,6 +7,7 @@ type WithDragId<T> = T & { _dragId: string }
 import Dialog from "primevue/dialog"
 import Button from "primevue/button"
 import InputText from "primevue/inputtext"
+import InputNumber from "primevue/inputnumber"
 import InputGroup from "primevue/inputgroup"
 import InputGroupAddon from "primevue/inputgroupaddon"
 import MultiSelect from "primevue/multiselect"
@@ -240,6 +241,12 @@ const removeTag = (index: number) => {
             fluid
           />
           <p class="section-help">Hidden statuses don't appear as lanes on the board.</p>
+        </section>
+
+        <section>
+          <label>Due date warning threshold (days)</label>
+          <InputNumber v-model="localConfig.dueDateThreshold" :min="1" :max="365" fluid />
+          <p class="section-help">Highlight cards yellow when they are due within this many days.</p>
         </section>
 
         <section>

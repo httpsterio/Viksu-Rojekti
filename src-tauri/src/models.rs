@@ -44,6 +44,12 @@ pub struct BoardConfig {
     pub hidden_statuses: Vec<String>,
     #[serde(default)]
     pub hidden_statuses_enabled: bool,
+    #[serde(default = "default_due_date_threshold")]
+    pub due_date_threshold: u32,
+}
+
+fn default_due_date_threshold() -> u32 {
+    7
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug)]
@@ -81,6 +87,8 @@ pub struct CardMeta {
     pub created: String,
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub checklist: Vec<ChecklistItem>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub due_date: Option<String>,
 }
 
 fn deserialize_priority<'de, D>(deserializer: D) -> Result<u8, D::Error>
