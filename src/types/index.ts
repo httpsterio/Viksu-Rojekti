@@ -36,6 +36,12 @@ export interface Tag {
   pendingRename?: string
 }
 
+export interface ChecklistItem {
+  id: string
+  text: string
+  done: boolean
+}
+
 export interface CardMeta {
   id: string
   title: string
@@ -45,6 +51,7 @@ export interface CardMeta {
   priority: number
   position: number
   created: string
+  checklist: ChecklistItem[]
 }
 
 export interface Card extends CardMeta {

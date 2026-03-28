@@ -110,6 +110,7 @@ pub fn create_card(
             priority,
             position: max_pos + 1.0,
             created: Local::now().format("%Y-%m-%d").to_string(),
+            checklist: Vec::new(),
         },
         body,
     };

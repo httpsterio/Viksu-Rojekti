@@ -7,6 +7,7 @@ import Button from "primevue/button"
 import InputText from "primevue/inputtext"
 import Select from "primevue/select"
 import MultiSelect from "primevue/multiselect"
+import Checkbox from "primevue/checkbox"
 import Tag from "primevue/tag"
 import Chip from "primevue/chip"
 import ButtonGroup from "primevue/buttongroup"
@@ -41,6 +42,7 @@ const getInitialCard = (): Card => ({
   position: 0,
   created: "",
   body: "",
+  checklist: [],
 })
 
 const card = ref<Card>(getInitialCard())
@@ -96,6 +98,7 @@ watch(visible, (val) => {
     if (editingCard.value) {
       card.value = { ...editingCard.value }
       if (!card.value.tags) card.value.tags = []
+      if (!card.value.checklist) card.value.checklist = []
       descriptionTab.value = "view"
     } else {
       card.value = {
@@ -105,6 +108,34 @@ watch(visible, (val) => {
       descriptionTab.value = "edit"
     }
   }
+})
+
+const newChecklistItem = ref("")
+
+const addItem = () => {
+  const text = newChecklistItem.value.trim()
+  if (text) {
+    if (!card.value.checklist) card.value.checklist = []
+    card.value.checklist.push({
+      id: crypto.randomUUID(),
+      text,
+      done: false,
+    })
+    newChecklistItem.value = ""
+  }
+}
+
+const removeItem = (id: string) => {
+  if (card.value.checklist) {
+    card.value.checklist = card.value.checklist.filter((i) => i.id !== id)
+  }
+}
+
+const checklistProgress = computed(() => {
+  if (!card.value.checklist || card.value.checklist.length === 0) return ""
+  const total = card.value.checklist.length
+  const done = card.value.checklist.filter((i) => i.done).length
+  return `${done}/${total}`
 })
 
 const isSaving = ref(false)
@@ -320,6 +351,39 @@ const removeTag = (name: string) => {
             />
           </div>
         </div>
+
+        <div class="field checklist-field">
+          <div class="checklist-header">
+            <label>Checklist</label>
+            <span class="checklist-progress-text">{{ checklistProgress }}</span>
+          </div>
+          <div class="checklist-items">
+            <div v-for="item in card.checklist" :key="item.id" class="checklist-item">
+              <Checkbox v-model="item.done" :binary="true" :input-id="item.id" />
+              <label :for="item.id" :class="{ 'item-done': item.done }">{{ item.text }}</label>
+              <Button
+                icon="pi pi-times"
+                severity="secondary"
+                text
+                rounded
+                size="small"
+                class="remove-item-btn"
+                @click="removeItem(item.id)"
+              />
+            </div>
+          </div>
+          <div class="add-checklist-item">
+            <div class="p-inputgroup">
+              <InputText
+                v-model="newChecklistItem"
+                placeholder="Add an item..."
+                size="small"
+                @keydown.enter.prevent="addItem"
+              />
+              <Button icon="pi pi-plus" size="small" @click="addItem" />
+            </div>
+          </div>
+        </div>
       </div>
 
       <div class="description-section">
@@ -531,5 +595,69 @@ const removeTag = (name: string) => {
   height: 0.75rem;
   border-radius: 50%;
   display: inline-block;
+}
+
+.checklist-field {
+  border-top: 1px solid var(--border-color);
+  padding-top: 1.25rem;
+  margin-top: 1.25rem;
+}
+
+.checklist-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.checklist-header label {
+  margin-bottom: 0;
+}
+
+.checklist-progress-text {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.checklist-items {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.checklist-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.85rem;
+}
+
+.checklist-item label {
+  margin-bottom: 0;
+  flex: 1;
+  cursor: pointer;
+  line-height: 1.4;
+}
+
+.item-done {
+  text-decoration: line-through;
+  opacity: 0.6;
+}
+
+.remove-item-btn {
+  width: 2rem !important;
+  height: 2rem !important;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.checklist-item:hover .remove-item-btn {
+  opacity: 1;
+}
+
+.add-checklist-item {
+  margin-top: 0.25rem;
 }
 </style>

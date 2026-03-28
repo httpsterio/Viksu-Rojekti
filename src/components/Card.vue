@@ -15,6 +15,16 @@ const isDone = computed(() => doneStatusNames.value.has(props.card.status))
 
 const epic = computed(() => config.value?.epics.find((e) => e.name === props.card.epic))
 
+const checklistInfo = computed(() => {
+  if (!props.card.checklist || props.card.checklist.length === 0) return null
+  const total = props.card.checklist.length
+  const done = props.card.checklist.filter((i) => i.done).length
+  return {
+    text: `${done}/${total}`,
+    isComplete: done === total,
+  }
+})
+
 const getTag = (name: string) => config.value?.tags.find((t) => t.name === name)
 
 const getTagStyle = (name: string) => {
@@ -54,6 +64,14 @@ const getTagStyle = (name: string) => {
       >
         {{ epic.name }}
       </span>
+      <div
+        v-if="checklistInfo"
+        class="checklist-progress"
+        :class="{ 'checklist-complete': checklistInfo.isComplete }"
+      >
+        <i class="pi pi-check-square"></i>
+        <span>{{ checklistInfo.text }}</span>
+      </div>
       <span
         v-for="tagName in card.tags"
         :key="tagName"
@@ -63,9 +81,8 @@ const getTagStyle = (name: string) => {
         {{ getTag(tagName)?.name || tagName }}
       </span>
     </div>
-  </div>
-</template>
-
+    </div>
+    </template>
 <style scoped>
 .card {
   background: var(--bg-card);
@@ -135,6 +152,19 @@ const getTagStyle = (name: string) => {
 
 .epic-badge::before {
   content: "@";
+}
+
+.checklist-progress {
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.checklist-complete {
+  color: var(--p-success-color, #22c55e);
 }
 
 .tag-pill {

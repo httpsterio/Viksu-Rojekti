@@ -59,6 +59,14 @@ pub struct Epic {
 
 #[derive(Serialize, Deserialize, Clone, Debug)]
 #[serde(rename_all = "camelCase")]
+pub struct ChecklistItem {
+    pub id: String,
+    pub text: String,
+    pub done: bool,
+}
+
+#[derive(Serialize, Deserialize, Clone, Debug)]
+#[serde(rename_all = "camelCase")]
 pub struct CardMeta {
     pub id: String,
     pub title: String,
@@ -71,6 +79,8 @@ pub struct CardMeta {
     pub priority: u8,
     pub position: f64,
     pub created: String,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub checklist: Vec<ChecklistItem>,
 }
 
 fn deserialize_priority<'de, D>(deserializer: D) -> Result<u8, D::Error>

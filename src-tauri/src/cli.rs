@@ -170,6 +170,7 @@ pub fn handle_cli(command: Commands, project_dir: PathBuf) {
                                 priority: priority_val,
                                 position: max_pos + 1.0,
                                 created: Local::now().format("%Y-%m-%d").to_string(),
+                                checklist: Vec::new(),
                             },
                             body: "".to_string(),
                         };
