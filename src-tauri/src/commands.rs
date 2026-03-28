@@ -2,8 +2,8 @@ use tauri::State;
 use chrono::Local;
 use std::fs;
 use crate::models::{
-    ActiveFilters, AllCardsResult, AppState, BoardConfig, BoardState, Card, CardMeta, ChecklistItem,
-    Index, Priority, Status,
+    AllCardsResult, AppState, BoardConfig, BoardState, Card, CardMeta, ChecklistItem, Index,
+    Priority, Status,
 };
 use crate::{storage, index};
 

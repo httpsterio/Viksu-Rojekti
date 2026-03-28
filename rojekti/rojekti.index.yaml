@@ -1,5 +1,5 @@
-generated: 2026-03-28T23:18:52.367270600+02:00
-cardCount: 65
+generated: 2026-03-28T23:36:56.486514+02:00
+cardCount: 67
 cards:
 - id: roj-009
   title: 'fix: Broken cards graceful failing'
@@ -631,4 +631,25 @@ cards:
   - Bug
   priority: 3
   position: 2.0
+  created: 2026-03-28
+- id: roj-077
+  title: 'feat: Command palette'
+  status: TO DO
+  epic: General
+  tags:
+  - Feature
+  - UX
+  priority: 4
+  position: 5.875
+  created: 2026-03-28
+- id: roj-078
+  title: 'feat: Compact output for CLI'
+  status: TO DO
+  epic: Command Line
+  tags:
+  - Feature
+  - Backend
+  - CLI API
+  priority: 5
+  position: 6.875
   created: 2026-03-28
