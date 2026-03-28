@@ -1,5 +1,5 @@
-generated: 2026-03-28T16:28:53.399549200+02:00
-cardCount: 63
+generated: 2026-03-28T23:18:52.367270600+02:00
+cardCount: 65
 cards:
 - id: roj-009
   title: 'fix: Broken cards graceful failing'
@@ -197,13 +197,13 @@ cards:
   created: 2026-03-20
 - id: roj-030
   title: 'feat: Checklists in Card modal'
-  status: DOING
+  status: DONE
   epic: Settings
   tags:
   - Feature
   - UX
   priority: 4
-  position: 1.0
+  position: 0.5
   created: 2026-03-20
 - id: roj-031
   title: 'style: Store board status to a state yaml file'
@@ -513,12 +513,12 @@ cards:
   created: 2026-03-23
 - id: roj-063
   title: 'feat: DueDate field'
-  status: TO DO
+  status: DOING
   epic: Editor
   tags:
   - Feature
   priority: 4
-  position: 4.875
+  position: 1.0
   created: 2026-03-23
 - id: roj-065
   title: 'style: Migrate to Tailwind + PrimeVue unstyled mode'
@@ -607,3 +607,28 @@ cards:
   priority: 4
   position: 1.0
   created: 2026-03-27
+- id: roj-074
+  title: 'feat: Calendar view and Completed on date'
+  status: TO DO
+  epic: General
+  tags:
+  - Feature
+  priority: 4
+  position: 4.875
+  created: 2026-03-28
+  checklist:
+  - id: 0fa450b7-de1a-4322-9d88-c3ee591b34b5
+    text: calendar view
+    done: false
+  - id: db044815-aaad-4de3-a103-af1cd2b8955e
+    text: completed on date
+    done: false
+- id: roj-075
+  title: 'fix: When creating a new card, checklist items are not saved.'
+  status: TO DO
+  epic: Card
+  tags:
+  - Bug
+  priority: 3
+  position: 2.0
+  created: 2026-03-28

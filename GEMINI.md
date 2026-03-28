@@ -26,6 +26,7 @@ Rojekti is a local-first kanban board built with Tauri 2. Cards are stored as Ma
 - All build and run commands (`npm run dev`, `npm run build`, `cargo build`) must be run by the user on the Windows side — do not attempt to run them from the agent shell
 - Do not manage `node_modules`. If deps are missing, tell the user what to run.
 - Project path: `/mnt/d/MISC/PROJECTS/Rojekti/`
+- dO NOT
 
 ---
 
@@ -79,17 +80,18 @@ Description content here. Full markdown supported.
 
 ### Rust (`src-tauri/src/`)
 
-| File | Purpose |
-|------|---------|
-| `models.rs` | All structs. Every struct sent to the frontend has `#[serde(rename_all = "camelCase")]` |
-| `storage.rs` | All file I/O. Commands never touch the filesystem directly. |
-| `commands.rs` | Tauri command handlers. Call storage functions, never `std::fs` directly. |
-| `index.rs` | Index rebuild logic |
-| `cli.rs` | CLI command handlers |
-| `watcher.rs` | File watcher |
-| `lib.rs` | App startup, watcher init, WAL recovery on startup |
+| File          | Purpose                                                                                 |
+| ------------- | --------------------------------------------------------------------------------------- |
+| `models.rs`   | All structs. Every struct sent to the frontend has `#[serde(rename_all = "camelCase")]` |
+| `storage.rs`  | All file I/O. Commands never touch the filesystem directly.                             |
+| `commands.rs` | Tauri command handlers. Call storage functions, never `std::fs` directly.               |
+| `index.rs`    | Index rebuild logic                                                                     |
+| `cli.rs`      | CLI command handlers                                                                    |
+| `watcher.rs`  | File watcher                                                                            |
+| `lib.rs`      | App startup, watcher init, WAL recovery on startup                                      |
 
 Rules:
+
 - Return `Result<T, String>` from all command handlers. No `unwrap()` or `expect()`.
 - Use `.map_err(|e| format!("context: {}", e))` for error conversion.
 - Use `PathBuf` and `.join()` for all paths. No string concatenation.
@@ -114,7 +116,7 @@ Rules:
 
 ### Comments
 
-No comments explaining what code does. Only comment the *why*, and only when it's genuinely non-obvious.
+No comments explaining what code does. Only comment the _why_, and only when it's genuinely non-obvious.
 
 ---
 
@@ -126,6 +128,7 @@ No comments explaining what code does. Only comment the *why*, and only when it'
 - Do not put CLI handling in the Tauri setup hook
 - Do not use `any` in TypeScript
 - Do not run build commands from WSL
+- Don't focus on CLI behavior. We can ignore CLI entirely as it'll be totally redesigned.
 
 ---
 

@@ -1,7 +1,10 @@
 use tauri::State;
 use chrono::Local;
 use std::fs;
-use crate::models::{AppState, BoardConfig, BoardState, Card, CardMeta, Index, Status, AllCardsResult, Priority};
+use crate::models::{
+    ActiveFilters, AllCardsResult, AppState, BoardConfig, BoardState, Card, CardMeta, ChecklistItem,
+    Index, Priority, Status,
+};
 use crate::{storage, index};
 
 #[tauri::command]
@@ -71,6 +74,7 @@ pub fn create_card(
     tags: Vec<String>,
     priority: u8,
     body: String,
+    checklist: Vec<ChecklistItem>,
     state: State<AppState>,
 ) -> Result<Card, String> {
     let _lock = state.write_lock.lock().map_err(|e| format!("Lock error: {}", e))?;
@@ -110,7 +114,7 @@ pub fn create_card(
             priority,
             position: max_pos + 1.0,
             created: Local::now().format("%Y-%m-%d").to_string(),
-            checklist: Vec::new(),
+            checklist,
         },
         body,
     };
