@@ -19,7 +19,8 @@ const dueDateBorderColor = computed(() => {
   if (!props.card.dueDate || isDone.value) return "transparent"
   const today = new Date()
   today.setHours(0, 0, 0, 0)
-  const due = new Date(props.card.dueDate)
+  const [dy, dm, dd] = props.card.dueDate.split('-').map(Number)
+  const due = new Date(dy, dm - 1, dd)
   const diffDays = Math.ceil((due.getTime() - today.getTime()) / (1000 * 60 * 60 * 24))
   const threshold = config.value?.dueDateThreshold ?? 7
   if (diffDays < 0) return "#E53E3E" // overdue — red

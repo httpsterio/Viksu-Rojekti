@@ -1,4 +1,4 @@
-generated: 2026-03-29T00:19:17.415104200+02:00
+generated: 2026-03-29T01:41:16.963901100+02:00
 cardCount: 67
 cards:
 - id: roj-009
@@ -128,13 +128,13 @@ cards:
   created: 2026-03-20
 - id: roj-023
   title: 'style: cardmodal epics and tags dropdown coloring'
-  status: BACKLOG
+  status: DOING
   epic: Card
   tags:
   - UX
   - Polish
   priority: 4
-  position: 4.8447265625
+  position: 1.0
   created: 2026-03-20
 - id: roj-024
   title: 'feat: Hidden Statuses'
@@ -513,12 +513,12 @@ cards:
   created: 2026-03-23
 - id: roj-063
   title: 'feat: DueDate field'
-  status: DOING
+  status: DONE
   epic: Editor
   tags:
   - Feature
   priority: 4
-  position: 1.0
+  position: 0.25
   created: 2026-03-23
 - id: roj-065
   title: 'style: Migrate to Tailwind + PrimeVue unstyled mode'
@@ -625,12 +625,12 @@ cards:
     done: false
 - id: roj-075
   title: 'fix: When creating a new card, checklist items are not saved.'
-  status: TO DO
+  status: DONE
   epic: Card
   tags:
   - Bug
   priority: 3
-  position: 2.0
+  position: 0.125
   created: 2026-03-28
 - id: roj-077
   title: 'feat: Command palette'

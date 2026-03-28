@@ -1,14 +1,14 @@
 theme: sane
 collapsedStatuses:
-- BLOCKED / WONTFIX
 - ARCHIVE
+- BLOCKED / WONTFIX
 activeFilters:
   epic: null
   tag: null
   priority: null
 view: board
-windowWidth: 0
-windowHeight: 0
-windowX: 0
-windowY: 0
-showHiddenLanes: false
+windowWidth: 1299
+windowHeight: 853
+windowX: 104
+windowY: 104
+showHiddenLanes: true

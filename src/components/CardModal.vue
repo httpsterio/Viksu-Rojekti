@@ -71,9 +71,17 @@ const orphanedTags = computed(() =>
 )
 
 const dueDateObj = computed({
-  get: () => (card.value.dueDate ? new Date(card.value.dueDate) : null),
+  get: () => {
+    if (!card.value.dueDate) return null
+    const [y, m, d] = card.value.dueDate.split('-').map(Number)
+    return new Date(y, m - 1, d)
+  },
   set: (val: Date | null) => {
-    card.value.dueDate = val ? val.toISOString().split("T")[0] : undefined
+    if (!val) { card.value.dueDate = undefined; return }
+    const y = val.getFullYear()
+    const m = String(val.getMonth() + 1).padStart(2, '0')
+    const d = String(val.getDate()).padStart(2, '0')
+    card.value.dueDate = `${y}-${m}-${d}`
   },
 })
 
@@ -264,7 +272,7 @@ const removeTag = (name: string) => {
           </div>
         </div>
 
-        <div class="field">
+        <div class="field epic-field">
           <label>Epic</label>
           <Select
             v-model="card.epic"
@@ -274,20 +282,15 @@ const removeTag = (name: string) => {
             placeholder="No Epic"
             show-clear
             fluid
+            :pt="{
+              label: () => ({
+                style: card.epic ? {
+                  backgroundColor: getEpic(card.epic)?.color,
+                  color: contrastColor(getEpic(card.epic)?.color),
+                } : {}
+              })
+            }"
           >
-            <template #value="{ value }">
-              <span
-                v-if="value"
-                class="colored-option"
-                :style="{
-                  backgroundColor: getEpic(value)?.color,
-                  color: contrastColor(getEpic(value)?.color),
-                }"
-              >
-                {{ getEpic(value)?.name || value }}
-              </span>
-              <span v-else class="p-placeholder">No Epic</span>
-            </template>
             <template #option="{ option }">
               <span
                 class="colored-option"
@@ -303,7 +306,7 @@ const removeTag = (name: string) => {
           </div>
         </div>
 
-        <div class="field">
+        <div class="field tags-field">
           <label>Tags</label>
           <MultiSelect
             v-model="knownTags"
@@ -572,11 +575,26 @@ const removeTag = (name: string) => {
   opacity: 0.7;
 }
 
+.epic-field :deep(.p-select-option) {
+  padding: 0;
+}
+
+.epic-field :deep(.p-select-option:hover) .colored-option,
+.epic-field :deep(.p-select-option.p-focus) .colored-option {
+  filter: brightness(0.85);
+}
+
+.tags-field :deep(.p-multiselect-option:hover) .colored-option,
+.tags-field :deep(.p-multiselect-option.p-focus) .colored-option {
+  filter: brightness(0.85);
+}
+
 .colored-option {
-  display: inline-block;
-  padding: 0.15rem 0.5rem;
-  border-radius: 10px;
+  display: block;
+  padding: 0.5rem 0.75rem;
   font-size: 0.85rem;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .colored-chip {
