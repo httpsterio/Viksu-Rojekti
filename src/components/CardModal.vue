@@ -73,14 +73,17 @@ const orphanedTags = computed(() =>
 const dueDateObj = computed({
   get: () => {
     if (!card.value.dueDate) return null
-    const [y, m, d] = card.value.dueDate.split('-').map(Number)
+    const [y, m, d] = card.value.dueDate.split("-").map(Number)
     return new Date(y, m - 1, d)
   },
   set: (val: Date | null) => {
-    if (!val) { card.value.dueDate = undefined; return }
+    if (!val) {
+      card.value.dueDate = undefined
+      return
+    }
     const y = val.getFullYear()
-    const m = String(val.getMonth() + 1).padStart(2, '0')
-    const d = String(val.getDate()).padStart(2, '0')
+    const m = String(val.getMonth() + 1).padStart(2, "0")
+    const d = String(val.getDate()).padStart(2, "0")
     card.value.dueDate = `${y}-${m}-${d}`
   },
 })
@@ -282,15 +285,20 @@ const removeTag = (name: string) => {
             placeholder="No Epic"
             show-clear
             fluid
-            :pt="{
-              label: () => ({
-                style: card.epic ? {
-                  backgroundColor: getEpic(card.epic)?.color,
-                  color: contrastColor(getEpic(card.epic)?.color),
-                } : {}
-              })
-            }"
           >
+            <template #value="{ value }">
+              <span
+                v-if="value"
+                class="colored-chip"
+                :style="{
+                  backgroundColor: getEpic(value)?.color,
+                  color: contrastColor(getEpic(value)?.color),
+                }"
+              >
+                {{ getEpic(value)?.name || value }}
+              </span>
+              <span v-else class="p-placeholder">No Epic</span>
+            </template>
             <template #option="{ option }">
               <span
                 class="colored-option"
@@ -317,7 +325,7 @@ const removeTag = (name: string) => {
             display="chip"
             fluid
             :max-selected-labels="3"
-            :show-select-all="false"
+            :show-toggle-all="false"
           >
             <template #chip="{ value }">
               <span
@@ -340,18 +348,6 @@ const removeTag = (name: string) => {
             </template>
           </MultiSelect>
           <div v-if="card.tags && card.tags.length > 0" class="selected-tags">
-            <Tag
-              v-for="tagName in knownTags"
-              :key="tagName"
-              :value="getTag(tagName)?.name || tagName"
-              :style="{
-                backgroundColor: getTag(tagName)?.color,
-                color: contrastColor(getTag(tagName)?.color),
-              }"
-              class="removable-tag"
-              icon="pi pi-times"
-              @click="removeTag(tagName)"
-            />
             <Tag
               v-for="tagName in orphanedTags"
               :key="tagName"
@@ -576,25 +572,23 @@ const removeTag = (name: string) => {
 }
 
 .epic-field :deep(.p-select-option) {
-  padding: 0;
+  padding: 0.25rem 0.5rem;
 }
 
 .epic-field :deep(.p-select-option:hover) .colored-option,
-.epic-field :deep(.p-select-option.p-focus) .colored-option {
-  filter: brightness(0.85);
-}
-
+.epic-field :deep(.p-select-option.p-focus) .colored-option,
 .tags-field :deep(.p-multiselect-option:hover) .colored-option,
 .tags-field :deep(.p-multiselect-option.p-focus) .colored-option {
-  filter: brightness(0.85);
+  filter: brightness(0.75);
 }
 
 .colored-option {
   display: block;
-  padding: 0.5rem 0.75rem;
+  padding: 0.35rem 0.75rem;
   font-size: 0.85rem;
   width: 100%;
   box-sizing: border-box;
+  border-radius: 6px;
 }
 
 .colored-chip {

@@ -1,4 +1,4 @@
-generated: 2026-03-29T01:41:16.963901100+02:00
+generated: 2026-03-29T02:24:08.629806300+02:00
 cardCount: 67
 cards:
 - id: roj-009
@@ -19,7 +19,7 @@ cards:
   - Feature
   - Backend
   priority: 4
-  position: 1.875
+  position: 0.10422867990564556
   created: 2026-03-19
 - id: roj-011
   title: 'feat: File Watcher (real time refresh)'
@@ -128,13 +128,13 @@ cards:
   created: 2026-03-20
 - id: roj-023
   title: 'style: cardmodal epics and tags dropdown coloring'
-  status: DOING
+  status: DONE
   epic: Card
   tags:
   - UX
   - Polish
   priority: 4
-  position: 1.0
+  position: 0.0625
   created: 2026-03-20
 - id: roj-024
   title: 'feat: Hidden Statuses'
