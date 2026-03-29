@@ -1,6 +1,6 @@
 name: Rojekti
 prefix: roj
-nextId: 79
+nextId: 80
 statuses:
 - id: 8f09fa0b-200a-4495-84e7-de1a80983b67
   name: BACKLOG
@@ -98,3 +98,4 @@ hiddenStatuses:
 - 1411a664-8d6e-4174-b193-15d10a58d590
 - e08541a6-a806-4c5a-b5ac-76fcfa02f1e8
 hiddenStatusesEnabled: true
+dueDateThreshold: 7
