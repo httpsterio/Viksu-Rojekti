@@ -4,6 +4,8 @@ A local-first kanban board built with Tauri 2. Cards are stored as plain Markdow
 
 Built for working on projects with AI coding agents: the board doubles as a record of past decisions, readable by both you and an agent straight from the repo.
 
+[![Rojekti demo](https://img.youtube.com/vi/pfF9F0CUvFQ/hqdefault.jpg)](https://youtu.be/pfF9F0CUvFQ)
+
 ## Requirements
 
 - Windows 10 or later (only supported platform right now)
