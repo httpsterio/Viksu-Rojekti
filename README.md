@@ -2,6 +2,8 @@
 
 A local-first kanban board built with Tauri 2. Cards are stored as plain Markdown files with YAML frontmatter — no database, so the board is just a folder you can read, edit by hand, and version with git.
 
+Built for working on projects with AI coding agents: the board doubles as a record of past decisions, readable by both you and an agent straight from the repo.
+
 ## Requirements
 
 - Windows 10 or later (only supported platform right now)
