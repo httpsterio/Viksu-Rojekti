@@ -1,4 +1,4 @@
-generated: 2026-03-29T14:00:30.744441900+03:00
+generated: 2026-08-18T21:26:02.533796300+03:00
 cardCount: 67
 cards:
 - id: roj-009
@@ -105,7 +105,7 @@ cards:
   - Bug
   - UX
   priority: 5
-  position: 9.689453125
+  position: 6.75
   created: 2026-03-20
 - id: roj-020
   title: 'feat: Soft delete cards'
